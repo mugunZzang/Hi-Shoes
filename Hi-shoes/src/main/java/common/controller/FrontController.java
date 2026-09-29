@@ -43,10 +43,10 @@ SQL 데이터소스는 Java 표준 스펙이기 때문에 Tomcat 버전과 무�
       maxRequestSize = 31457280) 
 
 @WebServlet(
-		description = "사용자가 웹에서 *.up을 했을 경우 이 서블릿이 응답을 해주도록 한다.", 
-		urlPatterns = { "*.up" }, 
+		description = "사용자가 웹에서 *.go을 했을 경우 이 서블릿이 응답을 해주도록 한다.", 
+		urlPatterns = { "*.go" }, 
 		initParams = { 
-				@WebInitParam(name = "propertyConfig", value = "C:/KDT/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties", description = "*.up 에 대한 클래스의 매핑파일")
+				@WebInitParam(name = "propertyConfig", value = "C:/git/Hi-Shoes/Hi-shoes/src/main/webapp/WEB-INF/Command.properties", description = "*.go 에 대한 클래스의 매핑파일")
 		})
 public class FrontController extends HttpServlet {
 	

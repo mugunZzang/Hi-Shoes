@@ -13,7 +13,7 @@ public class HomeServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		response.sendRedirect(request.getContextPath() + "/index.up");
+		response.sendRedirect(request.getContextPath() + "/index.go");
 		/*
 		 * http://localhost:9090/MyMVC
 		 * 또는
