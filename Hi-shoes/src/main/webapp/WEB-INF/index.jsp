@@ -5,7 +5,10 @@
 	String ctxPath = request.getContextPath();
 %>
 
-<form method="post">
-	<input type="text" name="val"/>
-	<button type="submit">sql 테스트</button>
-</form>
+<jsp:include page="header.jsp" />
+
+<div class="container">
+	<h2>바디 입니다.</h2>
+</div>
+
+<jsp:include page="footer.jsp" />
