@@ -7,7 +7,7 @@
 
 <jsp:include page="header.jsp" />
 
-<div class="container">
+<div class="wrapper body-cont">
 	<h2>바디 입니다.</h2>
 </div>
 
