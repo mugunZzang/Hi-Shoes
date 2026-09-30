@@ -46,8 +46,9 @@
             </tr>
             <tr>
                 <td>1</td>
-                <td>공지사항입니다.</td>
-                <td>2026-09-29</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
             </tr>
         </table>
     </div>
@@ -56,12 +57,16 @@
     <div class="tab-pane fade" id="faq">
         <table class="table">
             <tr>
-                <th>번호</th>
-                <th>질문</th>
+                <th>글번호</th>
+                <th>글제목</th>
+                <th>글내용</th>
+                <th>카테고리</th>
             </tr>
             <tr>
                 <td>1</td>
-                <td>자주 묻는 질문입니다.</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
             </tr>
         </table>
     </div>
@@ -70,14 +75,18 @@
     <div class="tab-pane fade" id="question">
         <table class="table">
             <tr>
-                <th>번호</th>
-                <th>문의내용</th>
-                <th>답변상태</th>
+                <th>글번호</th>
+                <th>판매상품명</th>
+                <th>아이디</th>
+                <th>내용</th>
+                <th>작성일자</th>
             </tr>
             <tr>
                 <td>1</td>
-                <td>문의사항입니다.</td>
-                <td>답변완료</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
             </tr>
         </table>
     </div>
