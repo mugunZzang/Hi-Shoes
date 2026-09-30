@@ -15,7 +15,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import member.domain.MemberDTO;
 import notice.km.domain.NoticeDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
@@ -79,16 +78,16 @@ public class NoticeDAO_imple implements NoticeDAO {
 				// 검색대상 및 검색어가 있는 경우
 				
 				if("subject".equals(colname)) {
-					sql += " where subject like '%'|| ? ||'%' ";
+					sql += " where nsubject like '%'|| ? ||'%' ";
 					// 컬럼명과 테이블명은 위치홀더(?)로 사용하면 안된다.!!!!
 				}
 				else if("content".equals(colname)) {
-					sql += " where content like '%'|| ? ||'%' ";
+					sql += " where ncontents like '%'|| ? ||'%' ";
 				}
 				
 			}// end of if(!"".equals(colname) && !"".equals(searchWord))
 			
-			sql += " order by userseq desc ";
+			sql += " order by nnum desc ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -103,10 +102,10 @@ public class NoticeDAO_imple implements NoticeDAO {
 				NoticeDTO ndto = new NoticeDTO();
 				
 				ndto.setNnum(rs.getInt("nnum"));
-				ndto.setName(rs.getString("name"));
-				ndto.setEmail(aes.decrypt(rs.getString("email")));
-				ndto.setGender(rs.getString("gender"));
-				ndto.setGender(rs.getString("gender"));
+				ndto.setNsubject(rs.getString("nsubject"));
+				ndto.setNcontents(rs.getString("ncontents"));
+				ndto.setNwritedate(rs.getString("nwritedate"));
+				ndto.setNimage(rs.getString("nimage"));
 				
 				noticeList.add(ndto);
 				

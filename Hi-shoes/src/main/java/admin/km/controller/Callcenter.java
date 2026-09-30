@@ -28,6 +28,10 @@ public class Callcenter extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+			List<NoticeDTO> noticeList = null;
+			List<FaqDTO> faqList = null;
+			List<QuestionDTO> questionList = null;
+			
 			HttpSession session = request.getSession();
 	
 			MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
@@ -44,7 +48,11 @@ public class Callcenter extends AbstractController {
 	
 			if(searchType == null || (!"subject".equals(searchType) &&
 			  !"userid".equals(searchType) && !"content".equals(searchType) &&
-			  !"category".equals(searchType) && !"pname".equals(searchType))) { 
+			  !"category".equals(searchType) && !"pname".equals(searchType) &&
+			  !"register".equals(searchType) && !"pay".equals(searchType) && 
+			  !"change".equals(searchType) && !"order".equals(searchType) &&
+			  !"cancle".equals(searchType) && !"pinfo".equals(searchType) &&
+			  !"delivery".equals(searchType))) { 
 				searchType= ""; 
 			}
 			  
@@ -57,15 +65,18 @@ public class Callcenter extends AbstractController {
 			paraMap.put("searchWord", searchWord);
 			  
 			if("notice".equals(tab)) {
-				List<NoticeDTO> noticeList = ndao.select_notice_list(paraMap);
+				noticeList = ndao.select_notice_list(paraMap);
 			}
 			else if("faq".equals(tab)) {
-				List<FaqDTO> faqList = fdao.select_faq_list(paraMap);
+				faqList = fdao.select_faq_list(paraMap);
 			}
 			else if("question".equals(tab)) {
-				List<QuestionDTO> questionList = qdao.select_question_list(paraMap);
+				questionList = qdao.select_question_list(paraMap);
 			}
 			
+			request.setAttribute("noticeList", noticeList);
+			request.setAttribute("faqList", faqList);
+			request.setAttribute("questionList", questionList);
 	
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/admin/callcenter/callcenter.jsp");

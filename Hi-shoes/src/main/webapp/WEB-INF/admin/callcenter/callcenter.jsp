@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <jsp:include page="../adminHeader.jsp"/>
 
@@ -85,12 +88,24 @@ function goSearch(frm, type) {
                 <th style="width: 20%;">작성일</th>
             </tr>
           </thead>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-            </tr>
+          	<tbody>
+            		<c:if test="${not empty requestScope.noticeList}">
+			        <c:forEach var="notice" items="${noticeList}">
+			            <tr>
+			                <td>${notice.nnum}</td>
+			                <td>${notice.nsubject}</td>
+			                <td>${notice.ncontents}</td>
+			                <td>${notice.nwritedate}</td>
+			            </tr>
+			        </c:forEach>
+			    </c:if>
+            
+	            <c:if test="${empty requestScope.noticeList}">
+			        <tr>
+			            <td class="text-center" colspan="3">공지사항이 없습니다.</td>
+			        </tr>
+			    </c:if>
+		    </tbody>
         </table>
         <div class="text-end">
         	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;">글작성</button>
@@ -100,17 +115,17 @@ function goSearch(frm, type) {
     <!-- FAQ -->
     <div class="tab-pane fade" id="faq">
     	<form name="faq_search_frm">
-			<select name="searchType">
+			<select name="searchType" onchange="this.form.submit()">
 				<option value="">검색대상</option>
-				<option value="subject">글제목</option>
-				<option value="content">글내용</option>
-				<option value="category">카테고리</option>
+				<option value="register">가입/탈퇴</option>
+				<option value="change">정보변경</option>
+				<option value="pay">결제</option>
+				<option value="order">주문</option>
+				<option value="cancle">취소</option>
+				<option value="pinfo">상품정보</option>
+				<option value="delivery">배송</option>
 			</select>
 			&nbsp;
-			
-			<input type="text" name="searchWord"/>
-			
-			<button type="button" class="btn btn-secondary" onclick="goSearch(this.form,'faq')">검색</button>
 		</form>
         <table class="table" style="width: 100%;">
           <thead class="table-primary">
@@ -121,12 +136,24 @@ function goSearch(frm, type) {
                 <th style="width: 20%;">카테고리</th>
             </tr>
           </thead>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-            </tr>
+            <tbody>
+            		<c:if test="${not empty requestScope.faqList}">
+			        <c:forEach var="faq" items="${requestScope.faqList}">
+			            <tr>
+			                <td>${faq.fnum}</td>
+			                <td>${faq.fsubject}</td>
+			                <td>${faq.fcontents}</td>
+			                <td>${faq.fcategory}</td>
+			            </tr>
+			        </c:forEach>
+			    </c:if>
+            
+	            <c:if test="${empty requestScope.faqList}">
+			        <tr>
+			            <td class="text-center" colspan="4">faq가 없습니다.</td>
+			        </tr>
+			    </c:if>
+		    </tbody>
         </table>
         
         <div class="text-end">

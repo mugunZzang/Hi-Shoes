@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import notice.km.domain.NoticeDTO;
 import question.km.domin.QuestionDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
@@ -61,8 +63,62 @@ public class QuestionDAO_imple implements QuestionDAO {
 	// 문의사항 게시글 불러오기
 	@Override
 	public List<QuestionDTO> select_question_list(Map<String, String> paraMap) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		List<QuestionDTO> questionList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select qnnum, nsubject, ncontents, nwritedate, nimage "
+					  +  " from tbl_qna ";
+			
+			String colname = paraMap.get("searchType");
+			String searchWord = paraMap.get("searchWord");
+			
+			if(!"".equals(colname) && !"".equals(searchWord)) {
+				// 검색대상 및 검색어가 있는 경우
+				
+				if("subject".equals(colname)) {
+					sql += " where nsubject like '%'|| ? ||'%' ";
+					// 컬럼명과 테이블명은 위치홀더(?)로 사용하면 안된다.!!!!
+				}
+				else if("content".equals(colname)) {
+					sql += " where ncontents like '%'|| ? ||'%' ";
+				}
+				
+			}// end of if(!"".equals(colname) && !"".equals(searchWord))
+			
+			sql += " order by nnum desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!"".equals(colname) && !"".equals(searchWord)) {
+				// 검색대상 및 검색어가 있는 경우
+				pstmt.setString(1, searchWord);	
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				NoticeDTO ndto = new NoticeDTO();
+				
+				ndto.setNnum(rs.getInt("nnum"));
+				ndto.setNsubject(rs.getString("nsubject"));
+				ndto.setNcontents(rs.getString("ncontents"));
+				ndto.setNwritedate(rs.getString("nwritedate"));
+				ndto.setNimage(rs.getString("nimage"));
+				
+				noticeList.add(ndto);
+				
+			}// end of while(rs.next())
+					
+			
+		}finally {
+			
+			close();
+		}
+		
+		
+		return noticeList;
 	}
 
 

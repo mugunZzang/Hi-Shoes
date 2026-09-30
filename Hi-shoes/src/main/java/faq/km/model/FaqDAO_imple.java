@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import faq.km.domain.FaqDTO;
+import notice.km.domain.NoticeDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
 
@@ -61,8 +63,51 @@ public class FaqDAO_imple implements FaqDAO {
 	// faq 게시글 불러오기
 	@Override
 	public List<FaqDTO> select_faq_list(Map<String, String> paraMap) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		List<FaqDTO> faqList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select fnum, fsubject, fcontents, fcategory "
+					  +  " from tbl_faq ";
+			
+			String searchType = paraMap.get("searchType");
+			
+			
+			if(!"".equals(searchType)) {
+				sql += " where fcategory = ? ";
+			}
+			
+			sql += " order by fnum desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!"".equals(searchType)) {
+				pstmt.setString(1, searchType);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				FaqDTO fdto = new FaqDTO();
+				
+				fdto.setFnum(rs.getInt("fnum"));
+				fdto.setFsubject(rs.getString("fsubject"));
+				fdto.setFcontents(rs.getString("fcontents"));
+				fdto.setFcategory(rs.getString("fcategory"));
+				
+				faqList.add(fdto);
+				
+			}// end of while(rs.next())
+					
+			
+		}finally {
+			
+			close();
+		}
+		
+		
+		return faqList;
 	}
 
 }
