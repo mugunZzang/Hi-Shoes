@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+
+.card-body {
+	padding: 15px 10px 0;
+	text-align: left;
+}
+
+div.card {
+	gap: 8px;
+	border-radius: 0px;
+	/* border: 0px; */
+}
+
+div.card > img {
+	width: 100%;
+}
+
+/**********************************************************/
+
+div#contents {
+	width: 1202px;
+	margin: 0 auto;
+}
+
+
+#search_keyword > form > li > label {
+	font-size: 15px;
+	line-height: 50px;
+}
+
+
+
+
+
+
+
+
+
+

@@ -3,7 +3,7 @@ package shop.kimkc.domain;
 public class ProductDTO {
 	private int pnum;						// 판매번호
 	private String fk_pname;				// 제품명
-	private String piamge1;					// 제품이미지1
+	private String pimage1;					// 제품이미지1
 	private String pimage2;					// 제품이미지2
 	private String pcontent;				// 제품 설명
 	private int deliveryfee;				// 배송비
@@ -32,12 +32,12 @@ public class ProductDTO {
 		this.fk_pname = fk_pname;
 	}
 
-	public String getPiamge1() {
-		return piamge1;
+	public String getPimage1() {
+		return pimage1;
 	}
 
-	public void setPiamge1(String piamge1) {
-		this.piamge1 = piamge1;
+	public void setPimage1(String pimage1) {
+		this.pimage1 = pimage1;
 	}
 
 	public String getPimage2() {
