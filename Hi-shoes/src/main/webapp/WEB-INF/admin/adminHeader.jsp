@@ -431,9 +431,9 @@ body.sidebar-ready #container {
                 <a href="<%= ctxPath %>/admin/catalogueRegister.go"
                    class="<%= currentUri.contains("catalogueRegister") ? "active" : "" %>">카탈로그 등록</a>
                 <a href="<%= ctxPath %>/"
-                   class="<%= currentUri.contains("catalogueList") ? "active" : "" %>">발주 목록</a>
+                   class="<%= currentUri.contains("") ? "active" : "" %>">발주 목록</a>
                 <a href="<%= ctxPath %>/"
-                   class="<%= currentUri.contains("catalogueList") ? "active" : "" %>">발주 등록</a>     
+                   class="<%= currentUri.contains("") ? "active" : "" %>">발주 등록</a>     
             </div>
         </div>
 

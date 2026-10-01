@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -109,6 +112,162 @@ public class CatalogueDAO_imple implements CatalogueDAO {
 		return isExists;
 
 	} // end of public boolean pnameDuplicateCheck(String pname) throws SQLException-------------------------------------
+
+	
+	// 카탈로그 개수 조회(SELECT)
+	@Override
+	public int getTotalCountCatalogue(Map<String, String> paraMap) throws SQLException {
+
+	    int totalCount = 0;
+
+	    try {
+	    	conn = ds.getConnection();
+	    	
+		    String sql = " SELECT COUNT(*) "
+		               + " FROM tbl_catalogue catal "
+		               + " INNER JOIN tbl_category cate "
+		               + " ON catal.fk_catenum = cate.catenum ";
+
+		    List<String> conditions = new ArrayList<>();
+
+		    String productName = paraMap.get("productName");
+		    String categoryName = paraMap.get("categoryName");
+		    String brandName = paraMap.get("brandName");
+
+		    if (productName != null && !productName.trim().isEmpty()) {
+		        conditions.add(" catal.pname LIKE '%' || ? || '%' ");
+		    }
+
+		    if (categoryName != null && !categoryName.trim().isEmpty()) {
+		        conditions.add(" cate.catename LIKE '%' || ? || '%' ");
+		    }
+
+		    if (brandName != null && !brandName.trim().isEmpty()) {
+		        conditions.add(" catal.brand LIKE '%' || ? || '%' ");
+		    }
+
+		    if (!conditions.isEmpty()) {
+		        sql += " WHERE " + String.join(" AND ", conditions);
+		    }
+
+		    pstmt = conn.prepareStatement(sql);
+
+		    int index = 1;
+
+		    if (productName != null && !productName.trim().isEmpty()) {
+		        pstmt.setString(index++, productName);
+		    }
+
+		    if (categoryName != null && !categoryName.trim().isEmpty()) {
+		        pstmt.setString(index++, categoryName);
+		    }
+
+		    if (brandName != null && !brandName.trim().isEmpty()) {
+		        pstmt.setString(index++, brandName);
+		    }
+
+		    rs = pstmt.executeQuery();
+
+		    if (rs.next()) {
+		        totalCount = rs.getInt(1);
+		    }
+
+		} finally {
+			close();
+		}
+
+	    return totalCount;
+	} // end of public int getTotalCountCatalogue(Map<String, String> paraMap) throws SQLException
+
+
+	// 검색내역이 존재하면 존재하는 검색내용을 기준으로 구분하여 카탈로그를 페이징 처리하여 조회해온다.
+	@Override
+	public List<Map<String, String>> getCatalogueList(Map<String, String> paraMap) throws SQLException {
+		List<Map<String, String>> catalogue_map_List = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT catal.pname, "
+					+ "       catal.purprice, "
+					+ "       catal.regprice, "
+					+ "       catal.saleprice, "
+					+ "       catal.brand, "
+					+ "       cate.catename "
+					+ " FROM tbl_catalogue catal "
+					+ " INNER JOIN tbl_category cate "
+					+ " ON catal.fk_catenum = cate.catenum "; 
+					
+
+			List<String> conditions = new ArrayList<>();
+			List<String> values = new ArrayList<>();
+			
+			String productName = (String) paraMap.get("productName");
+			String categoryName = (String) paraMap.get("categoryName");
+			String brandName = (String) paraMap.get("brandName");
+			
+			if (productName != null && !productName.trim().isEmpty()) {
+			    conditions.add(" catal.pname LIKE '%' || ? || '%' ");
+			    values.add(productName);
+			}
+			
+			if (categoryName != null && !categoryName.trim().isEmpty()) {
+			    conditions.add(" cate.catename LIKE '%' || ? || '%' ");
+			    values.add(categoryName);
+			}
+			
+			if (brandName != null && !brandName.trim().isEmpty()) {
+			    conditions.add(" catal.brand LIKE '%' || ? || '%' ");
+			    values.add(brandName);
+			}
+			
+			if (!conditions.isEmpty()) {
+			    sql += " WHERE " + String.join(" AND ", conditions);
+			}
+			
+			sql += " ORDER BY catal.pname DESC, catal.brand DESC "
+			     + " OFFSET (TO_NUMBER(?)-1) * 10 ROWS "
+			     + " FETCH NEXT 10 ROWS ONLY ";			
+	
+			pstmt = conn.prepareStatement(sql);
+
+			int index = 1;
+
+			for (String value : values) {
+			    pstmt.setString(index++, value);
+			}
+			
+			pstmt.setString(index, paraMap.get("currentShowPageNo"));
+
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String pname = rs.getString("pname");
+				String purprice = String.valueOf(rs.getInt("purprice"));
+				String regprice =  String.valueOf(rs.getInt("regprice"));
+				String saleprice =  String.valueOf(rs.getInt("saleprice"));
+				String brand = rs.getString("brand");
+				String catename = rs.getString("catename");
+				
+				Map<String, String> catalMap = new HashMap<>();
+				
+				catalMap.put("pname", pname);
+				catalMap.put("purprice", purprice);
+				catalMap.put("regprice", regprice);
+				catalMap.put("saleprice", saleprice);
+				catalMap.put("brand", brand);
+				catalMap.put("catename", catename);
+				
+				catalogue_map_List.add(catalMap);
+				
+			} // end of while()-------------------------------------
+			
+		} finally {
+			close();
+		}
+		
+		return catalogue_map_List;
+	} // end of public List<Map<String, String>> getCatalogueList(Map<String, String> paraMap) throws SQLException------------------
 	
 	
     
