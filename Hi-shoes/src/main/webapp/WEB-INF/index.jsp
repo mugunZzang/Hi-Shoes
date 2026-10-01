@@ -87,7 +87,7 @@
 			  		</ul>
 			  	</div>
 			  </div>
-			  <div class="tab-pane" id="brand2" role="tabpanel" aria-labelledby="profile-tab">2</div>
+			  <div class="tab-pane" id="brand2" role="tabpanel" aria-labelledby="profile-tab">푸시가 된다면 이 문구가 보일 것이다.</div>
 			  <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab">3</div>
 			</div>
 		</section>
