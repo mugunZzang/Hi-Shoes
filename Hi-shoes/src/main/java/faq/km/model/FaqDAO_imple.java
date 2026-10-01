@@ -78,13 +78,20 @@ public class FaqDAO_imple implements FaqDAO {
 				sql += " where fcategory = ? ";
 			}
 			
-			sql += " order by fnum desc ";
+			sql += " order by fnum desc "
+				 + " offset(?-1)*10 row "
+				 + " fetch next 10 row only ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+			
 			if(!"".equals(searchType)) {
 				pstmt.setString(1, searchType);
+				pstmt.setInt(2, currentShowPageNo);
 			}
+			
+			pstmt.setInt(1, currentShowPageNo);
 			
 			rs = pstmt.executeQuery();
 			
@@ -109,5 +116,33 @@ public class FaqDAO_imple implements FaqDAO {
 		
 		return faqList;
 	}
+
+
+	// === 전체 페이지 개수 ===
+	@Override
+	public int getTotalCountOrder() throws Exception {
+		
+		int totalCountOrder = 0;
+		   
+		   try {
+			   conn = ds.getConnection();
+			   
+			   String sql = " select count(*) as CNT "
+			   			  + " From tbl_faq ";
+				   
+			   pstmt = conn.prepareStatement(sql);
+		   
+			   rs = pstmt.executeQuery();
+			   
+			   rs.next();
+			   
+			   totalCountOrder = rs.getInt("CNT");
+			
+		   } finally {
+			   close();
+		   }
+		   
+		   return totalCountOrder;
+	}// public int getTotalCountOrder() throws Exception
 
 }

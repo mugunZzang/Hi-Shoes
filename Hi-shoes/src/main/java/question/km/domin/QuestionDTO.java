@@ -1,6 +1,5 @@
 package question.km.domin;
 
-import product.km.domain.ProductDTO;
 
 public class QuestionDTO {
 	private int qnanum; // 문의번호
@@ -11,14 +10,6 @@ public class QuestionDTO {
 	private String islock;// 잠금여부
 	private String qanswer; // 답글
 	
-	private ProductDTO pdto;
-	
-	public ProductDTO getPdto() {
-		return pdto;
-	}
-	public void setPdto(ProductDTO pdto) {
-		this.pdto = pdto;
-	}
 	public int getQnanum() {
 		return qnanum;
 	}

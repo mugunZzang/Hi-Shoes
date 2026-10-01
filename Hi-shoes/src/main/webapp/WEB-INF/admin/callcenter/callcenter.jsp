@@ -30,32 +30,52 @@ function goSearch(frm, type) {
 }// end of function goSearch(frm, type)
 </script>
 
-<div class="container-fluid" id="container" style="position: relative; top:90px; padding: 0% 7%; ">
-    <div class="d-flex justify-content-between align-items-center my-5">
-        <p class="mb-2 fs-3">고객센터</p>
+<div class="container-fluid"
+     id="container"
+     style="position: relative;
+            top: 90px;
+            padding: 0% 7%;">
+
+    <!-- 페이지 제목 + 브레드크럼 -->
+    <div class="d-flex justify-content-between align-items-center"
+         style="padding: 20px 0px;
+                margin-bottom: 15px;">
+
+        <p class="mb-0 fs-4 fw-semibold">
+            고객센터
+        </p>
 
         <nav style="--bs-breadcrumb-divider: '>';">
-            <ol class="breadcrumb justify-content-end mb-0">
+
+            <ol class="breadcrumb mb-0">
+
                 <li class="breadcrumb-item">
-                    <a href="#">Home</a>
+                    <a href="#"
+                       class="text-decoration-none">
+                        Home
+                    </a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
+
+                <li class="breadcrumb-item active"
+                    aria-current="page">
                     고객센터
                 </li>
+
             </ol>
+
         </nav>
+
     </div>
-<div>
 
 <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#notice">공지사항</a>
+          <a class="nav-link ${tab == 'notice' ? 'active' : ''}" href="callcenter.go?tab=notice">공지사항</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#faq">FAQ</a>
+          <a class="nav-link ${tab == 'faq' ? 'active' : ''}" href="callcenter.go?tab=faq">FAQ</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#question">문의사항</a>
+          <a class="nav-link ${tab == 'question' ? 'active' : ''}" href="callcenter.go?tab=question">문의사항</a>
         </li>
 </ul>
 
@@ -66,7 +86,7 @@ function goSearch(frm, type) {
                 padding: 25px;">
 
     <!-- 공지사항 -->
-    <div class="tab-pane fade show active" id="notice">
+    <div class="tab-pane fade ${tab == 'notice' ? 'show active' : ''}" id="notice">
     	<form name="notice_search_frm">
 			<select name="searchType">
 				<option value="">검색대상</option>
@@ -89,10 +109,12 @@ function goSearch(frm, type) {
             </tr>
           </thead>
           	<tbody>
-            		<c:if test="${not empty requestScope.noticeList}">
-			        <c:forEach var="notice" items="${noticeList}">
+            	<c:if test="${not empty requestScope.noticeList}">
+			        <c:forEach var="notice" items="${noticeList}" varStatus="status">
 			            <tr>
-			                <td>${notice.nnum}</td>
+			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
+						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
+						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
 			                <td>${notice.nsubject}</td>
 			                <td>${notice.ncontents}</td>
 			                <td>${notice.nwritedate}</td>
@@ -107,13 +129,18 @@ function goSearch(frm, type) {
 			    </c:if>
 		    </tbody>
         </table>
+        <nav class="my-5">
+	       <div style='display:flex; width:80%; margin: 0 auto;'>
+	   	     <ul class="pagination" style='margin:auto;'>${requestScope.noticePageBar}</ul>
+	   	   </div>
+		</nav> 
         <div class="text-end">
-        	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;">글작성</button>
+        	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;" onclick="location.href='noticeWrite.go'">글작성</button>
         </div>
     </div>
 
     <!-- FAQ -->
-    <div class="tab-pane fade" id="faq">
+    <div class="tab-pane fade ${tab == 'faq' ? 'show active' : ''}" id="faq">
     	<form name="faq_search_frm">
 			<select name="searchType" onchange="this.form.submit()">
 				<option value="">검색대상</option>
@@ -136,11 +163,14 @@ function goSearch(frm, type) {
                 <th style="width: 20%;">카테고리</th>
             </tr>
           </thead>
-            <tbody>
-            		<c:if test="${not empty requestScope.faqList}">
-			        <c:forEach var="faq" items="${requestScope.faqList}">
+			 <tbody>
+            	<c:if test="${not empty requestScope.faqList}">
+            	
+			        <c:forEach var="faq" items="${requestScope.faqList}" varStatus="status">
 			            <tr>
-			                <td>${faq.fnum}</td>
+			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
+						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
+						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
 			                <td>${faq.fsubject}</td>
 			                <td>${faq.fcontents}</td>
 			                <td>${faq.fcategory}</td>
@@ -155,15 +185,20 @@ function goSearch(frm, type) {
 			    </c:if>
 		    </tbody>
         </table>
+        <nav class="my-5">
+	       <div style='display:flex; width:80%; margin: 0 auto;'>
+	   	     <ul class="pagination" style='margin:auto;'>${requestScope.faqPageBar}</ul>
+	   	   </div>
+		</nav>
         
         <div class="text-end">
-        	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;">글작성</button>
+        	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;" onclick="location.href='faqWrite.go'">글작성</button>
         </div>
         
     </div>
 
     <!-- 문의사항 -->
-    <div class="tab-pane fade" id="question">
+    <div class="tab-pane fade ${tab == 'question' ? 'show active' : ''}" id="question">
     	<form name="question_search_frm">
 			<select name="searchType">
 				<option value="">검색대상</option>
@@ -186,15 +221,35 @@ function goSearch(frm, type) {
                 <th style="width: 20%;">작성일자</th>
             </tr>
           </thead>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-            </tr>
+            <tbody>
+            	<c:if test="${not empty requestScope.questionList}">
+			        <c:forEach var="question" items="${requestScope.questionList}" varStatus="status">
+			            <tr>
+			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
+						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
+						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
+			                <td>${question.fk_pname}</td>
+			                <td>${question.fk_userid}</td>
+			                <td>${question.qcontents}</td>
+			                <td>${question.qwritedate}</td>
+			            </tr>
+			        </c:forEach>
+			    </c:if>
+            
+	            <c:if test="${empty requestScope.questionList}">
+			        <tr>
+			            <td class="text-center" colspan="5">문의사항이 없습니다.</td>
+			        </tr>
+			    </c:if>
         </table>
+        
+        <nav class="my-5">
+	       <div style='display:flex; width:80%; margin: 0 auto;'>
+	   	     <ul class="pagination" style='margin:auto;'>${requestScope.questionPageBar}</ul>
+	   	   </div>
+		</nav>
     </div>
+</div>
 </div>
 
 

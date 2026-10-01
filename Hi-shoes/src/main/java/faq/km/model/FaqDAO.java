@@ -10,4 +10,7 @@ public interface FaqDAO {
 	// faq 게시글 불러오기
 	List<FaqDTO> select_faq_list(Map<String, String> paraMap) throws Exception;
 
+	// === 전체 페이지 개수 ===
+	int getTotalCountOrder() throws Exception;
+
 }

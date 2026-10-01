@@ -1,7 +1,6 @@
 package notice.km.model;
 
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,14 +86,23 @@ public class NoticeDAO_imple implements NoticeDAO {
 				
 			}// end of if(!"".equals(colname) && !"".equals(searchWord))
 			
-			sql += " order by nnum desc ";
+			sql += " order by nnum desc "
+				 + " offset(?-1)*10 row "
+				 + " fetch next 10 row only ";
+			
+			   	    
 			
 			pstmt = conn.prepareStatement(sql);
 			
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+			
 			if(!"".equals(colname) && !"".equals(searchWord)) {
 				// 검색대상 및 검색어가 있는 경우
-				pstmt.setString(1, searchWord);	
+				pstmt.setString(1, searchWord);
+				pstmt.setInt(2, currentShowPageNo);
 			}
+			
+			pstmt.setInt(1, currentShowPageNo);
 			
 			rs = pstmt.executeQuery();
 			
@@ -120,5 +128,33 @@ public class NoticeDAO_imple implements NoticeDAO {
 		
 		return noticeList;
 	}
+
+	// === 전체 페이지 개수 ===
+	@Override
+	public int getTotalCountOrder() throws Exception {
+
+		int totalCountOrder = 0;
+		   
+		   try {
+			   conn = ds.getConnection();
+			   
+			   String sql = " select count(*) as CNT "
+			   			  + " From tbl_notice ";
+				   
+			   pstmt = conn.prepareStatement(sql);
+		   
+			   rs = pstmt.executeQuery();
+			   
+			   rs.next();
+			   
+			   totalCountOrder = rs.getInt("CNT");
+			
+		   } finally {
+			   close();
+		   }
+		   
+		   return totalCountOrder;
+	
+	}// end of public int getTotalCountOrder() throws Exception
 
 }

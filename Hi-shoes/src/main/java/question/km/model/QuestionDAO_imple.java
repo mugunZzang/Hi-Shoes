@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +15,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import notice.km.domain.NoticeDTO;
-import question.km.domin.QuestionDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
 
@@ -62,14 +61,15 @@ public class QuestionDAO_imple implements QuestionDAO {
 	
 	// 문의사항 게시글 불러오기
 	@Override
-	public List<QuestionDTO> select_question_list(Map<String, String> paraMap) throws Exception {
-		List<QuestionDTO> questionList = new ArrayList<>();
+	public List<Map<String,String>> select_question_list(Map<String, String> paraMap) throws Exception {
+		List<Map<String,String>> questionList = new ArrayList<>();
 		
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select qnnum, nsubject, ncontents, nwritedate, nimage "
-					  +  " from tbl_qna ";
+			String sql = " select qnanum, fk_pname, fk_userid, qcontents, qwritedate "
+					   + " from tbl_qna q join tbl_product p "
+					   + " on q.fk_pnum = pnum ";
 			
 			String colname = paraMap.get("searchType");
 			String searchWord = paraMap.get("searchWord");
@@ -77,37 +77,44 @@ public class QuestionDAO_imple implements QuestionDAO {
 			if(!"".equals(colname) && !"".equals(searchWord)) {
 				// 검색대상 및 검색어가 있는 경우
 				
-				if("subject".equals(colname)) {
-					sql += " where nsubject like '%'|| ? ||'%' ";
+				if("pname".equals(colname)) {
+					sql += " where fk_pname like '%'|| ? ||'%' ";
 					// 컬럼명과 테이블명은 위치홀더(?)로 사용하면 안된다.!!!!
 				}
-				else if("content".equals(colname)) {
-					sql += " where ncontents like '%'|| ? ||'%' ";
+				else if("userid".equals(colname)) {
+					sql += " where fk_userid like '%'|| ? ||'%' ";
 				}
 				
 			}// end of if(!"".equals(colname) && !"".equals(searchWord))
 			
-			sql += " order by nnum desc ";
+			sql += " order by qnanum desc "
+				+  " offset(?-1)*10 row "
+				+  " fetch next 10 row only ";
 			
 			pstmt = conn.prepareStatement(sql);
+			
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
 			
 			if(!"".equals(colname) && !"".equals(searchWord)) {
 				// 검색대상 및 검색어가 있는 경우
 				pstmt.setString(1, searchWord);	
+				pstmt.setInt(2, currentShowPageNo);
 			}
+			
+			pstmt.setInt(1, currentShowPageNo);
 			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				NoticeDTO ndto = new NoticeDTO();
 				
-				ndto.setNnum(rs.getInt("nnum"));
-				ndto.setNsubject(rs.getString("nsubject"));
-				ndto.setNcontents(rs.getString("ncontents"));
-				ndto.setNwritedate(rs.getString("nwritedate"));
-				ndto.setNimage(rs.getString("nimage"));
+				Map<String, String> qnaMap = new HashMap<>();
+				qnaMap.put("qnanum",String.valueOf(rs.getInt("qnanum")));
+				qnaMap.put("fk_pname",rs.getString("fk_pname"));
+				qnaMap.put("fk_userid",rs.getString("fk_userid"));
+				qnaMap.put("qcontents",rs.getString("qcontents"));
+				qnaMap.put("qwritedate",rs.getString("qwritedate"));
 				
-				noticeList.add(ndto);
+				questionList.add(qnaMap);
 				
 			}// end of while(rs.next())
 					
@@ -118,7 +125,34 @@ public class QuestionDAO_imple implements QuestionDAO {
 		}
 		
 		
-		return noticeList;
+		return questionList;
+	}
+
+	// === 전체 페이지 개수 ===
+	@Override
+	public int getTotalCountOrder() throws Exception {
+		
+		int totalCountOrder = 0;
+		   
+		   try {
+			   conn = ds.getConnection();
+			   
+			   String sql = " select count(*) as CNT "
+			   			  + " From tbl_qna ";
+				   
+			   pstmt = conn.prepareStatement(sql);
+		   
+			   rs = pstmt.executeQuery();
+			   
+			   rs.next();
+			   
+			   totalCountOrder = rs.getInt("CNT");
+			
+		   } finally {
+			   close();
+		   }
+		   
+		   return totalCountOrder;
 	}
 
 
