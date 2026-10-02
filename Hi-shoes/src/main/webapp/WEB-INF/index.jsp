@@ -7,7 +7,7 @@
 
 <jsp:include page="header.jsp" />
 
-<main>
+<main class="bodycont">
 	
 	<div id="main-slide" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
 		<div class="carousel-inner">

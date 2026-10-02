@@ -12,26 +12,26 @@
  	margin-bottom: 0;
  } 
 
-.join-wrap {
+header .join-wrap {
 	display:flex;
 	gap:20px;
 	flex-wrap:wrap;
 }
 
-.join-wrap a {
+header .join-wrap a {
 	display:block;
 	width: 38px;
 	text-align:center;
 }
 
-.join-wrap a span {	
+header .join-wrap a span {	
 	display:block;
 	font-weight: 400;
 	font-size: 10px;
 	color: #7C7C7C;
 }
 
-.main-nav a {
+header .main-nav a {
 	display:inline-block;
 	padding: 10px;
 	font-size:15px;
@@ -39,11 +39,11 @@
 	font-weight: 500;
 }
 
-.main-nav a:hover {
+header .main-nav a:hover {
 	color: #87A922;	
 }
 
- .header-bottom {	
+header .header-bottom {	
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -52,14 +52,14 @@
     margin-top: 10px;
 }
 
-.header-bottom > nav {
+header .header-bottom > nav {
 	
 	float: left;
     position: absolute;
     left: 0;
 } 
 
-.searchbar {
+header .searchbar {
 	max-width:596px;
 	width: 100%;
 	height:38px;
@@ -68,18 +68,18 @@
 	overflow:hidden;
 }
 
-.searchbar input {	
+header .searchbar input {	
 	padding-left: 24px;
 	border:none;
 	outline:none;
 }
 
-.searchbar input:focus {
+header .searchbar input:focus {
 	outline:none;
 	box-shadow: none;
 }
 
-.searchbar input + button {
+header .searchbar input + button {
 	padding-right: 45px;
 	border:none;
 	text-indent:-9999px;
@@ -87,24 +87,20 @@
 }
 
 /* main */
-main {
-	flex:1;
-}
-
-#main-slide {
+main #main-slide {
 	height:600px;
 	overflow:hidden;
 	margin-bottom:40px;
 }
-#main-slide .carousel-inner {
+main #main-slide .carousel-inner {
 	height: 100%;
 }
-#main-slide .carousel-item {
+main #main-slide .carousel-item {
 	height: 100%;	
 	position: relative;
 }
 
-#main-slide .carousel-item img {
+main #main-slide .carousel-item img {
 	position:absolute;
 	top:50%;
 	left:50%;
@@ -123,28 +119,30 @@ main .event-banners {
 }
 main .event-banners > div {
 	flex:1 1 49%;
+	border-radius:8px;
+	overflow:hidden;
 }
 main .event-banners img{
 	width: 100%;
 }
 
-.bestsellers {
+main .bestsellers {
 	margin: 80px auto;
 }
 
-.bestsellers h2 {
+main .bestsellers h2 {
 	font-weight: 600;
 	color: #1D1D1D;
 	font-size: 30px;
 	margin-bottom: 40px;
 }
 
-.bestsellers ul.nav-tabs {
+main .bestsellers ul.nav-tabs {
 	border: none;	
 	margin-bottom: 30px;
 }
 
-.bestsellers ul li button.nav-link {
+main .bestsellers ul li button.nav-link {
 	font-weight: 500;
 	font-size: 16px;
 	color: #7C7C7C;
@@ -152,12 +150,12 @@ main .event-banners img{
 	border-bottom:5px solid transparent;	
 }
 
-.bestsellers ul li button.nav-link.active {
+main .bestsellers ul li button.nav-link.active {
 	color:#114232;
 	border-color:#114232;
 }
 
-.bestsellers .tab-content ul {
+main .bestsellers .tab-content ul {
 	display:flex;
 	justify-content: center;
 	flex-wrap: wrap;
@@ -165,26 +163,26 @@ main .event-banners img{
 	padding:0;
 }
 
-.bestsellers .tab-content ul li {
+main .bestsellers .tab-content ul li {
 	flex: 0 1 290px;
 	box-shadow: 0 5px 5px rgba(163, 163, 163, .2);
 	border-radius: 8px;
 	overflow: hidden;
 }
 
-.bestsellers .tab-content ul li a img {
+main .bestsellers .tab-content ul li a img {
 	width: 100%;
 } 
 
 /* footer */
-.customer-banner {
+.footer-banner {
 	background-color: #F7F6BB;
 	min-height:60px;
 	padding-top:14px;
 	padding-bottom:14px;
 }
 
-.customer-banner .wrapper {
+.footer-banner .wrapper {
 	display:flex;
 	justify-content: space-between;
 	align-items:center;
@@ -194,24 +192,25 @@ main .event-banners img{
 	margin: auto;
 }
 
-.customer-banner .wrapper .cs-texts span{
+.footer-banner .wrapper .cs-texts span{
 	font-size:15px;
 	color: #1D1D1D;
 }
 
-.customer-banner .wrapper .cs-texts span:first-child {
+.footer-banner .wrapper .cs-texts span:first-child {
 	margin-right: 30px;
 	font-weight: 500;
 }
 
-.customer-banner .wrapper .cs-texts span:nth-child(2) {
+.footer-banner .wrapper .cs-texts span:nth-child(2) {
 	margin-right: 10px;
 }
 
-.customer-banner .wrapper .cs-texts span:nth-child(3) {
+.footer-banner .wrapper .cs-texts span:nth-child(3) {
 	color: #7C7C7C;
 }
 
+/* 다른 곳에서 쓸 수 있어서 클래스명으로만 선언 해둠. */
 .link-btn1 {
 	display:block;
 	border: 1px solid #7C7C7C;
@@ -277,19 +276,10 @@ footer .wrapper .social-wrap a img {
 	width: 100%;
 }
 
-
-
-
-
-
-
-
-
-
 /* media query */
 
 @media (max-width: 1300px) {
-	.header-bottom > nav {
+	header .header-bottom > nav {
 		position: unset;
 	}
 }
@@ -307,14 +297,12 @@ footer .wrapper .social-wrap a img {
 	}	
 }
 
-
-
 @media (min-width: 1200px) {
 	header.container-fluid {
 		padding-right: 40px;
 		padding-left: 40px;
 	}	
-	.sub-contents.container-fluid {
+	main .sub-contents.container-fluid {
 		max-width:1200px;
 		padding:0;
 	}

@@ -5,7 +5,7 @@
     String ctxPath = request.getContextPath();
 %>   
 
-	<section class="customer-banner container-fluid">
+	<section class="footer-banner container-fluid">
 		<div class="wrapper">
 			<section class="cs-texts">
 				<span>고객센터</span>

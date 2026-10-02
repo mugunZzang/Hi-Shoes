@@ -38,7 +38,7 @@
 				</h1>								
 			</div>
 			<div class="join-wrap nav nav-pills">
-				<a href="#">
+				<a href="<%=ctxPath %>/user/userLogin.go">
 					<img alt="login" src="<%= ctxPath %>/images/login.svg">
 					<span>LOGIN</span>
 				</a>
