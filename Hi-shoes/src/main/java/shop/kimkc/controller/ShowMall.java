@@ -24,7 +24,7 @@ public class ShowMall extends AbstractController {
 		
 		// 검색키워드를 적용한 상품목록 가져오기
 		List<ProductDTO> prodList = pdao.getProductList(searchKeyword);
-		System.out.println("prodList 사이즈 " + prodList.size());
+		//System.out.println("prodList 사이즈 " + prodList.size());
 		
 		request.setAttribute("prodList", prodList);
 		

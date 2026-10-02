@@ -82,7 +82,7 @@ public class ProductDAO_imple implements ProductDAO {
 				ProductDTO pdto = new ProductDTO();
 				pdto.setPnum(rs.getInt("pnum"));
 				pdto.setPimage1(rs.getString("pimage1"));
-				System.out.println("판매번호 : " + rs.getInt("pnum"));
+				//System.out.println("판매번호 : " + rs.getInt("pnum"));
 				
 				CatalogueDTO cdto = new CatalogueDTO();
 				cdto.setPname(rs.getString("pname"));

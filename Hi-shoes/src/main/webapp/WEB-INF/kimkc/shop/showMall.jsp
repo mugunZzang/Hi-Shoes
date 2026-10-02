@@ -39,7 +39,7 @@
 			<c:if test="${not empty requestScope.prodList}">
 				<c:forEach var="pdto" items="${requestScope.prodList}">
 					<div class="col-lg-3 col-md-6">
-						<div class="card">
+						<div class="card" onclick="location.href='${pageContext.request.contextPath}/shop/productDetail.go';">	<%-- 여기에 판매번호 넘겨야 함 --%>
 							<img src="${pageContext.request.contextPath}/images/kimkc/product/${pdto.pimage1}" class="card-img-top" alt="...">
 							<div class="card-body">
 							  	<p class="card-title">${pdto.catalogueDTO.brand}</p>
@@ -47,7 +47,7 @@
 								<p class="card-text">${pdto.catalogueDTO.regprice}</p>
 								<p class="card-text">${pdto.catalogueDTO.saleprice}</p>
 							
-							  	<a href="#" class="card-link stretched-link" style="display: none;">Card link</a>
+							  	<a href="/Hi-shoes/shop/productDetail.go" class="card-link stretched-link" style="display: none;">Card link</a>
 							  	
 							</div>
 						</div>
