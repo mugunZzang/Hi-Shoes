@@ -87,8 +87,58 @@
 			  		</ul>
 			  	</div>
 			  </div>
-			  <div class="tab-pane" id="brand2" role="tabpanel" aria-labelledby="profile-tab">푸시가 된다면 이 문구가 보일 것이다.</div>
-			  <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab">3</div>
+			  <div class="tab-pane" id="brand2" role="tabpanel" aria-labelledby="profile-tab">
+			  	<div>
+			  		<ul class="">
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/9090_detail_076.jpg">
+			  				</a>
+			  			</li>
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/9082_detail_091.jpg">
+			  				</a>
+			  			</li>
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/9081_detail_03.jpg">
+			  				</a>
+			  			</li>
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/9080_detail_039.jpg">
+			  				</a>
+			  			</li>
+			  		</ul>
+			  	</div>
+			  </div>
+			  <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab">
+			  	<div>
+			  		<ul class="">
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/68639_1695633642289.jpg">
+			  				</a>
+			  			</li>
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/17488_1707870306485.jpg">
+			  				</a>
+			  			</li>
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/00631_1751870842066.jpg">
+			  				</a>
+			  			</li>
+			  			<li class="">
+			  				<a href="#">
+			  					<img alt="상품" src="<%=ctxPath%>/images/67001_1706255553897.jpg">
+			  				</a>
+			  			</li>
+			  		</ul>
+			  	</div>
+			  </div>
 			</div>
 		</section>
 	</div>	
