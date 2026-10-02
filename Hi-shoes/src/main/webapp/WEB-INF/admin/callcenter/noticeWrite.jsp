@@ -10,7 +10,32 @@
 
 <script type="text/javascript">
 	
+	
+function goWriter() {
+	
+	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
+	
+	let b_requiredInfo = true;
+	
+	$('input.requiredInfo').each(function(index, elmt){
+		const data = $(elmt).val().trim();
+		if(data == "") {
+			alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.-2");
+			b_requiredInfo = false;
+			return false; // break; 라는 뜻이다. 
+		}
+	});
+	
+	if(!b_requiredInfo) {
+		return; // goWriter() 함수를 종료한다. 
+	}
+	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
+  	const frm =	document.noticeWriteFrm;
 
+    frm.method = "post"; 
+    frm.submit();
+	
+}
 
 </script>
 <div class="container-fluid"
@@ -62,7 +87,7 @@
                 padding: 25px;">
                 
                 <div class="col-md-12">
-      <form name="noticeWriteFrm">
+      <form name="noticeWriteFrm" enctype="multipart/form-data">
           <table style="width: 100%; border-collapse: separate; border-spacing: 20px 5px;">
              <tbody>
                 
@@ -70,14 +95,14 @@
                     <td style="font-size:16pt;">글제목</td>
                     <td>
                        <input type="text" name="nsubject"  style="width: 800px; height: 40px;" maxlength="100" class="requiredInfo" />
-                       <span class="error text-danger">글제목은 필수입력 사항입니다.</span>
+                       <span class="error text-danger" style="display:none;">글제목은 필수입력 사항입니다.</span>
                     </td>
                 </tr>
                 
                 <tr>
                     <td class="align-top" style="font-size:16pt;">글내용</td>
                     <td>
-                       <textarea name="contents"
+                       <textarea name="ncontents"
                           style="width: 800px; height: 500px;"
                           maxlength="1000"></textarea>
                     </td>
@@ -92,7 +117,7 @@
 
                 <tr>
                     <td colspan="2" class="text-center">
-                       <input type="button" class="btn btn-secondary btn-lg me-5" value="작성하기" onclick="goRegister()" />
+                       <input type="button" class="btn btn-secondary btn-lg me-5" value="작성하기" onclick="goWriter()" />
                     </td>
                 </tr>
                  

@@ -13,4 +13,7 @@ public interface FaqDAO {
 	// === 전체 페이지 개수 ===
 	int getTotalCountOrder() throws Exception;
 
+	// faq 입력해주기
+	int faqInsert(FaqDTO fdto) throws Exception;
+
 }

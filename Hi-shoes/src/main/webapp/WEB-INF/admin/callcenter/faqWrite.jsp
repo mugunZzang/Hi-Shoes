@@ -8,6 +8,37 @@
 
 <jsp:include page="../adminHeader.jsp"/>
 
+<script type="text/javascript">
+	
+	
+function goWriter() {
+	
+	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
+	
+	let b_requiredInfo = true;
+	
+	$('input.requiredInfo').each(function(index, elmt){
+		const data = $(elmt).val().trim();
+		if(data == "") {
+			alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.-2");
+			b_requiredInfo = false;
+			return false; // break; 라는 뜻이다. 
+		}
+	});
+	
+	if(!b_requiredInfo) {
+		return; // goWriter() 함수를 종료한다. 
+	}
+	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
+  	const frm =	document.faqWriteFrm;
+
+    frm.method = "post"; 
+    frm.submit();
+	
+}
+
+</script>
+
 <div class="container-fluid"
      id="container"
      style="position: relative;
@@ -58,15 +89,15 @@
                 
                 <div class="col-md-12">
       <form name="faqWriteFrm">
-      	  <select name="category" style="width: 200px; height: 40px; margin-left:104px;">
+      	  <select name="category" class="requiredInfo" style="width: 200px; height: 40px; margin-left:120px;">
 			        <option value="">카테고리 선택</option>
-			        <option value="register">가입/탈퇴</option>
-			        <option value="change">정보변경</option>
-			        <option value="pay">결제</option>
-			        <option value="order">주문</option>
-			        <option value="cancle">취소</option>
-			        <option value="pinfo">상품정보</option>
-			        <option value="delivery">배송</option>
+			        <option value="가입/탈퇴">가입/탈퇴</option>
+			        <option value="정보변경">정보변경</option>
+			        <option value="결제">결제</option>
+			        <option value="주문">주문</option>
+			        <option value="취소">취소</option>
+			        <option value="상품정보">상품정보</option>
+			        <option value="배송">배송</option>
 		  </select>
 		  <span class="error text-danger" >카테고리는 필수입력 사항입니다.</span>
           <table style="width: 100%; border-collapse: separate; border-spacing: 20px 5px;">
@@ -75,7 +106,7 @@
                 <tr>
                     <td style="font-size:16pt;">글제목</td>
                     <td>
-                       <input type="text" name="nsubject"  style="width: 800px; height: 40px;" maxlength="100" class="requiredInfo" />
+                       <input type="text" name="fsubject"  style="width: 800px; height: 40px;" maxlength="100" class="requiredInfo" />
                        <span class="error text-danger">글제목은 필수입력 사항입니다.</span>
                     </td>
                 </tr>
@@ -83,7 +114,7 @@
                 <tr>
                     <td class="align-top" style="font-size:16pt;">글내용</td>
                     <td>
-                       <textarea name="contents"
+                       <textarea name="fcontents"
                           style="width: 800px; height: 500px;"
                           maxlength="1000"></textarea>
                     </td>
@@ -91,7 +122,7 @@
 
                 <tr>
                     <td colspan="2" class="text-center">
-                       <input type="button" class="btn btn-secondary btn-lg me-5" value="작성하기" onclick="goRegister()" />
+                       <input type="button" class="btn btn-secondary btn-lg me-5" value="작성하기" onclick="goWriter()" />
                     </td>
                 </tr>
                  

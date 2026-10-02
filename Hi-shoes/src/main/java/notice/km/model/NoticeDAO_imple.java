@@ -157,4 +157,30 @@ public class NoticeDAO_imple implements NoticeDAO {
 	
 	}// end of public int getTotalCountOrder() throws Exception
 
+	// 공지사항에 넣어주기
+	@Override
+	public int noticeInsert(NoticeDTO ndto) throws Exception {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " insert into tbl_notice (nnum, nsubject, ncontents, nimage) "
+					  +  " values (SEQ_NNUM.nextval,?,?,?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, ndto.getNsubject());
+			pstmt.setString(2, ndto.getNsubject());
+			pstmt.setString(3, ndto.getNimage());
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
 }

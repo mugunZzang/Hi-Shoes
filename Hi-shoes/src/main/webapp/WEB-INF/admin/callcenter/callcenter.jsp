@@ -8,11 +8,15 @@
 
 <script type="text/javascript">
 
-
-
-
-
-
+$(function(){
+	
+	
+	
+	
+	
+	
+	
+}); // end of $(function(){
 
 function goSearch(frm, type) {
 
@@ -111,7 +115,7 @@ function goSearch(frm, type) {
           	<tbody>
             	<c:if test="${not empty requestScope.noticeList}">
 			        <c:forEach var="notice" items="${noticeList}" varStatus="status">
-			            <tr>
+			            <tr class="noticeInfo">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
@@ -142,7 +146,7 @@ function goSearch(frm, type) {
     <!-- FAQ -->
     <div class="tab-pane fade ${tab == 'faq' ? 'show active' : ''}" id="faq">
     	<form name="faq_search_frm">
-			<select name="searchType" onchange="this.form.submit()">
+			<select name="searchType">
 				<option value="">검색대상</option>
 				<option value="register">가입/탈퇴</option>
 				<option value="change">정보변경</option>
@@ -153,6 +157,11 @@ function goSearch(frm, type) {
 				<option value="delivery">배송</option>
 			</select>
 			&nbsp;
+			<button type="button"
+            class="btn btn-secondary"
+            onclick="goSearch(this.form, 'faq')">
+        		검색
+    		</button>
 		</form>
         <table class="table" style="width: 100%;">
           <thead class="table-primary">
@@ -167,7 +176,7 @@ function goSearch(frm, type) {
             	<c:if test="${not empty requestScope.faqList}">
             	
 			        <c:forEach var="faq" items="${requestScope.faqList}" varStatus="status">
-			            <tr>
+			            <tr class="faqInfo">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
@@ -209,7 +218,7 @@ function goSearch(frm, type) {
 			
 			<input type="text" name="searchWord"/>
 			
-			<button type="button" class="btn btn-secondary" onclick="goSearch(this.form,'qestion')">검색</button>
+			<button type="button" class="btn btn-secondary" onclick="goSearch(this.form,'question')">검색</button>
 		</form>
         <table class="table" style="width: 100%;">
           <thead class="table-primary">
@@ -224,7 +233,7 @@ function goSearch(frm, type) {
             <tbody>
             	<c:if test="${not empty requestScope.questionList}">
 			        <c:forEach var="question" items="${requestScope.questionList}" varStatus="status">
-			            <tr>
+			            <tr class="questionInfo">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>

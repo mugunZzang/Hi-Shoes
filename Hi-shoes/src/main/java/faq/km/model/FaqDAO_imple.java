@@ -145,4 +145,31 @@ public class FaqDAO_imple implements FaqDAO {
 		   return totalCountOrder;
 	}// public int getTotalCountOrder() throws Exception
 
+
+	// faq 입력해주기
+	@Override
+	public int faqInsert(FaqDTO fdto) throws Exception {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " insert into tbl_faq (fnum, fsubject, fcontents, fcategory) "
+					  +  " values (SEQ_fNUM.nextval,?,?,?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, fdto.getFsubject());
+			pstmt.setString(2, fdto.getFsubject());
+			pstmt.setString(3, fdto.getFcategory());
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
 }
