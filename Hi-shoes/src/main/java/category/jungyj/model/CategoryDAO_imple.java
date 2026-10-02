@@ -79,4 +79,52 @@ public class CategoryDAO_imple implements CategoryDAO {
 
 	} // end of public List<CategoryDTO> selectCategoryList() throws SQLException--------------------------
 
+	
+	// 카테고리 등록(INSERT)
+	@Override
+	public int categoryRegister(String catename) throws SQLException {
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " INSERT INTO tbl_category (catenum, catename)  "
+					   + " VALUES (SEQ_CATENUM.nextval, ? ) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, catename);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+	} // end of public int categoryRegister(String catename) throws SQLException--------------------------
+
+	
+	// 카테고리 삭제(DELETE)
+	@Override
+	public int categoryDelete(String cateno) throws SQLException {
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " DELETE FROM tbl_category "
+					   + " WHERE catenum = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, Integer.parseInt(cateno));
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+	} // end of public int categoryDelete(String cateno) throws SQLException--------------------------
+
 }

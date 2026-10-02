@@ -264,7 +264,7 @@
 			        // 작업 버튼을 다시 수정 / 삭제 버튼으로 변경
 			        row.find("td").eq(0).html(
 			            "<button type='button' class='btn btn-outline-secondary btn-edit'>수정</button> " +
-			            "<button type='button' class='btn btn-outline-danger'>삭제</button>"
+			            "<button type='button' class='btn btn-outline-danger btn-delete'>삭제</button>"
 			        );
 
 			        // input을 수정된 값으로 일반 text로 변경
@@ -325,6 +325,158 @@
 	        });
 
 	    });
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    //=============================================================================================================
+	    	
+	    // 카테고리 조회 및 등록 버튼 클릭시
+	    $(document).on("click", "#btnCategoryModal", function(){
+
+	        // 1. 등록 입력창/에러 메시지 초기화
+	        $("#newCategoryName").val("");
+	        $("#categoryErrMsg").addClass("d-none").text("");
+	        
+	        // 2. 항상 조회 탭으로 초기화
+	        bootstrap.Tab.getOrCreateInstance(document.getElementById("tab-list")).show();
+
+	        // 3. 모달 열기 전에 목록 먼저 조회
+	        loadCategoryList();
+
+	        // 4. 모달 열기
+	        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("categoryModal"));
+	        modal.show();
+	    });	
+	    
+	    
+	    //======================================================================
+	    	
+	    // 카테고리 등록 버튼 클릭시 이벤트 발생
+	    $(document).on("click", "#btnAddCategory", function(){
+			const catename = $("#newCategoryName").val().trim();
+			
+			// 유효성 검사
+			// 공백인 경우
+			if(catename == ""){
+				$("#categoryErrMsg").removeClass("d-none").text("카테고리명을 입력하세요.");
+		        $("#newCategoryName").focus();
+		        return;
+			}
+			
+			// 한글만 가능
+		    const regExp_category = /^[가-힣]+$/;
+		    if(!regExp_category.test(catename)){
+		        $("#categoryErrMsg").removeClass("d-none").text("카테고리명은 한글만 입력할 수 있습니다.");
+		        $("#newCategoryName").focus();
+		        return;
+		    }
+		    
+		    // 검사 통과 시 에러 메시지 숨기고 AJAX 진행
+		    $("#categoryErrMsg").addClass("d-none").text("");
+			
+		    
+			// ======================= ajax 요청 보내기 =================================
+		    $.ajax({
+				url: "<%= ctx_Path%>/admin/category/categoryRegister.go",
+				type: "post",
+				data: {
+					"catename": catename
+				},
+				dataType: "json",
+				success: function(json){
+					
+//					console.log(json);   1 나옴
+					if(json.result == 1){
+
+				        // 1) 입력창/에러 메시지 초기화
+				        $("#newCategoryName").val("");
+				        $("#categoryErrMsg").addClass("d-none").text("");
+
+				        // 2) 조회 탭으로 이동
+				        bootstrap.Tab.getOrCreateInstance(document.getElementById("tab-list")).show();
+
+				        // 3) 목록 다시 조회 → 테이블 갱신
+				        loadCategoryList();
+					} else {
+				        $("#categoryErrMsg").removeClass("d-none").text("카테고리 등록에 실패했습니다.");
+				    }
+					
+				},
+				error: function(request, status, error){
+					alert("code: " + request.status +"\nmessage: " + request.responseText +"\nerror: " + error);
+				}
+				
+		    });
+			
+	    });	
+	    
+	    //===========================================================================================================
+	    	
+	   // 카테고리 삭제 버튼 클릭시
+	   $(document).on("click", "#categoryTbl .btn-category-delete", function(){
+
+	        const row = $(this).closest("tr");
+	        const cateno = row.find(".cate-name").data("cateno");
+	        const catename = row.find(".cate-name").text().trim();
+
+	        if(!confirm("'" + catename + "' 카테고리를 삭제하시겠습니까?")){
+	            return;
+	        }
+/*
+	        console.log("삭제할 제품명 :", pname);
+	        삭제할 제품명 : 핸드볼 스페지알 로우 프로
+	        삭제할 제품명 : 플렉스 워크
+*/
+
+	        $.ajax({
+				url: "<%= ctx_Path%>/admin/category/categoryDelete.go",
+				type: "post",
+				data: {
+					"cateno": cateno
+				},
+				dataType: "json",
+				success: function(json){
+
+//					console.log(json);    1 나옴
+
+					if(json.result == 1){
+
+					    row.remove();   // 해당 행만 화면에서 제거
+
+					    // 남은 행이 없으면 안내 문구 표시
+					    if($("#categoryTbl tbody tr").length === 0){
+					        $("#categoryTbl tbody").html(
+					            "<tr>" +
+					                "<td colspan='3' class='text-center align-middle'>" +
+					                    "<span style='color:red; font-weight:bold;'>등록된 카테고리가 없습니다.</span>" +
+					                "</td>" +
+					            "</tr>"
+					        );
+					    }
+					    
+					} else{
+						console.log("카테고리 삭제 실패");
+					}
+
+					
+				},
+				error: function(request, status, error){
+					alert("code: " + request.status +"\nmessage: " + request.responseText +"\nerror: " + error);
+				}
+	        
+	        });
+	        	
+			
+		   
+	   });
+	    
+	    
+	   //===========================================================================================================
+	    	
 		
 	});  // end of $(function(){})----------------------------
 	
@@ -376,7 +528,7 @@
 						html += "<tr>" +
 							"<td class='text-center align-middle'>" +
 								"<button type='button' class='btn btn-outline-secondary btn-edit'>수정</button> " +
-								"<button type='button' class='btn btn-outline-danger'>삭제</button>" +
+								"<button type='button' class='btn btn-outline-danger btn-delete'>삭제</button>" +
 							"</td>" +
 							"<td class='text-center align-middle'>" + item.pname + "</td>" +
 							"<td class='text-center align-middle'>" + item.catename + "</td>" +
@@ -391,6 +543,73 @@
 				// 테이블과 페이지바 교체
 				$("#catalogueTbl tbody").html(html);
 				$("#pageBar").html(json.pageBar);
+			},
+
+			error: function(request, status, error){
+				alert(
+					"code: " + request.status +
+					"\nmessage: " + request.responseText +
+					"\nerror: " + error
+				);
+			}
+		});
+	}
+	
+	//======================================================================================================
+		
+		
+		
+	function loadCategoryList(){
+		$.ajax({
+			url: "<%= ctx_Path %>/admin/category/categoryList.go",
+			method: "get",
+			async: true,
+			dataType: "json",
+
+			success: function(json){
+//				console.log(json);
+				// {categoryList: Array(5)}
+				
+				
+			    let html = "";
+
+			    if(json.categoryList.length === 0){
+			        html += "<tr>" +
+			                    "<td colspan='3' class='text-center align-middle'>" +
+			                        "<span style='color:red; font-weight:bold;'>등록된 카테고리가 없습니다.</span>" +
+			                    "</td>" +
+			                "</tr>";
+			    }
+			    else {
+			        $.each(json.categoryList, function(index, item){
+/*
+			        	console.log(item.cateNum);
+			        	console.log(item.cateName);
+						1
+						운동화
+						2
+						스니커즈
+						3
+						구두
+						4
+						부츠
+						5
+						샌들
+						
+*/
+			            html += "<tr>" +
+			                        "<td class='text-center align-middle'>" + (index + 1) + "</td>" +
+			                        "<td class='text-center align-middle cate-name' data-cateno='" + item.cateNum + "'>" +
+			                            item.cateName +
+			                        "</td>" +
+			                        "<td class='text-center align-middle'>" +
+			                            "<button type='button' class='btn btn-sm btn-outline-danger btn-category-delete'>삭제</button>" +
+			                        "</td>" +
+			                    "</tr>";
+			        });
+			    }
+
+			    $("#categoryTbl tbody").html(html);
 			},
 
 			error: function(request, status, error){
@@ -497,6 +716,21 @@
 			</form>
 		</div>
 		
+    </div>
+    
+    <div>
+    	<button type="button"
+				class="btn btn-secondary"
+				onclick="location.href='<%= ctx_Path %>/admin/catalogueRegister.go'">
+				    카탈로그 등록
+		</button>
+	<!-- 버튼 -->
+	<button type="button" 
+	        class="btn btn-secondary" 
+	        id="btnCategoryModal">
+	    카테고리 조회 및 등록
+	</button>
+	
     </div>
 
 
@@ -648,6 +882,83 @@
 	
 
 </div>
+
+	<!-- 카테고리 모달 -->
+	<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="categoryModalLabel">카테고리 목록</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      
+				
+			
+			  <!-- 탭 메뉴 -->
+			  <ul class="nav nav-tabs mb-3" id="categoryTab" role="tablist">
+			    <li class="nav-item" role="presentation">
+			      <button class="nav-link active" id="tab-list" data-bs-toggle="tab"
+			              data-bs-target="#pane-list" type="button" role="tab">
+			        카테고리 조회
+			      </button>
+			    </li>
+			    <li class="nav-item" role="presentation">
+			      <button class="nav-link" id="tab-register" data-bs-toggle="tab"
+			              data-bs-target="#pane-register" type="button" role="tab">
+			        카테고리 등록
+			      </button>
+			    </li>
+			  </ul>
+			
+			  <!-- 탭 내용 -->
+			  <div class="tab-content">
+			
+			    <!-- 조회 화면 -->
+			    <div class="tab-pane fade show active" id="pane-list" role="tabpanel">
+			      <div id="loadingSpinner" class="text-center my-4 d-none">
+			        <div class="spinner-border text-primary" role="status"></div>
+			      </div>
+			        <table class="table table-bordered" id="categoryTbl">
+				    <colgroup>
+				      <col style="width: 15%;">
+				      <col style="width: 65%;">
+				      <col style="width: 20%;">
+				    </colgroup>
+				    <thead>
+				      <tr>
+				        <th class="text-center align-middle">번호</th>
+				        <th class="text-center align-middle">카테고리명</th>
+				        <th class="text-center align-middle">작업</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <!-- JS로 동적 생성 -->
+				    </tbody>
+				  </table>
+			    </div>
+			
+			    <!-- 등록 화면 -->
+			    <div class="tab-pane fade" id="pane-register" role="tabpanel">
+			      <div class="mb-3">
+			        <label for="newCategoryName" class="form-label">카테고리명</label>
+			        <input type="text" id="newCategoryName" class="form-control"
+			               maxlength="100" placeholder="새 카테고리명을 입력하세요">
+			        <div class="form-text text-danger d-none" id="categoryErrMsg"></div>
+			      </div>
+			      <div class="text-end">
+			        <button type="button" class="btn btn-primary" id="btnAddCategory">등록</button>
+			      </div>
+			    </div>
+			
+			  </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 
 <jsp:include page="../adminFooter.jsp" />

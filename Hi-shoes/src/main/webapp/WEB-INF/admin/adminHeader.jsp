@@ -430,10 +430,10 @@ body.sidebar-ready #container {
                    class="<%= currentUri.contains("catalogueList") ? "active" : "" %>">카탈로그 목록</a>
                 <a href="<%= ctxPath %>/admin/catalogueRegister.go"
                    class="<%= currentUri.contains("catalogueRegister") ? "active" : "" %>">카탈로그 등록</a>
-                <a href="<%= ctxPath %>/"
-                   class="<%= currentUri.contains("") ? "active" : "" %>">발주 목록</a>
-                <a href="<%= ctxPath %>/"
-                   class="<%= currentUri.contains("") ? "active" : "" %>">발주 등록</a>     
+                <a href="<%= ctxPath %>/admin/purchaseList.go"
+                   class="<%= currentUri.contains("purchaseList") ? "active" : "" %>">발주 목록</a>
+                <a href="<%= ctxPath %>/admin/purchaseRegister.go"
+                   class="<%= currentUri.contains("purchaseRegister") ? "active" : "" %>">발주 등록</a>     
             </div>
         </div>
 
