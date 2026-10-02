@@ -56,8 +56,8 @@
 	else if(currentUri.contains("/product")) {
 	    adminMenu = "product";
 	}
-	else if(currentUri.contains("/supply")) {
-	    adminMenu = "supply";
+	else if(currentUri.contains("/supplier")) {
+	    adminMenu = "supplier";
 	}
 	else if(currentUri.contains("/catalogue")) {
 	    adminMenu = "purchase";
@@ -407,10 +407,10 @@ body.sidebar-ready #container {
         <div class="menu-group">
             <button type="button" class="menu-group-btn"
                     data-bs-toggle="collapse" data-bs-target="#menuSupply"
-                    aria-expanded="<%= "supply".equals(adminMenu) %>">
+                    aria-expanded="<%= "supplier".equals(adminMenu) %>">
                 공급업체 관리 <i class="fa-solid fa-chevron-down menu-arrow"></i>
             </button>
-            <div id="menuSupply" class="collapse menu-sub <%= "supply".equals(adminMenu) ? "show" : "" %>">
+            <div id="menuSupply" class="collapse menu-sub <%= "supplier".equals(adminMenu) ? "show" : "" %>">
                 <a href="<%= ctxPath %>/admin/supplyList.go"
                    class="<%= currentUri.contains("supplyList") ? "active" : "" %>">공급업체 목록</a>
                 <a href="<%= ctxPath %>/admin/supplyRegister.go"

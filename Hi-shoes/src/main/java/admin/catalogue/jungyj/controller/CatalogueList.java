@@ -1,4 +1,4 @@
-package catalogue.jungyj.controller;
+package admin.catalogue.jungyj.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import catalogue.jungyj.model.CatalogueDAO;
-import catalogue.jungyj.model.CatalogueDAO_imple;
+import admin.catalogue.jungyj.model.CatalogueDAO;
+import admin.catalogue.jungyj.model.CatalogueDAO_imple;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

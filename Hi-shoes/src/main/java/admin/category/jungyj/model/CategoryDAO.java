@@ -1,9 +1,9 @@
-package category.jungyj.model;
+package admin.category.jungyj.model;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import category.jungyj.domain.CategoryDTO;
+import admin.category.jungyj.domain.CategoryDTO;
 
 public interface CategoryDAO {
 

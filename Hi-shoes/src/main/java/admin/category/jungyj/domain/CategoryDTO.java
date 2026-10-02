@@ -1,4 +1,4 @@
-package category.jungyj.domain;
+package admin.category.jungyj.domain;
 
 public class CategoryDTO {
     private int cateNum;        //NUMBER   카테고리코드

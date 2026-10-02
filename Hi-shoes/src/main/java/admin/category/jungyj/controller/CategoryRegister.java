@@ -1,14 +1,14 @@
-package category.jungyj.controller;
+package admin.category.jungyj.controller;
 
 import org.json.JSONObject;
 
-import category.jungyj.model.CategoryDAO;
-import category.jungyj.model.CategoryDAO_imple;
+import admin.category.jungyj.model.CategoryDAO;
+import admin.category.jungyj.model.CategoryDAO_imple;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class CategoryDelete extends AbstractController {
+public class CategoryRegister extends AbstractController {
 	
 	private CategoryDAO catedao = new CategoryDAO_imple();
 
@@ -18,9 +18,10 @@ public class CategoryDelete extends AbstractController {
 		String method = request.getMethod();
 		
 		if("POST".equals(method)) {
-			String cateno = request.getParameter("cateno");
 			
-			int result = catedao.categoryDelete(cateno);
+			String catename = request.getParameter("catename");
+			
+			int result = catedao.categoryRegister(catename);
 			
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("result", result);
@@ -29,8 +30,9 @@ public class CategoryDelete extends AbstractController {
 
             super.setRedirect(false);
             super.setViewPage("/WEB-INF/jsonview.jsp");
+			
 		}
-
+		
 	}
 
 }

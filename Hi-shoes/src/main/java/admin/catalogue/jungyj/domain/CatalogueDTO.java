@@ -1,4 +1,4 @@
-package catalogue.jungyj.domain;
+package admin.catalogue.jungyj.domain;
 
 public class CatalogueDTO {
 

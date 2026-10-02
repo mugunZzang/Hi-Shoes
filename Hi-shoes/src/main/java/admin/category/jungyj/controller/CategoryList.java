@@ -1,30 +1,31 @@
-package category.jungyj.controller;
+package admin.category.jungyj.controller;
+
+import java.util.List;
 
 import org.json.JSONObject;
 
-import category.jungyj.model.CategoryDAO;
-import category.jungyj.model.CategoryDAO_imple;
+import admin.category.jungyj.domain.CategoryDTO;
+import admin.category.jungyj.model.CategoryDAO;
+import admin.category.jungyj.model.CategoryDAO_imple;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class CategoryRegister extends AbstractController {
-	
-	private CategoryDAO catedao = new CategoryDAO_imple();
+public class CategoryList extends AbstractController {
 
+	private CategoryDAO catedao = new CategoryDAO_imple();
+	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String method = request.getMethod();
 		
-		if("POST".equals(method)) {
+		if("GET".equals(method)) {
 			
-			String catename = request.getParameter("catename");
-			
-			int result = catedao.categoryRegister(catename);
+			List<CategoryDTO> categoryList = catedao.selectCategoryList();
 			
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("result", result);
+            jsonObj.put("categoryList", categoryList);
             
             request.setAttribute("json", jsonObj.toString());
 
@@ -32,7 +33,7 @@ public class CategoryRegister extends AbstractController {
             super.setViewPage("/WEB-INF/jsonview.jsp");
 			
 		}
-		
+
 	}
 
 }

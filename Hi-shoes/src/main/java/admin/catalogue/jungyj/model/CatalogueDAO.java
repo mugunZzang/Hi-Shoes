@@ -1,4 +1,4 @@
-package catalogue.jungyj.model;
+package admin.catalogue.jungyj.model;
 
 import java.sql.SQLException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package catalogue.jungyj.model;
+package admin.catalogue.jungyj.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

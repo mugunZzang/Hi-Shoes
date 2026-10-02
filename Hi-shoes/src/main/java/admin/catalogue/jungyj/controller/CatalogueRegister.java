@@ -1,14 +1,14 @@
-package catalogue.jungyj.controller;
+package admin.catalogue.jungyj.controller;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import catalogue.jungyj.model.CatalogueDAO;
-import catalogue.jungyj.model.CatalogueDAO_imple;
-import category.jungyj.domain.CategoryDTO;
-import category.jungyj.model.CategoryDAO;
-import category.jungyj.model.CategoryDAO_imple;
+import admin.catalogue.jungyj.model.CatalogueDAO;
+import admin.catalogue.jungyj.model.CatalogueDAO_imple;
+import admin.category.jungyj.domain.CategoryDTO;
+import admin.category.jungyj.model.CategoryDAO;
+import admin.category.jungyj.model.CategoryDAO_imple;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

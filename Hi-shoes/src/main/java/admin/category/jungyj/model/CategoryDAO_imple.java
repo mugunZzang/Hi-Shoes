@@ -1,4 +1,4 @@
-package category.jungyj.model;
+package admin.category.jungyj.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +12,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import category.jungyj.domain.CategoryDTO;
+import admin.category.jungyj.domain.CategoryDTO;
 
 public class CategoryDAO_imple implements CategoryDAO {
 
