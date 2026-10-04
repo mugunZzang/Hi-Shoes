@@ -1,12 +1,14 @@
 package admin.supplier.jungyj.model;
 
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -89,7 +91,7 @@ public class SupplierDAO_imple implements SupplierDAO {
 //				sdto.setSemail(aes.decrypt( rs.getString("semail")));
 				
 			} // end of while--------------------
-			
+
 			
 		} finally {
 			close();
@@ -97,5 +99,37 @@ public class SupplierDAO_imple implements SupplierDAO {
 		
 		return supplierList;
 	} // end of public List<SupplierDTO> selectSuppliernopaging() throws SQLException-------------------------------
+
+	
+	// 공급업체 등록(INSERT)
+	@Override
+	public int supplierRegister(Map<String, String> paraMap) throws SQLException {
+	    int result = 0;
+	    
+	    try {
+			conn = ds.getConnection();
+			
+			String sql = " INSERT INTO tbl_supplier (supname, sbusinum, ceo, smobile, semail) "
+					   + " VALUES (?, ?, ?, ?, ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("supplyName"));
+			pstmt.setInt(2, Integer.parseInt(paraMap.get("bizNo")));
+			pstmt.setString(3, paraMap.get("ceoName"));
+			pstmt.setString(4, aes.encrypt(paraMap.get("supplyTel")));
+			pstmt.setString(5, aes.encrypt(paraMap.get("supplyEmail")));
+	    	
+			result = pstmt.executeUpdate();
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	    
+		return result;
+	} // end of public int supplierRegister(Map<String, String> paraMap) throws SQLException-------------------------
 
 }

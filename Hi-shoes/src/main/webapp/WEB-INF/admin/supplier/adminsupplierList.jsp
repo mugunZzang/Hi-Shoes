@@ -11,11 +11,10 @@
     
 <jsp:include page="../adminHeader.jsp" />
 
-
 <script type="text/javascript">
-
+	const ctx_Path = "<%= ctx_Path %>";
 </script>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/supplier/supplier.js"></script>
 
 <div class="container-fluid"
      id="container"
@@ -76,7 +75,7 @@
 	<div>
     	<button type="button"
 				class="btn btn-secondary"
-				onclick="location.href='<%= ctx_Path %>/admin/catalogueRegister.go'">
+				id="supplyRegisterModal">
 				    공급업체 등록
 		</button>
 
@@ -146,6 +145,67 @@
 
 	</nav> 
 
+</div>
 
+
+
+
+<!-- 공급업체 등록 모달 -->
+<div class="modal fade" id="supplyModal" tabindex="-1" aria-labelledby="supplyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="supplyModalLabel">공급업체 등록</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="supplyForm" novalidate>
+
+          <div class="mb-3">
+            <label for="supplyName" class="form-label">업체명 <span class="text-danger">*</span></label>
+            <input type="text" id="supplyName" class="form-control" maxlength="100"
+                   placeholder="한글/영어/특수문자 ( ) 만 가능 (최대 100자)">
+            <div class="invalid-feedback">업체명은 한글, 영어, 특수문자 ( ) 만 입력 가능하며 최대 100자입니다.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="bizNo" class="form-label">사업자등록번호 <span class="text-danger">*</span></label>
+            <input type="text" id="bizNo" class="form-control" maxlength="10" inputmode="numeric"
+                   placeholder="숫자 10자리 (- 제외)">
+            <div class="invalid-feedback">사업자등록번호는 숫자 10자리로 입력해주세요.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="ceoName" class="form-label">대표명 <span class="text-danger">*</span></label>
+            <input type="text" id="ceoName" class="form-control" maxlength="10"
+                   placeholder="한글/영어 (최대 10자)">
+            <div class="invalid-feedback">대표명은 한글, 영어만 입력 가능하며 최대 10자입니다.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="supplyTel" class="form-label">연락처 <span class="text-danger">*</span></label>
+            <input type="text" id="supplyTel" class="form-control" maxlength="11" inputmode="numeric"
+                   placeholder="숫자만 입력 (- 제외)">
+            <div class="invalid-feedback">연락처는 숫자만 입력해주세요. (9~11자리)</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="supplyEmail" class="form-label">회사 이메일 <span class="text-danger">*</span></label>
+            <input type="email" id="supplyEmail" class="form-control" maxlength="100"
+                   placeholder="example@company.com">
+            <div class="invalid-feedback">올바른 이메일 형식이 아닙니다.</div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" id="btnSupplySave">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <jsp:include page="../adminFooter.jsp" />
