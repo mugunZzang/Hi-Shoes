@@ -86,13 +86,19 @@ public class SupplierDAO_imple implements SupplierDAO {
 				SupplierDTO sdto = new SupplierDTO();
 				sdto.setSupname(rs.getString("supname"));
 				sdto.setSbusinum(rs.getInt("sbusinum"));
-				sdto.setSupname(rs.getString("ceo"));
-//				sdto.setSmobile(aes.decrypt(rs.getString("smobile")));
-//				sdto.setSemail(aes.decrypt( rs.getString("semail")));
+				sdto.setCeo(rs.getString("ceo"));
+				sdto.setSmobile(aes.decrypt(rs.getString("smobile")));
+				sdto.setSemail(aes.decrypt( rs.getString("semail")));
 				
+				supplierList.add(sdto);
 			} // end of while--------------------
 
-			
+			if(supplierList.size() > 0) {
+				System.out.println("[INFO] admin.supplier.jungyj.controller.SupplierList 공급업체 조회 성공");
+			}
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			close();
 		}

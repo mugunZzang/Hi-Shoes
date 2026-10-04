@@ -1,5 +1,7 @@
 $(function () {
 
+	
+	
     // 검증 규칙
     const RULES = {
         supplyName:  { regex: /^[가-힣a-zA-Z()\s]{1,100}$/,      },
@@ -83,10 +85,13 @@ $(function () {
 				"supplyEmail": $("#supplyEmail").val().trim()
 			},
 			dataType: "json",
-            success: function () {
-                alert("공급업체가 등록되었습니다.");
-                bootstrap.Modal.getInstance(document.getElementById("supplyModal")).hide();
-                // 목록 갱신 함수가 있다면 여기서 호출 (예: loadSupplyList();)
+            success: function (json) {
+				if (json.result == 1) {
+				    alert("공급업체가 등록되었습니다.");
+				    location.reload();      // GET으로 목록을 다시 불러옴
+				} else {
+				    alert("등록에 실패했습니다.");
+				}
             },
 			error: function(request, status, error){
 				alert("code: " + request.status +"\nmessage: " + request.responseText +"\nerror: " + error);
@@ -94,4 +99,62 @@ $(function () {
         });
     });
 
-});
+	
+	
+});  // end of $(function(){})---------------------------------------------------
+
+
+
+// 공급업체 목록 조회 (최초 로딩 / 페이지 이동 / 등록 후 갱신 공용)
+function loadSupplyList() {
+
+    $.ajax({
+        url: ctx_Path + "/admin/supplier/supplierList.go",
+        method: "get",
+		data: { "isAjax": "1" },
+        dataType: "json",
+        success: function (json) {
+
+            let html = "";
+
+            if (json.supplierList.length === 0) {
+                html += "<tr>" +
+                            "<td colspan='5' class='text-center align-middle'>" +
+                                "<span style='color:red; font-weight:bold;'>등록된 공급업체가 없습니다.</span>" +
+                            "</td>" +
+                        "</tr>";
+            }
+            else {
+                $.each(json.supplierList, function (index, item) {
+					
+					console.log("~~~ 확인용 item.supplyName: ", item.supplyName);
+					console.log("~~~ 확인용 formatBizNo(item.bizNo): ", formatBizNo(item.bizNo));
+					console.log("~~~ 확인용 item.ceoName: ", item.ceoName);
+					console.log("~~~ 확인용 item.supplyTel: ", item.supplyTel);
+					console.log("~~~ 확인용 item.supplyEmail: ", item.supplyEmail);
+                    html += "<tr>" +
+                                "<td class='text-center align-middle'>" + item.supplyName + "</td>" +
+                                "<td class='text-center align-middle'>" + formatBizNo(item.bizNo) + "</td>" +
+                                "<td class='text-center align-middle'>" + item.ceoName + "</td>" +
+                                "<td class='text-center align-middle'>" + item.supplyTel + "</td>" +
+                                "<td class='text-center align-middle'>" + item.supplyEmail + "</td>" +
+                            "</tr>";
+                });
+            }
+
+            $("#supplyTbl tbody").html(html);
+        },
+
+        error: function (request, status, error) {
+            alert("code: " + request.status +
+                  "\nmessage: " + request.responseText +
+                  "\nerror: " + error);
+        }
+    });
+}
+
+// 사업자등록번호 표시용 (1234567890 → 123-45-67890)
+function formatBizNo(no) {
+    if (!no || no.length !== 10) return no;
+    return no.replace(/(\d{3})(\d{2})(\d{5})/, "$1-$2-$3");
+}

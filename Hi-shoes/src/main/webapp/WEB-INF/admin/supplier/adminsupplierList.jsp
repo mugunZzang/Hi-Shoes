@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     
 
@@ -15,6 +16,19 @@
 	const ctx_Path = "<%= ctx_Path %>";
 </script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/supplier/supplier.js"></script>
+
+<style>
+    #supplyTbl thead th {
+        background-color: #f8f9fa;   /* Bootstrap 기본 연한 회색 */
+        font-size: 12pt;
+        font-weight: 600;
+    }
+    #supplyTbl tbody td {
+        font-size: 10pt;
+    }
+
+</style>
+
 
 <div class="container-fluid"
      id="container"
@@ -59,7 +73,14 @@
         </nav>
 
     </div>
-
+    
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <button type="button"
+                class="btn btn-secondary"
+                id="supplyRegisterModal">
+            공급업체 등록
+        </button>
+    </div>
 
     <!-- 실제 페이지 작업 영역 -->
     <div style="background-color: #ffffff;
@@ -71,79 +92,77 @@
                 margin-bottom: 50px;">
 
         <!-- 실제 관리자 페이지 내용 -->
-    
-	<div>
-    	<button type="button"
-				class="btn btn-secondary"
-				id="supplyRegisterModal">
-				    공급업체 등록
-		</button>
 
-    </div>
-
-
-
-        <!-- 실제 관리자 페이지 내용 -->
 	
-		<table class="table table-bordered"
-		       id="catalogueTbl">
 
-		    <colgroup>
-		        <col style="width: 20%;">
-		        <col style="width: 20%;">
-		        <col style="width: 20%;">
-		        <col style="width: 20%;">
-		        <col style="width: 20%;">
-		    </colgroup>
+        <table class="table table-bordered" id="supplyTbl">
 
-		    <thead>
-		        <tr>
-		            <th class="text-center align-middle">
-		                업체명
-		            </th>
+            <colgroup>
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 15%;">
+                <col style="width: 20%;">
+                <col style="width: 25%;">
+            </colgroup>
 
-		            <th class="text-center align-middle">
-		                사업자등록번호
-		            </th>
-
-		            <th class="text-center align-middle">
-		                대표명
-		            </th>
-
-		            <th class="text-center align-middle">
-		                연락처
-		            </th>
-
-		            <th class="text-center align-middle">
-		                회사이메일
-		            </th>
-
-		        </tr>
-		    </thead>
+            <thead>
+                <tr>
+                    <th class="text-center align-middle">업체명</th>
+                    <th class="text-center align-middle">사업자등록번호</th>
+                    <th class="text-center align-middle">대표명</th>
+                    <th class="text-center align-middle">연락처</th>
+                    <th class="text-center align-middle">회사이메일</th>
+                </tr>
+            </thead>
 		
 		    <tbody>
-				
+				<c:if test="${empty requestScope.supplierList}">
+			        <tr>
+			            <td colspan="5" class="text-center align-middle">
+			                <span style="color: red; font-weight: bold;">등록된 공급업체가 없습니다.</span>
+			            </td>
+			        </tr>
+			    </c:if>
+			
+			    <c:if test="${not empty requestScope.supplierList}">
+			        <c:forEach var="sdto" items="${requestScope.supplierList}">
+			            <tr>
+			                <td class="text-center align-middle"><c:out value="${sdto.supname}"/></td>
+			                <td class="text-center align-middle">
+			                    ${ fn:substring(sdto.sbusinum,0,3) }-${fn:substring(sdto.sbusinum,3,5)}-${fn:substring(sdto.sbusinum,5,10)}
+			                </td>
+			                <td class="text-center align-middle"><c:out value="${sdto.ceo}"/></td>
+			                <td class="text-center align-middle">
+							    <c:choose>
+							        <c:when test="${fn:length(sdto.smobile) == 11}">
+							            ${fn:substring(sdto.smobile,0,3)}-${fn:substring(sdto.smobile,3,7)}-${fn:substring(sdto.smobile,7,11)}
+							        </c:when>
+							        <c:when test="${fn:length(sdto.smobile) == 10}">
+							            <c:choose>
+							                <c:when test="${fn:startsWith(sdto.smobile,'02')}">
+							                    ${fn:substring(sdto.smobile,0,2)}-${fn:substring(sdto.smobile,2,6)}-${fn:substring(sdto.smobile,6,10)}
+							                </c:when>
+							                <c:otherwise>
+							                    ${fn:substring(sdto.smobile,0,3)}-${fn:substring(sdto.smobile,3,6)}-${fn:substring(sdto.smobile,6,10)}
+							                </c:otherwise>
+							            </c:choose>
+							        </c:when>
+							        <c:otherwise>
+							            <c:out value="${sdto.smobile}"/>
+							        </c:otherwise>
+							    </c:choose>
+							</td>
+			                <td class="text-center align-middle"><c:out value="${sdto.semail}"/></td>
+			            </tr>
+			        </c:forEach>
+			    </c:if>
+							
 		    </tbody>
 
 		</table>
 		
 	 
-</div>
-	<%-- === 페이지바 === --%>
-	<nav class="my-2">
-
-       <div style="display:flex;
-                   width:80%;
-                   margin:0 auto;
-                   margin-bottom:150px;">
-
-   	     <ul class="pagination" style="margin:auto;" id="pageBar">
-   	         ${requestScope.pageBar}
-   	     </ul>
-
-   	   </div>
-
-	</nav> 
+	</div>
 
 </div>
 

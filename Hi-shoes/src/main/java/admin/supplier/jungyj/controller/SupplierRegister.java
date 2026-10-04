@@ -1,7 +1,10 @@
 package admin.supplier.jungyj.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONObject;
 
 import admin.supplier.jungyj.model.SupplierDAO;
 import admin.supplier.jungyj.model.SupplierDAO_imple;
@@ -44,14 +47,26 @@ public class SupplierRegister extends AbstractController {
 			paraMap.put("supplyTel", supplyTel);
 			paraMap.put("supplyEmail", supplyEmail);
 			
-			
-			int result = sdao.supplierRegister(paraMap);
-			
-			if(result == 1) {
-				System.out.println("admin.supplier.jungyj.controller.SupllierRegister 공급업체 등록 성공");
-			} else {
+			try {
+				int result = sdao.supplierRegister(paraMap);
+				
+				if(result == 1) {
+					System.out.println("admin.supplier.jungyj.controller.SupllierRegister 공급업체 등록 성공");
+				}
+
+	            JSONObject jsonObj = new JSONObject();
+	            jsonObj.put("result", result);
+	            
+	            request.setAttribute("json", jsonObj.toString());
+	            
+			} catch(SQLException e) {
+				e.printStackTrace();
 				System.out.println("admin.supplier.jungyj.controller.SupllierRegister 공급업체 등록 실패");
 			}
+
+
+            super.setRedirect(false);
+            super.setViewPage("/WEB-INF/jsonview.jsp");
 		}
 
 	}

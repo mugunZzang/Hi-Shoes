@@ -2,6 +2,9 @@ package admin.supplier.jungyj.controller;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import admin.supplier.jungyj.domain.SupplierDTO;
 import admin.supplier.jungyj.model.SupplierDAO;
 import admin.supplier.jungyj.model.SupplierDAO_imple;
@@ -20,14 +23,15 @@ public class SupplierList extends AbstractController {
 		
 		if("GET".equals(method)) {
 			
-			// *** 페이징 처리를 안한 공급업체 목록 보여주기 *** //
-			List<SupplierDTO> memberList = sdao.selectSuppliernopaging();
-			
-			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/admin/supplier/adminsupplierList.jsp");
-			
-		}
+			// 페이징 처리 안 한 공급업체 목록 조회
+	        List<SupplierDTO> supplierList = sdao.selectSuppliernopaging();
+	        
+	        request.setAttribute("supplierList", supplierList);
 
+	        super.setRedirect(false);
+	        super.setViewPage("/WEB-INF/admin/supplier/adminsupplierList.jsp");
+	    }
+		
 	}
 
 }
