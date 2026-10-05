@@ -1,4 +1,4 @@
-package user.controller;
+package login.controller;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-public class UserLogin extends AbstractController {
+public class LoginMain extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		super.setRedirect(false); 
-		super.setViewPage("/WEB-INF/user/userLogin.jsp");	
+		super.setViewPage("/WEB-INF/login/login_cookie.jsp");	
 		
 	}
 

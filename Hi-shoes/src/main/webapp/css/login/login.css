@@ -1,0 +1,58 @@
+@charset "UTF-8";
+
+.title-wrap{
+	margin-bottom: 60px;
+	text-align:center;
+}
+
+.center-cont {
+	max-width: 596px;
+}
+
+.other-service ul li {
+	width: fit-content;
+	line-height: 1;
+}
+
+.other-service ul li:not(:last-child) {
+	border-right: 1px solid #7C7C7C;
+}
+
+.other-service ul li a {
+	font-weight: 400;
+	font-size: 14px;
+	color: #7C7C7C;
+}
+
+/* 모달 팝업 */
+.modal-title {
+	font-weight: 600;
+	font-size: 24px;
+	color: #1D1D1D;
+}
+
+/* 아이디 찾기 */
+.result-wrap span:first-child {	
+    color: #7c7c7c;
+    font-size: 15px;
+    font-weight: 400;	
+}
+
+.result-wrap span:last-child {	
+    font-size: 18px;
+    font-weight: 500;
+    color: #114232;
+}
+
+/* 비밀번호 찾기 */
+#temp-certificate .request-text {
+	font-weight:400;
+	font-size:15px;
+	color:#7C7C7C;
+}
+
+#temp-certificate .request-text span {
+	font-weight: 500;
+	color:#114232;
+}
+

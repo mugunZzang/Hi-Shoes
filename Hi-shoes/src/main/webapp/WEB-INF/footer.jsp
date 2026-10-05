@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+
 <%
     String ctxPath = request.getContextPath();
 %>   
@@ -48,6 +51,29 @@
 			</section>			
 		</div>
 	</footer>
+
+<%
+    // 본인의 DB 정보에 맞게 수정하세요.
+    String driver = "oracle.jdbc.driver.OracleDriver"; // MySQL 기준 (오라클은 oracle.jdbc.driver.OracleDriver)
+    String url = "jdbc:oracle:thin:@211.238.142.54:1521/XEPDB1";
+    String user = "SEMI_ORAUSER";
+    String password = "bclass";
+
+    Connection conn = null;
+
+    try {
+        Class.forName(driver);
+        conn = DriverManager.getConnection(url, user, password);
+        out.println("<h2>🎉 DB 연결 성공! 🎉</h2>");
+    } catch (Exception e) {
+        out.println("<h2>❌ DB 연결 실패 ❌</h2>");
+        out.println("<pre>");
+        e.printStackTrace(new java.io.PrintWriter(out));
+        out.println("</pre>");
+    } finally {
+        if(conn != null) try { conn.close(); } catch(Exception e) {}
+    }
+%>
 
 </body>
 </html>

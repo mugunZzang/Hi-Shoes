@@ -4,6 +4,7 @@
 
 
 /* reset */
+
 * {
 	font-family: "Noto Sans KR", sans-serif;
 	font-optical-sizing: auto;
@@ -26,6 +27,11 @@ body *{
 	transition: color .2s, background-color .2s;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+}
+
 a {
 	color: #7C7C7C;
 	text-decoration: none;
@@ -35,7 +41,68 @@ ul, li {
 	list-style:none;
 }
 
+
+/* Layout */
+
 .bodycont {
 	flex:1;
 }
 
+.section-tit {
+	font-weight: 600;
+	font-size: 30px;
+	color: #1D1D1D;
+}
+
+.form-control:focus, .form-check-input:focus {
+	border-color: #114232;
+	box-shadow: 0 0 0 .25rem rgba(17, 66, 50, .5);
+}
+
+.form-check-input:checked {
+	background-color: #114232;
+	border-color: #114232;
+}
+
+/* Button */
+
+.btn {
+	border: none;
+}
+
+.btn-primary {
+	background-color: rgba(17, 68, 50, .9);
+}
+
+.btn-info {
+	background-color: rgba(252, 220, 42, .9);	
+	color: #1D1D1D;
+}
+
+.btn-danger {
+	background-color: rgba(135, 169, 34, .9);	
+}
+
+.btn:hover, .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active, .btn:focus-visible {
+	background-color: rgba(17, 68, 50, 1);
+	border-color: rgba(17, 68, 50, 1);
+	box-shadow: 0 0 0 .25rem rgba(17, 66, 50, .5);
+} 
+
+.btn.btn-info:hover, .btn-check.btn-info:checked+.btn, .btn.btn-info.active, .btn.btn-info.show, .btn.btn-info:first-child:active, :not(.btn-check)+.btn.btn-info:active, .btn.btn-info:focus-visible {
+	background-color: rgba(252, 220, 42, 1);	
+	border-color: rgba(252, 220, 42, 1);
+	box-shadow: 0 0 0 .25rem rgba(252, 220, 42, .5 );
+	color: #1D1D1D;
+}
+
+.btn.btn-danger:hover, .btn-check.btn-danger:checked+.btn, .btn.btn-danger.active, .btn.btn-danger.show, .btn.btn-danger:first-child:active, :not(.btn-check)+.btn.btn-danger:active, .btn.btn-danger:focus-visible{
+	background-color: rgba(135, 169, 34, 1);	
+	border-color: rgba(135, 169, 34, 1);
+	box-shadow: 0 0 0 .25rem rgba(135, 169, 34, .5);
+}
+
+
+.btn-close:focus {
+	box-shadow: 0 0 0 .25rem rgba(17, 66, 50, .5);
+}

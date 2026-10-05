@@ -249,3 +249,11 @@ create table tbl_faq
 );
 
 CREATE SEQUENCE SEQ_FNUM;
+
+
+
+-------------------TEST-------------------
+select *
+from tbl_member;
+
+SHOW USER;
