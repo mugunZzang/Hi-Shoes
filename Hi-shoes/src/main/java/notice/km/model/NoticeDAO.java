@@ -11,9 +11,15 @@ public interface NoticeDAO {
 	List<NoticeDTO> select_notice_list(Map<String, String> paraMap) throws Exception;
 
 	// === 전체 페이지 개수 ===
-	int getTotalCountOrder() throws Exception;
+	int getTotalCountOrder(Map<String, String> paraMap) throws Exception;
 
 	// 공지사항에 넣어주기
 	int noticeInsert(NoticeDTO ndto) throws Exception;
+	
+	// 공지사항 하나 선택하기
+	NoticeDTO selectNoticeOne(Map<String, String> paraMap) throws Exception;
+
+	// 공지사항 수정하기
+	int noticeUpdate(NoticeDTO ndto) throws Exception;
 
 }

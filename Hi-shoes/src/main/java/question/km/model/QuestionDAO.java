@@ -10,6 +10,6 @@ public interface QuestionDAO {
 	List<Map<String,String>> select_question_list(Map<String, String> paraMap) throws Exception;
 
 	// === 전체 페이지 개수 ===
-	int getTotalCountOrder() throws Exception;
+	int getTotalCountOrder(Map<String, String> paraMap) throws Exception;
 
 }

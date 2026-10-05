@@ -130,7 +130,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 
 	// === 전체 페이지 개수 ===
 	@Override
-	public int getTotalCountOrder() throws Exception {
+	public int getTotalCountOrder(Map<String, String> paraMap) throws Exception {
 		
 		int totalCountOrder = 0;
 		   

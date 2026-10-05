@@ -300,108 +300,48 @@
     <div class="notice-write-box">
 
 
-        <form name="noticeWriteFrm"
-              method="post"
-              action=""
-              enctype="multipart/form-data">
-
-
-            <table class="notice-write-table">
-
-                <tbody>
-
-
-                    <!-- 제목 -->
-
-                    <tr>
-
-                        <th>
-                            글제목
-                        </th>
-
-                        <td>
-
-                            <input type="text"
-                                   name="nsubject"
-                                   class="notice-title-input"
-                                   maxlength="100"
-                                   placeholder="공지사항 제목을 입력해주세요.">
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- 내용 -->
-
-                    <tr>
-
-                        <th style="vertical-align: top; padding-top: 25px;">
-                            글내용
-                        </th>
-
-                        <td>
-
-                            <textarea name="ncontents"
-                                      class="notice-content-input"
-                                      maxlength="1000"
-                                      placeholder="공지사항 내용을 입력해주세요."></textarea>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- 이미지 -->
-
-                    <tr>
-
-                        <th>
-                            이미지
-                        </th>
-
-                        <td>
-
-                            <input type="file"
-                                   name="image"
-                                   class="notice-file-input"
-                                   accept="image/*">
-
-                        </td>
-
-                    </tr>
-
-
-                </tbody>
-
-            </table>
-
-
-            <!-- 버튼 -->
-
-            <div class="notice-button-area">
-
-                <button type="button"
-                        class="btn btn-primary notice-submit-btn"
-                        onclick="goWriter()">
-
-                    작성하기
-
-                </button>
-
-
-                <button type="button"
-                        class="btn btn-secondary notice-cancel-btn"
-                        onclick="goBack()">
-
-                    취소
-
-                </button>
-
-            </div>
-
-
-        </form>
+        <form name="noticeEditFrm"
+		      method="post"
+		      action="${pageContext.request.contextPath}/admin/callcenter/noticeEdit.go">
+		
+		    <input type="hidden" name="nnum" value="${requestScope.ndto.nnum}" />
+		
+		    <table class="table">
+		
+		        <tr>
+		            <th>제목</th>
+		            <td>
+		                <input type="text"
+		                       name="nsubject"
+		                       value="${requestScope.ndto.nsubject}"
+		                       class="form-control"
+		                       required />
+		            </td>
+		        </tr>
+		
+		        <tr>
+		            <th>내용</th>
+		            <td>
+		                <textarea name="ncontents"
+		                          class="form-control"
+		                          rows="15"
+		                          required>${requestScope.ndto.ncontents}</textarea>
+		            </td>
+		        </tr>
+		
+		    </table>
+		
+		    <button type="submit" class="btn btn-primary">
+		        수정하기
+		    </button>
+		
+		    <button type="button"
+		            class="btn btn-secondary"
+		            onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/callcenter.go?tab=notice'">
+		        취소
+		    </button>
+		
+		</form>
 
     </div>
 

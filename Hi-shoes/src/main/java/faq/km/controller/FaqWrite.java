@@ -11,47 +11,174 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class FaqWrite extends AbstractController {
 
-	private FaqDAO fdao = new FaqDAO_imple();
-	
-	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		String method = request.getMethod(); // "GET" 또는 "POST" 
-		
-		System.out.println("현재 method = " + method);
-		System.out.println("현재 URI = " + request.getRequestURI());
-		
-		if("GET".equals(method)) {
-			
-			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/admin/callcenter/faqWrite.jsp");
-		}
-		else {
-			// post 방식으로 받아옴
-			
-			String fsubject = request.getParameter("fsubject");
-			String fcontents = request.getParameter("fcontents");
-			String category = request.getParameter("category");
-			
-			System.out.println(category);
-		    
-		    FaqDTO fdto = new FaqDTO();
-		    fdto.setFcategory(category);
-		    fdto.setFsubject(fsubject);
-		    fdto.setFcontents(fcontents);
-		    
-		    // 공지사항에 넣어주기
-		    int n = fdao.faqInsert(fdto);
-		    
-		    if(n==1) {
-		    	super.setRedirect(false);
-				super.setViewPage("/WEB-INF/admin/callcenter/callcenter.jsp");
-		    }
 
-	    		 
-		}
-		
-		
-	}
+    private FaqDAO fdao = new FaqDAO_imple();
+
+
+    @Override
+    public void execute(HttpServletRequest request,
+                        HttpServletResponse response)
+                        throws Exception {
+
+
+        // =====================================================
+        // GET / POST 구분
+        // =====================================================
+
+        String method = request.getMethod();
+
+
+        // =====================================================
+        // GET
+        // =====================================================
+
+        if("GET".equalsIgnoreCase(method)) {
+
+
+            super.setRedirect(false);
+
+
+            super.setViewPage(
+                "/WEB-INF/admin/callcenter/faqWrite.jsp"
+            );
+
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // POST
+        // =====================================================
+
+
+        String category =
+                request.getParameter("category");
+
+
+        String fsubject =
+                request.getParameter("fsubject");
+
+
+        String fcontents =
+                request.getParameter("fcontents");
+
+
+        // =====================================================
+        // 공백 제거
+        // =====================================================
+
+        if(category != null) {
+
+            category = category.trim();
+
+        }
+
+
+        if(fsubject != null) {
+
+            fsubject = fsubject.trim();
+
+        }
+
+
+        if(fcontents != null) {
+
+            fcontents = fcontents.trim();
+
+        }
+
+
+        // =====================================================
+        // 필수값 검사
+        // =====================================================
+
+        if(category == null
+                || category.isEmpty()
+                || fsubject == null
+                || fsubject.isEmpty()
+                || fcontents == null
+                || fcontents.isEmpty()) {
+
+
+            // 잘못된 요청이면 다시 작성 페이지
+            super.setRedirect(false);
+
+
+            super.setViewPage(
+                "/WEB-INF/admin/callcenter/faqWrite.jsp"
+            );
+
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // DTO 생성
+        // =====================================================
+
+        FaqDTO fdto =
+                new FaqDTO();
+
+
+        fdto.setFcategory(
+                category
+        );
+
+
+        fdto.setFsubject(
+                fsubject
+        );
+
+
+        fdto.setFcontents(
+                fcontents
+        );
+
+
+        // =====================================================
+        // DB INSERT
+        // =====================================================
+
+        int n =
+                fdao.faqInsert(fdto);
+
+
+        // =====================================================
+        // 성공
+        // =====================================================
+
+        if(n == 1) {
+
+            super.setRedirect(false);
+
+
+            super.setViewPage(
+                "/admin/callcenter/callcenter.jsp?tab=faq"
+            );
+
+
+        }
+
+        // =====================================================
+        // 실패
+        // =====================================================
+
+        else {
+
+
+            super.setRedirect(false);
+
+
+            super.setViewPage(
+                "/WEB-INF/admin/callcenter/faqWrite.jsp"
+            );
+
+        }
+
+    }
 
 }

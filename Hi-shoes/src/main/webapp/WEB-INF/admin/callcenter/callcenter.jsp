@@ -115,7 +115,8 @@ function goSearch(frm, type) {
           	<tbody>
             	<c:if test="${not empty requestScope.noticeList}">
 			        <c:forEach var="notice" items="${noticeList}" varStatus="status">
-			            <tr class="noticeInfo">
+			            <tr class="noticeInfo" onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/noticeEdit.go?nnum=${notice.nnum}'"
+    							style="cursor:pointer;">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
@@ -233,7 +234,8 @@ function goSearch(frm, type) {
             <tbody>
             	<c:if test="${not empty requestScope.questionList}">
 			        <c:forEach var="question" items="${requestScope.questionList}" varStatus="status">
-			            <tr class="questionInfo">
+			            <tr class="questionInfo" onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/faqWrite.go?fnum=${faq.fnum}'"
+    							style="cursor:pointer;">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
