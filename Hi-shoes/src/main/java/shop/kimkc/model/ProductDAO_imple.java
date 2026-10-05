@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import shop.kimkc.domain.CatalogueDTO;
 import shop.kimkc.domain.ProductDTO;
+import shop.kimkc.domain.Product_ImageDTO;
 
 
 public class ProductDAO_imple implements ProductDAO {
@@ -52,7 +53,7 @@ public class ProductDAO_imple implements ProductDAO {
 	}
 
 	
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 
 	// 검색키워드를 적용한 상품목록 가져오기
@@ -100,6 +101,117 @@ public class ProductDAO_imple implements ProductDAO {
 		}
 		
 		return productList;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 클릭한 상품의 정보를 갖고오기
+	@Override
+	public ProductDTO getProductInfo(String pnum) throws SQLException {
+		
+		ProductDTO pdto = new ProductDTO();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select "
+					+ "    A.fk_pname, A.pimage1, A.pimage2, A.pcontent, A.deliveryfee, A.WARRANTY_SYSTEMFILENAME, A.WARRANTY_ORIGINFILENAME, "
+					+ "    B.regprice, B.saleprice, B.brand "
+					+ " from "
+					+ "    tbl_product A join tbl_catalogue B "
+					+ " on  A.fk_pname = B.pname "
+					+ " where A.pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, pnum);
+			rs = pstmt.executeQuery();
+			rs.next();
+
+			pdto.setFk_pname(rs.getString("fk_pname"));
+			pdto.setPimage1(rs.getString("pimage1"));
+			pdto.setPimage2(rs.getString("pimage2"));
+			pdto.setPcontent(rs.getString("pcontent"));
+			pdto.setDeliveryfee(rs.getInt("deliveryfee"));
+			pdto.setWarranty_systemFileName(rs.getString("WARRANTY_SYSTEMFILENAME"));
+			pdto.setWarranty_originFileName(rs.getString("WARRANTY_ORIGINFILENAME"));
+			
+			CatalogueDTO cdto = new CatalogueDTO();
+			cdto.setRegprice(rs.getInt("regprice"));
+			cdto.setSaleprice(rs.getInt("saleprice"));
+			cdto.setBrand(rs.getString("brand"));
+			
+			pdto.setCatalogueDTO(cdto);
+			
+			
+			sql = " select distinct image_name from tbl_product_image "
+					+ " where fk_pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			rs = pstmt.executeQuery();
+			
+			List<Product_ImageDTO> pidtoList = new ArrayList<>();
+			
+			while(rs.next()) {
+				Product_ImageDTO pidto = new Product_ImageDTO();
+				pidto.setImage_name(rs.getString("image_name"));
+				pidtoList.add(pidto);
+			}
+			
+			pdto.setProdImageDTOList(pidtoList);
+			
+			
+			
+			
+		} finally {
+			close();
+		}
+		
+		return pdto;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	// 선택한 상품의 사이즈목록 갖고오기
+	@Override
+	public List<Integer> getProductSizes(String pnum) throws SQLException {
+		List<Integer> sizeList = new ArrayList<>();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " SELECT DISTINCT "
+					+ "    S.SSIZE, "
+					+ "    S.SQTY "
+					+ " FROM TBL_PRODUCT P "
+					+ " JOIN TBL_CATALOGUE C "
+					+ "    ON P.FK_PNAME = C.PNAME "
+					+ " JOIN TBL_STOCK S "
+					+ "    ON C.PNAME = S.FK_PNAME "
+					+ " WHERE P.PNUM = to_number(?) "
+					+ "  AND S.SQTY > 0 ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				sizeList.add(rs.getInt("ssize"));
+			}
+				
+			
+		} finally {
+			close();
+		}
+		
+		
+		return sizeList;
 	}
 	
 	

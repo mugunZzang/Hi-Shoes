@@ -1,0 +1,728 @@
+@charset "UTF-8";
+
+/* =========================
+   기본 설정
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family: Arial, "Malgun Gothic", sans-serif;
+    font-size: 13px;
+
+    color: #222;
+    background-color: #fff;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================
+   전체 주문 페이지
+========================= */
+
+.order-container {
+    width: 1202px;
+
+    margin: 55px auto 100px;
+}
+
+
+/* =========================
+   페이지 제목
+========================= */
+
+.order-container > h1 {
+    margin: 0 0 45px;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   주문 리스트
+========================= */
+
+.order-list-section {
+    width: 100%;
+}
+
+.order-list-section h2 {
+    margin: 0 0 15px;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* 배송 상품 제목 */
+
+.order-list-title {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 15px;
+
+    background-color: #f4f4f4;
+
+    border-top: 2px solid #222;
+    border-bottom: 1px solid #ddd;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.order-list-title strong {
+    margin-left: 12px;
+
+    color: #e60000;
+}
+
+
+/* =========================
+   주문 상품 목록
+========================= */
+
+.order-product-list {
+    width: 100%;
+}
+
+
+/* 상품 하나 */
+
+.order-product {
+    min-height: 115px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 16px;
+
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* =========================
+   상품 이미지
+========================= */
+
+.order-product-image {
+    width: 80px;
+    height: 80px;
+
+    flex-shrink: 0;
+
+    margin-right: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #f5f5f5;
+}
+
+.order-product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+/* =========================
+   상품 정보
+========================= */
+
+.order-product-info {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.order-product-info .brand {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.order-product-info .product-name {
+    color: #666;
+
+    font-size: 11px;
+}
+
+.order-product-info .product-option {
+    margin-top: 5px;
+
+    color: #777;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   상품 가격
+========================= */
+
+.order-product-price {
+    width: 180px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 3px;
+
+    font-size: 13px;
+}
+
+.order-product-price del {
+    margin-right: 4px;
+
+    color: #aaa;
+
+    font-size: 10px;
+}
+
+.order-product-price strong {
+    font-size: 14px;
+}
+
+.order-product-price .discount-price {
+    color: #e60000;
+}
+
+.order-product-price span {
+    font-size: 11px;
+}
+
+
+/* =========================
+   주문 금액 요약
+========================= */
+
+.order-price-summary {
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+
+    border-top: 2px solid #222;
+    border-bottom: 1px solid #ccc;
+
+    margin-top: 38px;
+}
+
+
+/* 금액 항목 */
+
+.order-price-summary .summary-item {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 20px;
+}
+
+.order-price-summary .summary-item span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.order-price-summary .summary-item strong {
+    font-size: 17px;
+}
+
+
+/* - / = */
+
+.order-price-summary .summary-symbol {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: #666;
+    color: white;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* 최종 금액 */
+
+.order-price-summary .final-price {
+    color: #e60000;
+}
+
+
+/* =========================
+   아래쪽 주문 정보
+========================= */
+
+.order-content {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 30px;
+
+    margin-top: 50px;
+}
+
+
+/* =========================
+   왼쪽 영역
+========================= */
+
+.order-main {
+    width: 875px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   주문 고객정보
+========================= */
+
+.customer-section {
+    width: 100%;
+
+    padding-bottom: 25px;
+
+    border-bottom: 1px solid #ccc;
+}
+
+
+/* 섹션 제목 */
+
+.section-header {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 2px solid #222;
+}
+
+.section-header h2 {
+    margin: 0;
+
+    font-size: 14px;
+}
+
+.section-header label {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.section-header input {
+    margin: 0;
+}
+
+
+/* =========================
+   입력 폼
+========================= */
+
+.customer-form,
+.delivery-form {
+    padding-top: 20px;
+}
+
+
+/* 한 줄 */
+
+.form-row {
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+}
+
+
+/* 왼쪽 라벨 */
+
+.form-row > label {
+    width: 140px;
+
+    flex-shrink: 0;
+
+    padding-left: 10px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.form-row > label span {
+    color: #e60000;
+}
+
+
+/* 일반 input */
+
+.form-row > input {
+    width: 265px;
+    height: 30px;
+
+    padding: 0 10px;
+
+    border: 1px solid #ddd;
+
+    font-size: 11px;
+
+    outline: none;
+}
+
+
+/* 주문자 정보 input */
+
+.customer-form .form-row > input {
+    border-color: #28b44b;
+}
+
+
+/* =========================
+   배송 정보
+========================= */
+
+.delivery-section {
+    margin-top: 45px;
+}
+
+.delivery-section h2 {
+    margin: 0 0 20px;
+
+    font-size: 14px;
+}
+
+
+/* 배송 방법 */
+
+.delivery-method {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid #222;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* 배송 입력 영역 */
+
+.delivery-form {
+    padding-top: 45px;
+    padding-bottom: 30px;
+
+    border-bottom: 1px solid #ccc;
+}
+
+
+/* 배송 input */
+
+.delivery-form .form-row > input {
+    width: 265px;
+}
+
+
+/* =========================
+   주소
+========================= */
+
+.address-row {
+    align-items: flex-start;
+
+    min-height: 130px;
+}
+
+.address-row > label {
+    padding-top: 9px;
+}
+
+
+/* 주소 입력 전체 */
+
+.address-input {
+    width: 420px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* 우편번호 */
+
+.zipcode {
+    display: flex;
+
+    width: 265px;
+}
+
+.zipcode input {
+    width: 180px;
+    height: 30px;
+
+    padding: 0 10px;
+
+    border: 1px solid #ddd;
+
+    font-size: 11px;
+}
+
+.zipcode button {
+    width: 100px;
+    height: 30px;
+
+    margin-left: 3px;
+
+    background-color: white;
+
+    border: 1px solid #222;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* 주소 input */
+
+.address-input > input {
+    width: 420px;
+    height: 30px;
+
+    padding: 0 10px;
+
+    border: 1px solid #ddd;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   배송 요청사항
+========================= */
+
+.delivery-request-row {
+    margin-top: 10px;
+
+    align-items: flex-start;
+}
+
+.delivery-request-row > label {
+    padding-top: 9px;
+}
+
+
+/* 요청사항 영역 */
+
+.delivery-request {
+    width: 420px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* 요청사항 select */
+
+.delivery-request select {
+    width: 420px;
+    height: 30px;
+
+    padding: 0 10px;
+
+    border: 1px solid #ddd;
+
+    background-color: white;
+
+    font-size: 11px;
+}
+
+
+/* 요청사항 입력 */
+
+.delivery-request input {
+    width: 420px;
+    height: 30px;
+
+    padding: 0 10px;
+
+    border: 1px solid #ddd;
+
+    background-color: #fafafa;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   오른쪽 결제정보
+========================= */
+
+.payment-section {
+    width: 300px;
+
+    flex-shrink: 0;
+
+    padding: 25px 20px 20px;
+
+    border: 3px solid #222;
+
+    background-color: white;
+}
+
+
+/* 결제정보 제목 */
+
+.payment-section h2 {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* 구분선 */
+
+.payment-line {
+    width: 100%;
+
+    margin: 20px 0;
+
+    border-top: 1px solid #222;
+}
+
+
+/* =========================
+   결제 항목
+========================= */
+
+.payment-row {
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 5px;
+}
+
+.payment-row span {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.payment-row strong {
+    font-size: 12px;
+}
+
+
+/* 할인 상세 버튼 */
+
+.discount-detail {
+    padding: 0;
+    margin-left: 3px;
+
+    border: none;
+
+    background-color: transparent;
+
+    font-size: 9px;
+}
+
+
+/* =========================
+   최종 결제 금액
+========================= */
+
+.payment-total {
+    margin-top: 45px;
+    padding-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-top: 1px solid #ccc;
+}
+
+.payment-total span {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.payment-total strong {
+    color: #e60000;
+
+    font-size: 20px;
+}
+
+.payment-total small {
+    font-size: 11px;
+}
+
+
+/* =========================
+   결제 버튼
+========================= */
+
+.payment-button {
+    width: 100%;
+    height: 45px;
+
+    margin-top: 35px;
+
+    border: none;
+
+    background-color: #111;
+    color: white;
+
+    font-size: 12px;
+    font-weight: 700;
+}

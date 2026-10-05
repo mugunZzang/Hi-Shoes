@@ -1,5 +1,7 @@
 package shop.kimkc.domain;
 
+import java.util.List;
+
 public class ProductDTO {
 	private int pnum;						// 판매번호
 	private String fk_pname;				// 제품명
@@ -12,7 +14,8 @@ public class ProductDTO {
 	
 	private CatalogueDTO catalogueDTO;		// 카탈로그VO
 	
-	
+	private List<StockDTO> stockDTOList;	// 재고VO 리스트
+	private List<Product_ImageDTO> prodImageDTOList;	// 추가이미지 리스트
 	
 	
 	
@@ -86,6 +89,22 @@ public class ProductDTO {
 
 	public void setCatalogueDTO(CatalogueDTO catalogueDTO) {
 		this.catalogueDTO = catalogueDTO;
+	}
+
+	public List<StockDTO> getStockDTOList() {
+		return stockDTOList;
+	}
+
+	public void setStockDTOList(List<StockDTO> stockDTOList) {
+		this.stockDTOList = stockDTOList;
+	}
+
+	public List<Product_ImageDTO> getProdImageDTOList() {
+		return prodImageDTOList;
+	}
+
+	public void setProdImageDTOList(List<Product_ImageDTO> prodImageDTOList) {
+		this.prodImageDTOList = prodImageDTOList;
 	}
 
 

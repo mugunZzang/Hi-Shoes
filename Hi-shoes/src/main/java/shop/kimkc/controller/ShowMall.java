@@ -27,7 +27,7 @@ public class ShowMall extends AbstractController {
 		//System.out.println("prodList 사이즈 " + prodList.size());
 		
 		request.setAttribute("prodList", prodList);
-		
+		request.setAttribute("searchKeyword", searchKeyword);
 		
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/kimkc/shop/showMall.jsp");

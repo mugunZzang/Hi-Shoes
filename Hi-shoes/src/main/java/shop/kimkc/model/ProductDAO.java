@@ -10,4 +10,11 @@ public interface ProductDAO {
 	// 검색키워드를 적용한 상품목록 가져오기
 	List<ProductDTO> getProductList(String searchKeyword) throws SQLException;
 
+	
+	// 클릭한 상품의 정보를 갖고오기
+	ProductDTO getProductInfo(String pnum) throws SQLException;
+
+	// 선택한 상품의 사이즈목록 갖고오기
+	List<Integer> getProductSizes(String pnum) throws SQLException;
+
 }
