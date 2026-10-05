@@ -411,10 +411,8 @@ body.sidebar-ready #container {
                 공급업체 관리 <i class="fa-solid fa-chevron-down menu-arrow"></i>
             </button>
             <div id="menuSupply" class="collapse menu-sub <%= "supplier".equals(adminMenu) ? "show" : "" %>">
-                <a href="<%= ctxPath %>/admin/supplyList.go"
+                <a href="<%= ctxPath %>/admin/supplier/supplierList.go"
                    class="<%= currentUri.contains("supplyList") ? "active" : "" %>">공급업체 목록</a>
-                <a href="<%= ctxPath %>/admin/supplyRegister.go"
-                   class="<%= currentUri.contains("supplyRegister") ? "active" : "" %>">공급업체 등록</a>
             </div>
         </div>
 
