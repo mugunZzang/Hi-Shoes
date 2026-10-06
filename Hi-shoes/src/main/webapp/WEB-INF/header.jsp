@@ -43,7 +43,7 @@
 					<span>LOGIN</span>
 				</a>
 				
-				<a href="#">
+				<a href="<%=ctxPath %>/member/memberRegister.go">
 					<img alt="join" src="<%= ctxPath %>/images/join.svg">
 					<span>JOIN</span>
 				</a>

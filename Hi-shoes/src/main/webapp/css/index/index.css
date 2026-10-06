@@ -182,7 +182,7 @@ main .bestsellers .tab-content ul li a img {
 	padding-bottom:14px;
 }
 
-.footer-banner .wrapper {
+.footer-banner .foot-banner-wrap {
 	display:flex;
 	justify-content: space-between;
 	align-items:center;
@@ -192,21 +192,21 @@ main .bestsellers .tab-content ul li a img {
 	margin: auto;
 }
 
-.footer-banner .wrapper .cs-texts span{
+.footer-banner .foot-banner-wrap .cs-texts span{
 	font-size:15px;
 	color: #1D1D1D;
 }
 
-.footer-banner .wrapper .cs-texts span:first-child {
+.footer-banner .foot-banner-wrap .cs-texts span:first-child {
 	margin-right: 30px;
 	font-weight: 500;
 }
 
-.footer-banner .wrapper .cs-texts span:nth-child(2) {
+.footer-banner .foot-banner-wrap .cs-texts span:nth-child(2) {
 	margin-right: 10px;
 }
 
-.footer-banner .wrapper .cs-texts span:nth-child(3) {
+.footer-banner .foot-banner-wrap .cs-texts span:nth-child(3) {
 	color: #7C7C7C;
 }
 
@@ -225,7 +225,7 @@ footer {
 	padding:30px 40px;
 }
 
-footer .wrapper {
+footer .footer-wrap {
 	display:flex;
 	justify-content:space-between;
 	flex-wrap:wrap;	
@@ -233,46 +233,46 @@ footer .wrapper {
 	align-items:flex-start;
 }
 
-footer .wrapper .address-wrap {
+footer .footer-wrap .address-wrap {
 	flex:1;	
 }
 
-footer .wrapper address {
+footer .footer-wrap address {
 	font-size:14px;
 	font-weight: 500;
 	color:#7C7C7C;
 	margin-bottom: 0;
 }
 
-footer .wrapper address span {
+footer .footer-wrap address span {
 	margin-right:20px;
 }
 
-footer .wrapper address span:last-child {
+footer .footer-wrap address span:last-child {
 	margin-right: 0;
 }
 
-footer .wrapper address p {
+footer .footer-wrap address p {
 	margin: 10px 0;
 }
 
-footer .wrapper address p:last-child {
+footer .footer-wrap address p:last-child {
 	margin-bottom:0;
 }
 
-footer .wrapper .social-wrap {
+footer .footer-wrap .social-wrap {
 	display:flex;
 	gap:10px;
 }
 
-footer .wrapper .social-wrap a {
+footer .footer-wrap .social-wrap a {
 	width: 24px;	
 	display:flex;
 	justify-content:center;
 	align-items:center;
 }
 
-footer .wrapper .social-wrap a img {	
+footer .footer-wrap .social-wrap a img {	
 	width: 100%;
 }
 
@@ -292,7 +292,7 @@ footer .wrapper .social-wrap a img {
 }
 
 @media (max-width: 576px) {
-	footer .wrapper {
+	footer .footer-wrap {
 		flex-direction: column;
 	}	
 }

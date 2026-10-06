@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.DriverManager" %>
-
 <%
     String ctxPath = request.getContextPath();
 %>   
 
 	<section class="footer-banner container-fluid">
-		<div class="wrapper">
+		<div class="foot-banner-wrap">
 			<section class="cs-texts">
 				<span>고객센터</span>
 				<span>1588-9667</span>
@@ -21,7 +18,7 @@
 		</div>
 	</section>
 	<footer class="container-fluid">
-		<div class="wrapper">
+		<div class="footer-wrap">
 			<section>
 				<img alt="푸터 로고" src="<%= ctxPath%>/images/Footer-Logo.svg">
 			</section>
@@ -52,28 +49,6 @@
 		</div>
 	</footer>
 
-<%
-    // 본인의 DB 정보에 맞게 수정하세요.
-    String driver = "oracle.jdbc.driver.OracleDriver"; // MySQL 기준 (오라클은 oracle.jdbc.driver.OracleDriver)
-    String url = "jdbc:oracle:thin:@211.238.142.54:1521/XEPDB1";
-    String user = "SEMI_ORAUSER";
-    String password = "bclass";
-
-    Connection conn = null;
-
-    try {
-        Class.forName(driver);
-        conn = DriverManager.getConnection(url, user, password);
-        out.println("<h2>🎉 DB 연결 성공! 🎉</h2>");
-    } catch (Exception e) {
-        out.println("<h2>❌ DB 연결 실패 ❌</h2>");
-        out.println("<pre>");
-        e.printStackTrace(new java.io.PrintWriter(out));
-        out.println("</pre>");
-    } finally {
-        if(conn != null) try { conn.close(); } catch(Exception e) {}
-    }
-%>
 
 </body>
 </html>
