@@ -22,7 +22,7 @@
 			const select_ssize = $(this).val();
 			
 			$.ajax({
-				url: "<%= ctxPath%>/shop/getColorsBySsizeJSON.up",
+				url: "<%= ctxPath%>/shop/getColorsBySsizeJSON.go",
 				data:{'ssize' : select_ssize,
 						'pname' : '${requestScope.pdto.fk_pname}'},
 				dataType:"json",
@@ -36,7 +36,7 @@
 						html += "<option value='" + $(item) + "'>" + $(item) + "</option>"
 					});
 					
-					// 사이즈 선택한 후에는 선택 가능하게 
+					// 사이즈 선택한 후에는 선택 가능하게
 					$('select[id="product-color"]').prop('disabled', false);
 					
 					//let html = "<option value="">블랙</option>"
