@@ -54,9 +54,11 @@
     <!-- 실제 페이지 작업 영역 -->
     <div style="background-color: #ffffff;
                 width: 100%;
-                min-height: 500px;
+                min-height: 50px;
                 border: 1px solid #eeeeee;
-                padding: 25px;">
+                border-radius: 6px;
+                padding: 25px;
+                margin-bottom: 50px;">
 
         <!-- ===== 1. 발주할 상품 등록 폼 ===== -->
         <p class="fs-5 fw-semibold mb-3">발주할 상품 등록</p>
