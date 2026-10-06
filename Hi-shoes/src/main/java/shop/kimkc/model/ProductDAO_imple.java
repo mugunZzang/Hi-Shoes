@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -195,7 +196,8 @@ public class ProductDAO_imple implements ProductDAO {
 					+ " JOIN TBL_STOCK S "
 					+ "    ON C.PNAME = S.FK_PNAME "
 					+ " WHERE P.PNUM = to_number(?) "
-					+ "  AND S.SQTY > 0 ";
+					+ "  AND S.SQTY > 0 "
+					+ " ORDER BY SSIZE ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, pnum);
@@ -212,6 +214,39 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		
 		return sizeList;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	// 사이즈, 상품명으로 색상목록 갖고오기
+	@Override
+	public List<String> getColorBySsize(Map<String, String> paraMap) throws SQLException {
+		List<String> colorList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT DISTINCT color FROM tbl_stock "
+					+ " where fk_pname = ? "
+					+ " and ssize = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("pname"));
+			pstmt.setString(2, paraMap.get("ssize"));
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				colorList.add(rs.getString("COLOR"));
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return colorList;
 	}
 	
 	

@@ -240,3 +240,30 @@
             background-color: #111;
             color: white;
         }
+        
+   
+   
+   
+   		input.radio-ssize {
+   			display:none;
+   		}
+   		
+   		
+   		label.label-radio-ssize {
+   			display: inline-flex;
+   			width: 50px;
+    		height: 35px;
+    		border-radius: 0;
+    		border: 1px solid #7C7C7C;
+			justify-content: center;
+			align-items: center;  
+   		}
+   		
+   		
+   		
+   		input:radio[class="radio-ssize"]:checked + label.label-radio-ssize {
+      background-color: #007bff;
+      color: #fff;
+      border-color: #007bff;
+      font-weight: bold;
+    }

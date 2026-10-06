@@ -9,6 +9,52 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/kimkc/productDetail.css" >
 <jsp:include page="../../header.jsp" />
 
+<script>
+
+
+	$(function() {
+		
+		// 색상 선택은 사이즈 선택 전까지 비활성화
+		$('select[id="product-color"]').prop('disabled', true);
+		
+		$('input:radio[class="radio-ssize"]').on("change", function() {
+			//alert($(this).val());
+			const select_ssize = $(this).val();
+			
+			$.ajax({
+				url: "<%= ctxPath%>/shop/getColorsBySsizeJSON.up",
+				data:{'ssize' : select_ssize,
+						'pname' : '${requestScope.pdto.fk_pname}'},
+				dataType:"json",
+				success:function(json) {
+					// 일단 한번 비워주기
+					$(select[id="product-color"]).empty();
+					
+					let html = "<option value=''>색상 선택</option>";
+					
+					$.each(function(index, item) {
+						html += "<option value='" + $(item) + "'>" + $(item) + "</option>"
+					});
+					
+					// 사이즈 선택한 후에는 선택 가능하게 
+					$('select[id="product-color"]').prop('disabled', false);
+					
+					//let html = "<option value="">블랙</option>"
+				},
+				
+				error: function(request, status, error){
+			    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }	
+						
+			});
+		});
+		
+	});
+
+
+</script>
+
+
 <div class="product-container">
 
     <!-- 왼쪽: 상품 이미지 영역 -->
@@ -84,8 +130,13 @@
 
                 <div class="size-list">
                 	<c:if test="${not empty requestScope.sizeList}">
-                		<c:forEach var="size" items="${requestScope.sizeList}">
-                			<button type="button">${size}</button>
+                		<c:forEach var="size" items="${requestScope.sizeList}" varStatus="idx" >
+                			<%-- <button type="button" class="btn-select-ssize">${size}</button> --%>
+                			<!-- 라디오 버튼과 label의 'id' 및 'for' 값을 반드시 일치시켜야 합니다 -->
+
+							
+							  <input type="radio" id="ssize-option${idx.index}" name="radio-group-ssize" class="radio-ssize" value="${size}">
+							  <label for="ssize-option${idx.index}" class="label-radio-ssize">${size}</label>
                 		</c:forEach>
 			<!-- 	    <button type="button">225</button>
 	                    <button type="button">230</button>
@@ -105,9 +156,9 @@
 
                 <select id="product-color" name="color">
                     <option value="">색상 선택</option>
-                    <option value="beige">베이지</option>
+                    <!-- <option value="beige">베이지</option>
                     <option value="black">블랙</option>
-                    <option value="brown">브라운</option>
+                    <option value="brown">브라운</option> -->
                 </select>
 
             </div>
