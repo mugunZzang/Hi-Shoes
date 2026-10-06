@@ -1,56 +1,11 @@
 @charset "UTF-8";
 
-.body-cont {
+.cont-wrap {
 	max-width:1200px;	
-	width: 100%;	
+	width: 100%;
+	margin: 60px 0;	
 }
 
-.section-tit {
-	margin-bottom: 10px;
-}
-
-.section-tit + p {
-	font-weight: 500;
-	font-size: 15px;
-	color: #87A922;
-	margin-bottom: 14px;
-}
-
-table#tblMemberRegister thead {
-	border-bottom: 1px solid #DBDBDB;
-}
-
-table#tblMemberRegister tbody td {
-	padding: 10px 30px;
-	vertical-align: top;
-    height: 85px;
-}
-
-table#tblMemberRegister tbody tr td:first-child {
-	padding-top: 20px;
-}
-
-table#tblMemberRegister tbody td label {
-	font-weight: 500;
-	font-size: 15px;
-	color:#1D1D1D;
-}
-
-table#tblMemberRegister tbody td span.star {
-	font-weight: 500;
-	font-size: 15px;
-	color: #87A922;
-}
-
-table#tblMemberRegister tbody td span.error {
-	color:#ff0000;
-	font-size: 12px;
-	font-weight: 400;
-	display:block;
-	margin-top:5px;
-}
-
-table#tblMemberRegister tbody td iframe {
-	border: 1px solid #7C7C7C;
-	border-radius: 8px;
+.cont-wrap .tit-wrap {
+	border-bottom: 1px solid red;
 }
