@@ -428,3 +428,492 @@
 .product-detail-images img {
 	width: 900px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ========================================
+   상품 하단 탭
+======================================== */
+
+.product-bottom {
+    width: 1202px;
+    margin: 80px auto 0;
+}
+
+
+/* 탭 메뉴 */
+
+.product-tab-menu {
+    display: flex;
+    width: 100%;
+    height: 56px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 30px;
+}
+
+
+/* 각각의 탭 */
+
+.product-tab {
+    flex: 1;
+
+    height: 56px;
+
+    border: 1px solid #ddd;
+    border-bottom: 1px solid #222;
+
+    background-color: #fff;
+
+    font-size: 14px;
+    color: #555;
+
+    cursor: pointer;
+}
+
+
+/* 탭 사이의 경계 */
+
+.product-tab + .product-tab {
+    border-left: none;
+}
+
+
+/* 선택된 탭 */
+
+.product-tab.active {
+    border: 2px solid #222;
+    border-bottom: none;
+
+    color: #111;
+    font-weight: bold;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+/* 탭 내용 */
+
+.product-tab-content {
+    display: none;
+}
+
+
+/* 현재 선택된 탭 */
+
+.product-tab-content.active {
+    display: block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   상품후기 / Q&A
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   공통
+   --------------------------------------------------------- */
+
+.product-tab-content {
+    width: 100%;
+    display: none;
+}
+
+.product-tab-content.active {
+    display: block;
+}
+
+
+/* =========================================================
+   상품 후기
+   ========================================================= */
+
+#product-review {
+    width: 100%;
+}
+
+
+.review-header {
+    width: 100%;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #222;
+    box-sizing: border-box;
+}
+
+.review-count {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.review-count strong {
+    color: #ff0000;
+    font-weight: 700;
+}
+
+.review-sort {
+    width: 120px;
+    height: 32px;
+
+    border: none;
+    background-color: transparent;
+
+    font-size: 13px;
+    color: #222;
+
+    text-align: right;
+    cursor: pointer;
+}
+
+
+/* 후기 하나 */
+.review-item {
+    width: 100%;
+
+    padding: 28px 20px 35px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #e5e5e5;
+}
+
+
+/* 후기 별점 */
+.review-big-rating {
+    margin-bottom: 14px;
+
+    font-size: 20px;
+    line-height: 1;
+
+    letter-spacing: 1px;
+
+    color: #000;
+}
+
+
+/* 후기 기본 정보 */
+.review-info {
+    width: 100%;
+    min-height: 52px;
+
+gap: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 12px 16px;
+
+    box-sizing: border-box;
+
+    background-color: #f5f5f5;
+}
+
+
+/* 옵션 */
+.review-option-area {
+    display: flex;
+    align-items: center;
+
+    /* margin-bottom: 8px; */
+
+    font-size: 13px;
+}
+
+.review-option {
+    margin-right: 35px;
+
+    color: #555;
+}
+
+.review-option-value {
+    color: #222;
+}
+
+
+/* 작성자 / 날짜 */
+.review-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* align-items: center; */
+
+    font-size: 13px;
+}
+
+.review-user {
+    color: #555;
+    font-size: 13px;
+}
+
+.review-date {
+    /* margin-left: 12px; */
+
+    color: #888;
+}
+
+.review-user,
+.review-date {
+    display: block;
+}
+
+/* 후기 내용 */
+.review-content {
+    margin-top: 22px;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    color: #222;
+
+    word-break: keep-all;
+}
+
+
+/* =========================================================
+   상품 Q&A
+   ========================================================= */
+
+#product-qna {
+    width: 100%;
+}
+
+
+/* Q&A 전체 */
+.qna-list {
+    width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   Q&A 한 줄
+   --------------------------------------------------------- */
+
+.qna-item {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* 질문 한 줄 */
+.qna-question {
+    width: 100%;
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+/* 질문 제목 */
+.qna-title {
+    flex: 1;
+
+    padding-left: 20px;
+
+    font-size: 14px;
+    color: #111;
+
+    box-sizing: border-box;
+
+    /* 제목이 너무 길 경우 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* 자물쇠 */
+.qna-lock {
+    width: 40px;
+    flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 13px;
+    color: #888;
+}
+
+
+/* 자물쇠 없는 경우 */
+.qna-lock.empty {
+    visibility: hidden;
+}
+
+
+/* 작성자 */
+.qna-user {
+    width: 100px;
+    flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 12px;
+    color: #666;
+}
+
+
+/* 날짜 */
+.qna-date {
+    width: 120px;
+    flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 12px;
+    color: #777;
+}
+
+
+/* 답변 상태 */
+.qna-status {
+    width: 90px;
+    flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 12px;
+    color: #ff0000;
+}
+
+
+/* ---------------------------------------------------------
+   Q&A 펼쳐진 영역
+   --------------------------------------------------------- */
+
+.qna-answer-area {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 30px 20px 35px;
+
+    background-color: #fff;
+}
+
+
+/* 질문 내용 */
+.qna-question-content {
+    padding: 0 0 30px 0;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    color: #333;
+}
+
+
+/* ---------------------------------------------------------
+   Q&A 답변
+   --------------------------------------------------------- */
+
+.qna-answer {
+    width: 100%;
+
+    display: flex;
+
+    padding: 28px 30px;
+
+    box-sizing: border-box;
+
+    background-color: #f7f7f7;
+}
+
+
+/* 답변 A 아이콘 */
+.answer-icon {
+    width: 26px;
+    height: 26px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 18px;
+
+    border-radius: 50%;
+
+    background-color: #ed1c24;
+
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/* 답변 내용 */
+.answer-content {
+    font-size: 14px;
+    line-height: 1.8;
+
+    color: #333;
+}
+
+
+/* =========================================================
+   Q&A hover
+   ========================================================= */
+
+.qna-question:hover {
+    background-color: #fafafa;
+}
+
+
+/* =========================================================
+   반응형
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .qna-title {
+        min-width: 0;
+    }
+
+    .qna-user {
+        width: 80px;
+    }
+
+    .qna-date {
+        width: 100px;
+    }
+
+    .qna-status {
+        width: 80px;
+    }
+
+}

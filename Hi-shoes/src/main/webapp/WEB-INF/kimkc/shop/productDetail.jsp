@@ -205,6 +205,28 @@
 		
 		
 		
+		// ---------------------------------------------------------------------------------------------------------
+		
+		
+		// 상품 상세 탭 클릭
+		$('.product-tab').on('click', function() {
+
+		    const tabId = $(this).data('tab');
+
+		    // 모든 탭 비활성화
+		    $('.product-tab').removeClass('active');
+
+		    // 클릭한 탭 활성화
+		    $(this).addClass('active');
+
+		    // 모든 내용 숨김
+		    $('.product-tab-content').removeClass('active');
+
+		    // 선택한 내용 표시
+		    $('#' + tabId).addClass('active');
+
+		});
+		
 	});
 	
 	
@@ -232,7 +254,7 @@
 	function checkStock() {
 
 		// 스펙 목록들을 한 번에 보내기 위한 배열
-		let specList[];
+		let specList = [];
 		
 		// 선택한 스펙 목록의 스펙을 가져와 db를 검사...
 		$('div.selected-spec').each(function() {
@@ -425,45 +447,305 @@
 </div>
 
 
-<div class="product-detail-images">
-	<img src="<%=ctxPath %>/images/kimkc/product/${requestScope.pdto.pimage2}" />
-	
-	<c:if test="${not empty requestScope.pdto.prodImageDTOList}">
-    	<c:forEach var="pidto" items="${requestScope.pdto.prodImageDTOList}">
-       		<img src="<%=ctxPath %>/images/kimkc/product/${pidto.image_name}" alt="상품 측면 이미지">
-    	</c:forEach>
-    </c:if>
-	
 
-</div>
-	<%-- <div class="content-wrap row text-center">
-		상품이미지 영역
-		<div class="col-lg-6">
+<!-- 상품 상세 하단 탭 영역 -->
+<div class="product-bottom">
+
+    <!-- 탭 메뉴 -->
+    <div class="product-tab-menu">
+
+        <button type="button"
+                class="product-tab active"
+                data-tab="product-info">
+            상품정보
+        </button>
+
+        <button type="button"
+                class="product-tab"
+                data-tab="product-review">
+            상품후기 (<span>163</span>)
+        </button>
+
+        <button type="button"
+                class="product-tab"
+                data-tab="product-qna">
+            상품 Q&A (<span>12</span>)
+        </button>
+
+    </div>
+
+
+
+
+	<%-- 상품 상세정보 --%>
+	<div id="product-info" class="product-tab-content active">
+	
+		<div class="product-detail-images">
+			<img src="<%=ctxPath %>/images/kimkc/product/${requestScope.pdto.pimage2}" />
 			
-			<div class="pimage-wrap">
-				<img src="<%=ctxPath %>/images/kimkc/product/ML408K 1_뉴발란스.jpg" class="pimage"/>
-			</div>
-		</div>
-
-		상품정보 및 옵션선택 영역
-		<div class="col-lg-6">
-			<div class="productInfo_wrap">
-				<span class="productInfo_brand">브랜드</span>
-				<span class="productInfo_pname">상품명</span>
-				<span class="productInfo_pname">상품보증서</span>
-				<span class="productInfo_regprice">정가</span>
-				<span class="productInfo_saleprice">판매가</span>
-				<button class="productInfo_btnSize">사이즈용</button>
-				
-				<form action="" method="post">
-					<button class="productInfo_btnPurchase">결제</button>
-					<button class="productInfo_btnCart">장바구니</button>
-				</form>
-				
-			</div>
+			<c:if test="${not empty requestScope.pdto.prodImageDTOList}">
+		    	<c:forEach var="pidto" items="${requestScope.pdto.prodImageDTOList}">
+		       		<img src="<%=ctxPath %>/images/kimkc/product/${pidto.image_name}" alt="상품 측면 이미지">
+		    	</c:forEach>
+		    </c:if>
 			
 		
 		</div>
-	</div> --%>
+	</div>
+
+
+
+
+	<!-- ============================== -->
+    <!-- 상품후기 -->
+    <!-- ============================== -->
+    <div id="product-review" class="product-tab-content">
+
+        <div class="review-header">
+
+            <div class="review-count">
+                총 <strong>163</strong>개의 후기가 있습니다.
+            </div>
+
+            <select class="review-sort">
+                <option value="helpful">도움돼요순</option>
+                <option value="latest">최신순</option>
+                <option value="rating">별점순</option>
+            </select>
+
+        </div>
+
+
+        <!-- 후기 1개 -->
+        <div class="review-item">
+
+			<div class="review-big-rating">
+		            ★★★★★
+	        </div>
+		
+		    <!-- 후기 기본 정보 -->
+		    <div class="review-info">
+		
+		        <div class="review-option-area">
+		            <span class="review-option">옵션</span>
+		            <span class="review-option-value">100, 250</span>
+		        </div>
+		
+		        <div class="review-user-info">
+		
+		            <span class="review-user">
+		                작성자 : h****3
+		            </span>
+		
+		            <span class="review-date">
+		                2023.06.04 05:08:06
+		            </span>
+		
+		        </div>
+		
+		
+		    </div>
+		
+		    <!-- 후기 내용 -->
+		    <div class="review-content">
+		
+		        저희 아이 신발 사줬어요<br>
+		        평소 반스는 250 좀 작은데 나이키는 250이 딱이네요<br>
+		        편하고 좋다고 하네요~
+		
+		    </div>
+
+		</div>
+
+
+        <!-- 후기 2개째 -->
+        <div class="review-item">
+
+			<div class="review-big-rating">
+		            ★★★★★
+	        </div>
+	        
+		    <!-- 후기 기본 정보 -->
+		    <div class="review-info">
+		
+				
+		
+		        <div class="review-option-area">
+		            <span class="review-option">옵션</span>
+		            <span class="review-option-value">100, 250</span>
+		        </div>
+		
+		        <div class="review-user-info">
+		
+		            <span class="review-user">
+		                작성자 : h****3
+		            </span>
+		
+		            <span class="review-date">
+		                2023.06.04 05:08:06
+		            </span>
+		
+		        </div>
+
+		
+		    </div>
+		
+		    <!-- 후기 내용 -->
+		    <div class="review-content">
+		
+		        저희 아이 신발 사줬어요<br>
+		        평소 반스는 250 좀 작은데 나이키는 250이 딱이네요<br>
+		        편하고 좋다고 하네요~
+		
+		    </div>
+
+		</div>
+
+    </div>
+
+
+    <!-- ============================== -->
+    <!-- 상품 Q&A -->
+    <!-- ============================== -->
+    <div id="product-qna" class="product-tab-content">
+
+        <div class="qna-list">
+
+            <!-- Q&A 1 -->
+            <div class="qna-item">
+
+                <div class="qna-question">
+
+                    <span class="qna-title">
+                        사이즈교환
+                    </span>
+
+                    <span class="qna-lock">
+                        🔒
+                    </span>
+
+                    <span class="qna-user">
+                        s******6
+                    </span>
+
+                    <span class="qna-date">
+                        2026.08.31
+                    </span>
+
+                    <span class="qna-status">
+                        답변완료
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Q&A 2 -->
+            <div class="qna-item">
+
+                <div class="qna-question">
+
+                    <span class="qna-title">
+                        배송
+                    </span>
+
+                    <span class="qna-lock">
+                        🔒
+                    </span>
+
+                    <span class="qna-user">
+                        h*k
+                    </span>
+
+                    <span class="qna-date">
+                        2026.07.21
+                    </span>
+
+                    <span class="qna-status">
+                        답변완료
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Q&A 3 -->
+            <div class="qna-item">
+
+                <div class="qna-question">
+
+                    <span class="qna-title">
+                        260 사이즈는 아예 단종인가요?
+                    </span>
+
+					<span class="qna-lock empty">
+					
+					</span>
+					
+                    <span class="qna-user">
+                        s*****8
+                    </span>
+
+                    <span class="qna-date">
+                        2025.01.26
+                    </span>
+
+                    <span class="qna-status">
+                        답변완료
+                    </span>
+
+                </div>
+
+
+                <!-- 질문 내용 -->
+                <div class="qna-answer-area">
+
+                    <div class="qna-question-content">
+
+                        260사이 검색이 안되네요ㅠㅠ<br>
+                        260 사이즈가 필요해요
+
+                    </div>
+
+
+                    <!-- 답변 -->
+                    <div class="qna-answer">
+
+                        <div class="answer-icon">
+                            A
+                        </div>
+
+                        <div class="answer-content">
+
+                            안녕하십니까,<br>
+                            함께 그린 세상 ABC마트 고객센터입니다.<br><br>
+
+                            문의주신 나이키 코트 비전 로우 넥스트 네이처
+                            260사이즈 상품의 온라인 재고는 정확한 재입고 예정에
+                            있는 상품이 아니므로,<br>
+                            정확한 입고 시기에 대한 답변은 드리기 어려운 점
+                            양해 부탁드립니다.<br><br>
+
+                            만족스러운 답변을 드리지 못하여 죄송합니다.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
 
 <jsp:include page="../../footer.jsp" />
