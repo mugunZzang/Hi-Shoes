@@ -206,8 +206,8 @@ $(function () {
 	            // 성공 처리
 				if(json.isSuccess == 1){
 				    // 견적서 페이지로 이동 (다음 단계에서)
-				    console.log("발주 성공", json.purchaseNos);
-					location.replace(ctx_Path + "/admin/purchase/purchaseEstimate.go?purchaseNo=" + json.purchaseNo);
+				    console.log("발주 성공", json.purnum);
+					location.replace(ctx_Path + "/admin/purchase/purchaseEstimate.go?purnum=" + json.purnum);
 				}
 				else{
 				    alert("발주에 실패했습니다.");
@@ -217,6 +217,8 @@ $(function () {
 	        },
 	        error: function(request, status, error){
 	            alert("code: " + request.status + "\nmessage: " + request.responseText + "\nerror: " + error);
+				// 다른 이유로 실패했을 경우 버튼 활성화
+				$('#btnPurchaseSubmit').prop('disabled', false);
 	        }
 	    });
 	});

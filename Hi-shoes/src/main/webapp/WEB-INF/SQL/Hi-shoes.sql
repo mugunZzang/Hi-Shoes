@@ -257,3 +257,18 @@ WHERE pname='핸드볼 스페지알 로우 프로';
 
 
 SELECT * FROM tbl_supplier;
+
+SELECT P.purnum, to_char(P.purtime,'yyyy-mm-dd') AS purtime, 
+       S.supname, S.sbusinum, S.ceo, S.smobile, S.semail 
+FROM tbl_purchase P JOIN tbl_supplier S ON P.fk_supname = S.supname 
+WHERE P.purnum = 1 ;
+
+select P.purdetailnum, P.purqty, P.purqty, P.purdprice, 
+		                   P.purqty * P.purdprice AS amount,
+       S.color, S.ssize, S.fk_pname
+from tbl_purdetail P INNER JOIN tbl_stock S
+ON P.fk_snum = S.snum
+where fk_purnum = 1 
+order by purdetailnum 
+
+SELECT * FROM tbl_purdetail

@@ -1,15 +1,23 @@
 package admin.purchase.jungyj.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import util.security.AES256;
+import util.security.SecretMyKey;
 
 public class PurchaseDAO_imple implements PurchaseDAO {
 
@@ -18,7 +26,8 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	
+
+	private AES256 aes;
 	
 	// 생성자
 	public PurchaseDAO_imple() {
@@ -27,10 +36,13 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 	        Context envContext  = (Context)initContext.lookup("java:/comp/env");
 	        ds = (DataSource)envContext.lookup("jdbc/myoracle");
 	        // lookup()속에 /MyMVC/src/main/webapp/META-INF/context.xml에 지정한 이름을 적어주면 자동 주입됩니다.
-	        
+
+	        aes = new AES256(SecretMyKey.KEY);
 		} catch (NamingException e) {
 			e.printStackTrace();
 			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		} 
 		
 	}
@@ -176,5 +188,84 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 		
 		return result;
 	} // end of public int purchaseAdd(Map<String, Object> paraMap) throws SQLException-----------------------
+
+	
+	// 발주 + 공급업체 1건 검색
+	@Override
+	public Map<String, String> selectPurchase(String purnum) throws SQLException {
+		Map<String, String> purchaseMap = new HashMap<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT P.purnum, to_char(P.purtime,'yyyy-mm-dd') AS purtime,  "
+					   + "        S.supname, S.sbusinum, S.ceo, S.smobile, S.semail  "
+					   + " FROM tbl_purchase P JOIN tbl_supplier S ON P.fk_supname = S.supname  "
+					   + " WHERE P.purnum = TO_NUMBER(?)  ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, purnum);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				purchaseMap.put("purnum", String.valueOf(rs.getInt("purnum")));
+				purchaseMap.put("purtime", rs.getString("purtime"));
+				purchaseMap.put("supname", rs.getString("supname"));
+				purchaseMap.put("sbusinum", String.valueOf(rs.getInt("sbusinum")));
+				purchaseMap.put("ceo", rs.getString("ceo"));
+				purchaseMap.put("smobile", aes.decrypt(rs.getString("smobile")));
+				purchaseMap.put("semail", aes.decrypt(rs.getString("semail")));
+				
+			}
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return purchaseMap;
+	} // end of public Map<String, String> selectPurchase(String punum) throws SQLException-----------------------
+
+	// 발주 상세 N 건 조회
+	@Override
+	public List<Map<String, String>> selectPurchaseDetail(String purnum) throws SQLException {
+		List<Map<String, String>> purchaseDetailList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT P.purdetailnum, P.purqty, P.purdprice,  "
+					   + "		                   P.purqty * P.purdprice AS amount, "
+					   + "       S.color, S.ssize, S.fk_pname "
+					   + " FROM tbl_purdetail P INNER JOIN tbl_stock S "
+					   + " ON P.fk_snum = S.snum "
+					   + " WHERE fk_purnum = TO_NUMBER(?)  "
+					   + " ORDER BY purdetailnum  ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, purnum);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>(); 
+				map.put("purdetailnum", String.valueOf(rs.getInt("purdetailnum")));
+				map.put("purqty", String.valueOf(rs.getInt("purqty")));
+				map.put("purdprice", String.valueOf(rs.getInt("purdprice")));
+				map.put("amount", String.valueOf(rs.getInt("amount")));
+				map.put("color", rs.getString("color"));
+				map.put("ssize", String.valueOf(rs.getInt("ssize")));
+				map.put("fk_pname", rs.getString("fk_pname"));
+				
+				purchaseDetailList.add(map);
+			}
+		} finally {
+			close();
+		}
+		
+		return purchaseDetailList;
+	} // end of public List<Map<String, String>> selectPurchaseDetail(String purnum) throws SQLException-----------
 
 }

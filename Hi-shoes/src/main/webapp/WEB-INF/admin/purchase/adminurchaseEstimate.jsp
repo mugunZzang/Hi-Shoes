@@ -9,7 +9,12 @@
     String ctx_Path = request.getContextPath();
 %>
 
+
 <jsp:include page="../adminHeader.jsp" />
+<%-- 테스트용: 로그인 구현되면 삭제 --%>
+<c:if test="${empty sessionScope.loginuser}">
+    <c:set var="tmpName" value="홍길동"/>
+</c:if>
 <style type="text/css">
     .paper {
         width: 794px;              /* A4 폭 */
@@ -82,25 +87,25 @@
 	    <!-- 업체 정보 + 담당자 정보 -->
 	    <div class="row g-3 mb-4">
 			<div class="col-6">
-		        <table class="supplier-side">
-		            <tr>
-		                <td class="label-col" rowspan="5">공<br>급<br>자</td>
-		                <th>업체명</th><td><c:out value="${headerMap.supname}"/></td>
-		            </tr>
-		            <tr><th>대표</th><td><c:out value="${headerMap.represent}"/></td></tr>
-		            <tr><th>연락처</th><td><c:out value="${headerMap.supphone}"/></td></tr>
-		            <tr><th>사업자번호</th><td><c:out value="${headerMap.supbizno}"/></td></tr>
-		            <tr><th>이메일</th><td><c:out value="${headerMap.supemail}"/></td></tr>
-		        </table>
+				<table class="supplier-side">
+				    <tr>
+				        <td class="label-col" rowspan="5">공<br>급<br>자</td>
+				        <th>업체명</th><td><c:out value="${purchaseMap.supname}"/></td>
+				    </tr>
+				    <tr><th>대표</th><td><c:out value="${purchaseMap.ceo}"/></td></tr>
+				    <tr><th>연락처</th><td><c:out value="${purchaseMap.smobile}"/></td></tr>
+				    <tr><th>사업자번호</th><td><c:out value="${purchaseMap.sbusinum}"/></td></tr>
+				    <tr><th>이메일</th><td><c:out value="${purchaseMap.semail}"/></td></tr>
+				</table>
 			</div>
 			<div class="col-6">
-		        <div class="buyer-box h-100">
-		            <div class="to"><c:out value="${headerMap.supname}"/> 귀하</div>
-		            <div>담당자 : <c:out value="${sessionScope.loginuser.name}"/></div>
-		            <div>연락처 : <c:out value="${sessionScope.loginuser.mobile}"/></div>
-		            <div>이메일 : <c:out value="${sessionScope.loginuser.email}"/></div>
-		            <div>발주일 : <c:out value="${headerMap.purtime}"/></div>
-		        </div>
+				<div class="buyer-box h-100">
+				    <div class="to"><c:out value="${purchaseMap.supname}"/> 귀하</div>
+				    <div>담당자 : <c:out value="${sessionScope.loginuser.name}"/></div>  <!-- 현재 세션스코프 적용 X -->
+				    <div>연락처 : <c:out value="${sessionScope.loginuser.mobile}"/></div>
+				    <div>이메일 : <c:out value="${sessionScope.loginuser.email}"/></div>
+				    <div>발주일 : <c:out value="${purchaseMap.purtime}"/></div>
+				</div>
 		    </div>
 		</div>
 	    <p class="text-center my-4">아래와 같이 견적합니다.</p>

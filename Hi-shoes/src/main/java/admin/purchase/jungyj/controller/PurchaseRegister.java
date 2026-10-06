@@ -174,7 +174,7 @@ public class PurchaseRegister extends AbstractController {
 			
 		  
 			int isSuccess = 0;
-			String purchaseNo = "";
+			String purnum = "";
 
 			if (supname != null && !supname.isBlank() && str_catalogueName != null
 			        && str_size != null && str_color != null && str_qty != null) {
@@ -197,9 +197,17 @@ public class PurchaseRegister extends AbstractController {
 		        isSuccess = pdao.purchaseAdd(paraMap);
 
 		        if (isSuccess == 1) {
-		            purchaseNo = String.valueOf(paraMap.get("purchaseNo"));   // DAO가 채번한 발주번호
+		        	purnum = String.valueOf(paraMap.get("purchaseNo"));   // DAO가 채번한 발주번호
 		        }
 			    
+		        JSONObject jsonObj = new JSONObject();
+		        jsonObj.put("isSuccess", isSuccess);
+		        jsonObj.put("purnum", purnum);
+
+		        request.setAttribute("json", jsonObj.toString());
+
+		        super.setRedirect(false);
+		        super.setViewPage("/WEB-INF/jsonview.jsp");
 			} // end of if (supname != null && !supname.isBlank() && str_catalogueName != null&& str_size != null && str_color != null && str_qty != null)
 			
 			
