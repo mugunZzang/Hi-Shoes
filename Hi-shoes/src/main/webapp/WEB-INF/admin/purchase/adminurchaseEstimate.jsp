@@ -43,7 +43,7 @@
 
 
     @media print {
-        .no-print, nav, header, footer { display: none !important; }
+        .no-print, nav, header, footer, #sidebarToggleIcon, #sidebarToggleBtn { display: none !important; }
         .paper { border: none; width: 100%; padding: 0; }
         #container { top: 0 !important; padding: 0 !important; }
     }
