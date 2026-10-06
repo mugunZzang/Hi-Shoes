@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import admin.catalogue.jungyj.model.CatalogueDAO;
 import admin.catalogue.jungyj.model.CatalogueDAO_imple;
+import admin.purchase.jungyj.model.PurchaseDAO;
+import admin.purchase.jungyj.model.PurchaseDAO_imple;
 import admin.supplier.jungyj.domain.SupplierDTO;
 import admin.supplier.jungyj.model.SupplierDAO;
 import admin.supplier.jungyj.model.SupplierDAO_imple;
@@ -20,6 +22,7 @@ public class PurchaseRegister extends AbstractController {
 	
 	private CatalogueDAO cdao = new CatalogueDAO_imple();
 	private SupplierDAO sdao = new SupplierDAO_imple();
+	   private PurchaseDAO pdao = new PurchaseDAO_imple();   // DAO 인터페이스/구현체 이름은 맞춰서 변경
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -34,10 +37,12 @@ public class PurchaseRegister extends AbstractController {
 				// 제품명 찾기 버튼 클릭 후 모달창의 ajax 요청인 경우
 				
 			    // 제품 검색어
-			    String productName = request.getParameter("productName");
-
-			    if(productName == null) {
-			        productName = "";
+			    String CatalogueName = request.getParameter("CatalogueName");
+//			    System.out.println("카탈로그 이름1 " + CatalogueName);
+			    // 카탈로그 이름1 잭
+			    
+			    if(CatalogueName == null) {
+			    	CatalogueName = "";
 			    }
 
 
@@ -56,7 +61,7 @@ public class PurchaseRegister extends AbstractController {
 			    // DAO에 전달할 데이터
 			    Map<String, String> paraMap = new HashMap<>();
 
-			    paraMap.put("productName", productName);
+			    paraMap.put("productName", CatalogueName);
 			    paraMap.put("currentShowPageNo", currentShowPageNo);
 
 
@@ -139,6 +144,67 @@ public class PurchaseRegister extends AbstractController {
 			} // end of if("true".equals(isAjax)) ~ else----------------------------
 			
 		} // end of if("GET".equals(method)) ~ else----------------------------------
+		else {
+			// POST 요청 시 발주하겠다는 의미
+			String supname           = request.getParameter("supname");
+			String str_catalogueName = request.getParameter("str_catalogueName_join");
+			String str_size          = request.getParameter("str_size_join");
+			String str_color         = request.getParameter("str_color_join");
+			String str_qty           = request.getParameter("str_qty_join");
+			String str_price         = request.getParameter("str_price_join");
+/*
+		    System.out.println("~~~확인용 supname :" + supname);
+		    System.out.println("~~~확인용 str_catalogueName :" + str_catalogueName);
+		    System.out.println("~~~확인용 str_size :" + str_size);
+		    System.out.println("~~~확인용 str_color :" + str_color);
+		    System.out.println("~~~확인용 str_qty :" + str_qty);
+		    System.out.println("~~~확인용 str_price :" + str_price);
+		    ~~~확인용 supname :테스트two
+		    ~~~확인용 str_catalogueName :플랫폼 윈터 퍼 부츠 에블린,플랫폼 윈터 퍼 부츠 에블린,플랫폼 윈터 퍼 부츠 에블린,플랫폼 윈터 퍼 부츠 에블린,플랫폼 윈터 퍼 부츠 에블린
+		    ~~~확인용 str_size :250,255,270,275,285
+		    ~~~확인용 str_color :WHITE,WHITE,WHITE,WHITE,WHITE
+		    ~~~확인용 str_qty :2,2,2,2,2
+		    ~~~확인용 str_price :65000,65000,65000,65000,65000
+*/
+			// === Transaction 처리하기 === //
+			// 한 번의 발주 = 업체 1곳 = 발주 1건 + 발주상세 N건(OR 발주 상세 1건)
+			// 발주번호 채번(SELECT)
+			// 발주 테이블 INSERT
+			// 발주상세 테이블 INSERT 
+			
+		  
+			int isSuccess = 0;
+			String purchaseNo = "";
+
+			if (supname != null && !supname.isBlank() && str_catalogueName != null
+			        && str_size != null && str_color != null && str_qty != null) {
+
+			    String[] catalogueName_arr = str_catalogueName.split("\\,");
+			    String[] size_arr          = str_size.split("\\,");
+			    String[] color_arr         = str_color.split("\\,");
+			    String[] qty_arr           = str_qty.split("\\,");
+			    String[] price_arr         = str_price.split("\\,");
+
+
+		        Map<String, Object> paraMap = new HashMap<>();
+		        paraMap.put("supname", supname);
+		        paraMap.put("catalogueName_arr", catalogueName_arr);
+		        paraMap.put("size_arr", size_arr);
+		        paraMap.put("color_arr", color_arr);
+		        paraMap.put("qty_arr", qty_arr);
+		        paraMap.put("price_arr", price_arr);
+
+		        isSuccess = pdao.purchaseAdd(paraMap);
+
+		        if (isSuccess == 1) {
+		            purchaseNo = String.valueOf(paraMap.get("purchaseNo"));   // DAO가 채번한 발주번호
+		        }
+			    
+			} // end of if (supname != null && !supname.isBlank() && str_catalogueName != null&& str_size != null && str_color != null && str_qty != null)
+			
+			
+			
+		}
 	}
 
 }

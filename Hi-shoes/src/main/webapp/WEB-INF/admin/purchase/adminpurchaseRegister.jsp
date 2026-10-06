@@ -76,7 +76,7 @@
             </div>
 
 			<div class="row mb-3 align-items-center">
-			    <label for="catalogueSelect" class="col-sm-2 col-form-label fw-semibold">
+			    <label for="catalogueName" class="col-sm-2 col-form-label fw-semibold">
 			        제품명<span class="required">*</span>
 			    </label>
 			    <div class="col-sm-5">
@@ -99,14 +99,14 @@
 			</div>
 
             <div class="row mb-3 align-items-start">
-                <label for="sizeSelect" class="col-sm-2 col-form-label fw-semibold infoData">사이즈<span class="required">*</span></label>
+                <label class="col-sm-2 col-form-label fw-semibold">사이즈<span class="required">*</span></label>
 				<div id="sizeGroup" style="display: flex; flex-wrap: wrap; gap: 12px; width: 420px;">		
 			        <!-- JS로 200~300 생성 -->
 			    </div>
             </div>
 
             <div class="row mb-3 align-items-center">
-                <label for="colorSelect" class="col-sm-2 col-form-label fw-semibold ">색상<span class="required">*</span></label>
+                <label class="col-sm-2 col-form-label fw-semibold ">색상<span class="required">*</span></label>
                 <div class="col-sm-5">
 		        <select id="colorSelect" class="form-select infoData">
 		            <option value="">색상을 선택하세요</option>
