@@ -188,8 +188,7 @@ public class ProductDAO_imple implements ProductDAO {
 			conn = ds.getConnection();
 			
 			String sql = " SELECT DISTINCT "
-					+ "    S.SSIZE, "
-					+ "    S.SQTY "
+					+ "    S.SSIZE "
 					+ " FROM TBL_PRODUCT P "
 					+ " JOIN TBL_CATALOGUE C "
 					+ "    ON P.FK_PNAME = C.PNAME "

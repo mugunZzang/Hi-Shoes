@@ -37,6 +37,8 @@ public class GetColorsBySsizeJSON extends AbstractController {
 		
 		String json = jsonArray.toString();
 		
+		request.setAttribute("json", json);
+		
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/jsonview.jsp");
 		
