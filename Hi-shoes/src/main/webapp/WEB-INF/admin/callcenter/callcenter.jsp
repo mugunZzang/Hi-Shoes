@@ -32,6 +32,42 @@ function goSearch(frm, type) {
 
     frm.submit();
 }// end of function goSearch(frm, type)
+
+function goDelete(num, type) {
+    if (confirm("삭제하시겠습니까?")) {
+        
+        alert("삭제되었습니다.");
+        
+        // 실제 삭제 처리할 코드
+        $.ajax({
+            	 url:"${pageContext.request.contextPath}/admin/callcenter/Delete.go", 
+            	 method:"post",
+            	 data: {
+                     num: num,
+                     type: type
+                    },
+                 dataType:"json",
+                 success:function(json){
+                	 if (json.result == 1) {
+                         alert("삭제되었습니다.");
+
+                         
+                         location.reload();
+                     }
+                     else {
+                         alert("삭제에 실패했습니다.");
+                     }
+                 },
+                 error: function(request, status, error){
+  				    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+  		         }
+             });
+    } else {
+        // 취소를 눌렀을 때
+        return;
+    }
+}
+
 </script>
 
 <div class="container-fluid"
@@ -109,7 +145,8 @@ function goSearch(frm, type) {
                 <th style="width: 10%;">글번호</th>
                 <th style="width: 20%;">글제목</th>
                 <th style="width: 50%;">글내용</th>
-                <th style="width: 20%;">작성일</th>
+                <th style="width: 10%;">작성일</th>
+                <th style="width: 10%; text-align:center;">삭제유무</th>
             </tr>
           </thead>
           	<tbody>
@@ -123,6 +160,11 @@ function goSearch(frm, type) {
 			                <td>${notice.nsubject}</td>
 			                <td>${notice.ncontents}</td>
 			                <td>${notice.nwritedate}</td>
+			                <td class="text-center"><button type="button"
+		            						class="btn btn-danger"
+		           						onclick="goDelete(${notice.nnum}, 'notice'); event.stopPropagation();" >
+		        					삭제
+		    						</button></td>
 			            </tr>
 			        </c:forEach>
 			    </c:if>
@@ -170,20 +212,27 @@ function goSearch(frm, type) {
                 <th style="width: 10%;">글번호</th>
                 <th style="width: 20%;">글제목</th>
                 <th style="width: 50%;">글내용</th>
-                <th style="width: 20%;">카테고리</th>
+                <th style="width: 10%;">카테고리</th>
+                <th style="width: 10%; text-align:center;">삭제유무</th>
             </tr>
           </thead>
 			 <tbody>
             	<c:if test="${not empty requestScope.faqList}">
             	
 			        <c:forEach var="faq" items="${requestScope.faqList}" varStatus="status">
-			            <tr class="faqInfo">
+			            <tr class="faqInfo" onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/faqEdit.go?fnum=${faq.fnum}'"
+    							style="cursor:pointer;">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
 			                <td>${faq.fsubject}</td>
 			                <td>${faq.fcontents}</td>
 			                <td>${faq.fcategory}</td>
+			                <td class="text-center"><button type="button"
+		            						class="btn btn-danger"
+		           						onclick="goDelete(${faq.fnum}, 'faq'); event.stopPropagation();">
+		        					삭제
+		    						</button></td>
 			            </tr>
 			        </c:forEach>
 			    </c:if>
@@ -196,6 +245,8 @@ function goSearch(frm, type) {
 		    </tbody>
         </table>
         <nav class="my-5">
+        
+        
 	       <div style='display:flex; width:80%; margin: 0 auto;'>
 	   	     <ul class="pagination" style='margin:auto;'>${requestScope.faqPageBar}</ul>
 	   	   </div>
@@ -205,7 +256,7 @@ function goSearch(frm, type) {
         	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;" onclick="location.href='faqWrite.go'">글작성</button>
         </div>
         
-    </div>
+    </div> 	
 
     <!-- 문의사항 -->
     <div class="tab-pane fade ${tab == 'question' ? 'show active' : ''}" id="question">
@@ -234,7 +285,7 @@ function goSearch(frm, type) {
             <tbody>
             	<c:if test="${not empty requestScope.questionList}">
 			        <c:forEach var="question" items="${requestScope.questionList}" varStatus="status">
-			            <tr class="questionInfo" onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/faqWrite.go?fnum=${faq.fnum}'"
+			            <tr onclick="location.href='questionEdit.go?qnanum=${question.qnanum}'"
     							style="cursor:pointer;">
 			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 

@@ -20,8 +20,7 @@ public class NoticeWrite extends AbstractController {
 
 
     @Override
-    public void execute(HttpServletRequest request,
-                        HttpServletResponse response) throws Exception {
+    public void execute(HttpServletRequest request,HttpServletResponse response) throws Exception {
 
 
         String method = request.getMethod();
@@ -36,9 +35,7 @@ public class NoticeWrite extends AbstractController {
 
             super.setRedirect(false);
 
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/noticeWrite.jsp"
-            );
+            super.setViewPage("/WEB-INF/admin/callcenter/noticeWrite.jsp");
 
             return;
         }
@@ -73,10 +70,7 @@ public class NoticeWrite extends AbstractController {
 
 
             super.setRedirect(false);
-
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/noticeWrite.jsp"
-            );
+            super.setViewPage("/WEB-INF/admin/callcenter/noticeWrite.jsp");
 
             return;
         }
@@ -92,49 +86,39 @@ public class NoticeWrite extends AbstractController {
         Part imagePart = request.getPart("image");
 
 
-        if(imagePart != null
-                && imagePart.getSize() > 0) {
+        if(imagePart != null&& imagePart.getSize() > 0) {
 
 
-            String originalFileName =
-                imagePart.getSubmittedFileName();
+            String originalFileName = imagePart.getSubmittedFileName();
 
 
-            if(originalFileName != null
-                    && !originalFileName.isBlank()) {
+            if(originalFileName != null && !originalFileName.isBlank()) {
 
 
                 // 확장자 가져오기
                 String extension = "";
 
-                int dotIndex =
-                    originalFileName.lastIndexOf(".");
+                int dotIndex = originalFileName.lastIndexOf(".");
 
 
                 if(dotIndex != -1) {
 
-                    extension =
-                        originalFileName.substring(dotIndex);
+                    extension = originalFileName.substring(dotIndex);
                 }
 
 
                 // 중복되지 않는 파일 이름 생성
-                imageName =
-                    UUID.randomUUID().toString()
-                    + extension;
+                imageName = UUID.randomUUID().toString() + extension;
 
 
                 // 저장 경로
-                ServletContext svlCtx =
-                    request.getServletContext();
+                ServletContext svlCtx = request.getServletContext();
 
 
-                String uploadFileDir =
-                    svlCtx.getRealPath("/images");
+                String uploadFileDir = svlCtx.getRealPath("/images");
 
 
-                File uploadDir =
-                    new File(uploadFileDir);
+                File uploadDir = new File(uploadFileDir);
 
 
                 // images 폴더가 없으면 생성
@@ -145,11 +129,7 @@ public class NoticeWrite extends AbstractController {
 
 
                 // 파일 저장
-                imagePart.write(
-                    uploadFileDir
-                    + File.separator
-                    + imageName
-                );
+                imagePart.write(uploadFileDir+ File.separator+ imageName);
             }
         }
 
@@ -183,21 +163,14 @@ public class NoticeWrite extends AbstractController {
 
             super.setRedirect(false);
 
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/callcenter.jsp?tab=notice"
-            );
+            super.setViewPage("/WEB-INF/admin/callcenter/callcenter.jsp?tab=notice");
 
         }
 
         else {
-
-
             // 실패
             super.setRedirect(false);
-
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/noticeWrite.jsp"
-            );
+            super.setViewPage("/WEB-INF/admin/callcenter/noticeWrite.jsp");
         }
 
     }

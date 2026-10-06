@@ -154,6 +154,90 @@ public class QuestionDAO_imple implements QuestionDAO {
 		   
 		   return totalCountOrder;
 	}
+	
+	@Override
+	public Map<String, String> selectQuestionOne(int qnanum) throws Exception {
+
+	    Map<String, String> qnaMap = null;
+
+	    try {
+
+	        conn = ds.getConnection();
+
+	        String sql =
+	                " select q.qnanum, "
+	              + "        q.fk_userid, "
+	              + "        q.fk_pnum, "
+	              + "        p.fk_pname, "
+	              + "        q.qcontents, "
+	              + "        q.qwritedate, "
+	              + "        q.islock, "
+	              + "        q.qanswer "
+	              + " from tbl_qna q "
+	              + " join tbl_product p "
+	              + " on q.fk_pnum = p.pnum "
+	              + " where q.qnanum = ? ";
+
+	        pstmt = conn.prepareStatement(sql);
+
+	        pstmt.setInt(1, qnanum);
+
+	        rs = pstmt.executeQuery();
+
+	        if(rs.next()) {
+
+	            qnaMap = new HashMap<>();
+	            qnaMap.put("qnanum",String.valueOf(rs.getInt("qnanum")));
+	            qnaMap.put("fk_userid",rs.getString("fk_userid"));
+	            qnaMap.put("fk_pnum",String.valueOf(rs.getInt("fk_pnum")));
+	            qnaMap.put("fk_pname",rs.getString("fk_pname"));
+	            qnaMap.put("qcontents",rs.getString("qcontents"));
+	            qnaMap.put("qwritedate",rs.getString("qwritedate"));
+	            qnaMap.put("islock",rs.getString("islock"));
+	            qnaMap.put("qanswer",rs.getString("qanswer"));
+	        }
+
+	    }
+	    finally {
+
+	        close();
+
+	    }
+
+	    return qnaMap;
+	}
+	
+	@Override
+	public int questionAnswer(Map<String, String> paraMap) throws Exception {
+
+	    int result = 0;
+
+	    try {
+
+	        conn = ds.getConnection();
+
+	        String sql =
+	                " update tbl_qna "
+	              + " set qanswer = ? "
+	              + " where qnanum = ? ";
+
+	        pstmt = conn.prepareStatement(sql);
+
+	        pstmt.setString(1, paraMap.get("qanswer"));
+	        pstmt.setInt(2,
+	                Integer.parseInt(paraMap.get("qnanum")));
+
+	        result = pstmt.executeUpdate();
+
+	    }
+	    finally {
+
+	        close();
+
+	    }
+
+	    return result;
+	}
 
 
 }

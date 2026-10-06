@@ -16,9 +16,7 @@ public class FaqWrite extends AbstractController {
 
 
     @Override
-    public void execute(HttpServletRequest request,
-                        HttpServletResponse response)
-                        throws Exception {
+    public void execute(HttpServletRequest request,HttpServletResponse response)throws Exception {
 
 
         // =====================================================
@@ -34,14 +32,8 @@ public class FaqWrite extends AbstractController {
 
         if("GET".equalsIgnoreCase(method)) {
 
-
             super.setRedirect(false);
-
-
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/faqWrite.jsp"
-            );
-
+            super.setViewPage("/WEB-INF/admin/callcenter/faqWrite.jsp");
 
             return;
 
@@ -53,47 +45,25 @@ public class FaqWrite extends AbstractController {
         // =====================================================
 
 
-        String category =
-                request.getParameter("category");
+        String category =request.getParameter("category");
+        String fsubject =request.getParameter("fsubject");
+        String fcontents =request.getParameter("fcontents");
 
-
-        String fsubject =
-                request.getParameter("fsubject");
-
-
-        String fcontents =
-                request.getParameter("fcontents");
-
-
-        // =====================================================
         // 공백 제거
-        // =====================================================
-
         if(category != null) {
-
             category = category.trim();
-
         }
 
 
         if(fsubject != null) {
-
             fsubject = fsubject.trim();
-
         }
-
 
         if(fcontents != null) {
-
             fcontents = fcontents.trim();
-
         }
 
-
-        // =====================================================
         // 필수값 검사
-        // =====================================================
-
         if(category == null
                 || category.isEmpty()
                 || fsubject == null
@@ -104,13 +74,8 @@ public class FaqWrite extends AbstractController {
 
             // 잘못된 요청이면 다시 작성 페이지
             super.setRedirect(false);
-
-
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/faqWrite.jsp"
-            );
-
-
+            super.setViewPage("/WEB-INF/admin/callcenter/faqWrite.jsp");
+            
             return;
 
         }
@@ -120,62 +85,36 @@ public class FaqWrite extends AbstractController {
         // DTO 생성
         // =====================================================
 
-        FaqDTO fdto =
-                new FaqDTO();
+        FaqDTO fdto = new FaqDTO();
 
 
-        fdto.setFcategory(
-                category
-        );
+        fdto.setFcategory(category);
 
 
-        fdto.setFsubject(
-                fsubject
-        );
+        fdto.setFsubject(fsubject);
 
 
-        fdto.setFcontents(
-                fcontents
-        );
+        fdto.setFcontents(fcontents);
 
 
-        // =====================================================
-        // DB INSERT
-        // =====================================================
+        int n = fdao.faqInsert(fdto);
 
-        int n =
-                fdao.faqInsert(fdto);
-
-
-        // =====================================================
         // 성공
-        // =====================================================
 
         if(n == 1) {
 
             super.setRedirect(false);
-
-
-            super.setViewPage(
-                "/admin/callcenter/callcenter.jsp?tab=faq"
-            );
+            super.setViewPage("/admin/callcenter/callcenter.jsp?tab=faq");
 
 
         }
 
-        // =====================================================
         // 실패
-        // =====================================================
 
         else {
 
-
             super.setRedirect(false);
-
-
-            super.setViewPage(
-                "/WEB-INF/admin/callcenter/faqWrite.jsp"
-            );
+            super.setViewPage("/WEB-INF/admin/callcenter/faqWrite.jsp");
 
         }
 

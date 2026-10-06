@@ -302,7 +302,7 @@
 
         <form name="noticeEditFrm"
 		      method="post"
-		      action="${pageContext.request.contextPath}/admin/callcenter/noticeEdit.go">
+		      action="<%= ctxPath%>/admin/callcenter/noticeEdit.go">
 		
 		    <input type="hidden" name="nnum" value="${requestScope.ndto.nnum}" />
 		
@@ -337,7 +337,7 @@
 		
 		    <button type="button"
 		            class="btn btn-secondary"
-		            onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/callcenter.go?tab=notice'">
+		            onclick="location.href='<%= ctxPath%>/admin/callcenter/callcenter.go?tab=notice'">
 		        취소
 		    </button>
 		

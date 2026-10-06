@@ -22,11 +22,8 @@ public class NoticeDAO_imple implements NoticeDAO {
 
 
     private DataSource ds;
-
     private Connection conn;
-
     private PreparedStatement pstmt;
-
     private ResultSet rs;
 
 
@@ -38,21 +35,12 @@ public class NoticeDAO_imple implements NoticeDAO {
 
         try {
 
-            Context initContext =
-                new InitialContext();
+            Context initContext = new InitialContext();
+
+            Context envContext =(Context)initContext.lookup("java:/comp/env");
 
 
-            Context envContext =
-                (Context)initContext.lookup(
-                    "java:/comp/env"
-                );
-
-
-            ds =
-                (DataSource)envContext.lookup(
-                    "jdbc/myoracle"
-                );
-
+            ds =(DataSource)envContext.lookup("jdbc/myoracle");
 
         }
         catch(NamingException e) {
@@ -105,39 +93,32 @@ public class NoticeDAO_imple implements NoticeDAO {
     // =====================================================
 
     @Override
-    public List<NoticeDTO> select_notice_list(
-            Map<String, String> paraMap) throws Exception {
+    public List<NoticeDTO> select_notice_list(Map<String, String> paraMap) throws Exception {
 
 
-        List<NoticeDTO> noticeList =
-            new ArrayList<>();
+        List<NoticeDTO> noticeList = new ArrayList<>();
 
 
         try {
 
-
             conn = ds.getConnection();
 
 
-            String sql =
-                " select nnum, nsubject, ncontents, "
-              + "        nwritedate, nimage "
-              + " from tbl_notice ";
+            String sql =" select nnum, nsubject, ncontents, "
+		              + "        nwritedate, nimage "
+		              + " from tbl_notice ";
 
 
-            String colname =
-                paraMap.get("searchType");
+            String colname =paraMap.get("searchType");
 
 
-            String searchWord =
-                paraMap.get("searchWord");
+            String searchWord =paraMap.get("searchWord");
 
 
-            boolean isSearch =
-                colname != null
-                && searchWord != null
-                && !colname.isEmpty()
-                && !searchWord.trim().isEmpty();
+            boolean isSearch = colname != null
+				               && searchWord != null
+				               && !colname.isEmpty()
+				               && !searchWord.trim().isEmpty();
 
 
             // =================================================
@@ -146,18 +127,12 @@ public class NoticeDAO_imple implements NoticeDAO {
 
             if(isSearch) {
 
-
                 if("subject".equals(colname)) {
-
-                    sql +=
-                        " where nsubject like '%' || ? || '%' ";
+                    sql += " where nsubject like '%' || ? || '%' ";
                 }
-
-
                 else if("content".equals(colname)) {
 
-                    sql +=
-                        " where ncontents like '%' || ? || '%' ";
+                    sql += " where ncontents like '%' || ? || '%' ";
                 }
 
             }
@@ -167,44 +142,29 @@ public class NoticeDAO_imple implements NoticeDAO {
             // 정렬 + 페이징
             // =================================================
 
-            sql +=
-                " order by nnum desc "
-              + " offset (? - 1) * 10 rows "
-              + " fetch next 10 rows only ";
+            sql +=" order by nnum desc "
+	              + " offset (? - 1) * 10 rows "
+	              + " fetch next 10 rows only ";
 
 
-            pstmt =
-                conn.prepareStatement(sql);
-
-
-            int parameterIndex = 1;
-
-
+            pstmt = conn.prepareStatement(sql);
+            
+            int i = 1;
             // 검색어
             if(isSearch) {
 
-                pstmt.setString(
-                    parameterIndex++,
-                    searchWord.trim()
-                );
+                pstmt.setString(i++,searchWord.trim());
             }
 
 
             // 현재 페이지
-            int currentShowPageNo =
-                Integer.parseInt(
-                    paraMap.get("currentShowPageNo")
-                );
+            int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
 
 
-            pstmt.setInt(
-                parameterIndex,
-                currentShowPageNo
-            );
+            pstmt.setInt(i,currentShowPageNo);
 
 
-            rs =
-                pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
 
             // =================================================
@@ -214,35 +174,14 @@ public class NoticeDAO_imple implements NoticeDAO {
             while(rs.next()) {
 
 
-                NoticeDTO ndto =
-                    new NoticeDTO();
+                NoticeDTO ndto =new NoticeDTO();
 
 
-                ndto.setNnum(
-                    rs.getInt("nnum")
-                );
-
-
-                ndto.setNsubject(
-                    rs.getString("nsubject")
-                );
-
-
-                ndto.setNcontents(
-                    rs.getString("ncontents")
-                );
-
-
-                ndto.setNwritedate(
-                    rs.getString("nwritedate")
-                );
-
-
-                ndto.setNimage(
-                    rs.getString("nimage")
-                );
-
-
+                ndto.setNnum(rs.getInt("nnum"));
+                ndto.setNsubject(rs.getString("nsubject"));
+                ndto.setNcontents(rs.getString("ncontents"));
+                ndto.setNwritedate(rs.getString("nwritedate"));
+                ndto.setNimage(rs.getString("nimage"));
                 noticeList.add(ndto);
 
             }
@@ -272,28 +211,21 @@ public class NoticeDAO_imple implements NoticeDAO {
         try {
 
 
-            conn =
-                ds.getConnection();
+            conn =ds.getConnection();
 
 
-            String sql =
-                " select count(*) as CNT "
-              + " from tbl_notice ";
+            String sql = " select count(*) as CNT "
+            			   + " from tbl_notice ";
+
+            String colname =paraMap.get("searchType");
+
+            String searchWord = paraMap.get("searchWord");
 
 
-            String colname =
-                paraMap.get("searchType");
-
-
-            String searchWord =
-                paraMap.get("searchWord");
-
-
-            boolean isSearch =
-                colname != null
-                && searchWord != null
-                && !colname.isEmpty()
-                && !searchWord.trim().isEmpty();
+            boolean isSearch =  colname != null
+				                && searchWord != null
+				                && !colname.isEmpty()
+				                && !searchWord.trim().isEmpty();
 
 
             // 검색 조건
@@ -302,41 +234,33 @@ public class NoticeDAO_imple implements NoticeDAO {
 
                 if("subject".equals(colname)) {
 
-                    sql +=
-                        " where nsubject like '%' || ? || '%' ";
+                    sql += " where nsubject like '%' || ? || '%' ";
                 }
 
 
                 else if("content".equals(colname)) {
 
-                    sql +=
-                        " where ncontents like '%' || ? || '%' ";
+                    sql += " where ncontents like '%' || ? || '%' ";
                 }
 
             }
 
 
-            pstmt =
-                conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sql);
 
 
             if(isSearch) {
 
-                pstmt.setString(
-                    1,
-                    searchWord.trim()
-                );
+                pstmt.setString(1,searchWord.trim());
             }
 
 
-            rs =
-                pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
 
             if(rs.next()) {
 
-                totalCountOrder =
-                    rs.getInt("CNT");
+                totalCountOrder = rs.getInt("CNT");
             }
 
         }
@@ -355,53 +279,36 @@ public class NoticeDAO_imple implements NoticeDAO {
     // =====================================================
 
     @Override
-    public int noticeInsert(
-            NoticeDTO ndto) throws Exception {
-
+    public int noticeInsert(NoticeDTO ndto) throws Exception {
 
         int n = 0;
 
-
         try {
 
-
-            conn =
-                ds.getConnection();
+            conn = ds.getConnection();
 
 
-            String sql =
-                " insert into tbl_notice "
-              + " (nnum, nsubject, ncontents, nimage) "
-              + " values (SEQ_NNUM.nextval, ?, ?, ?) ";
+            String sql = " insert into tbl_notice "
+		              + " (nnum, nsubject, ncontents, nimage) "
+		              + " values (SEQ_NNUM.nextval, ?, ?, ?) ";
 
 
-            pstmt =
-                conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sql);
 
 
             // 제목
-            pstmt.setString(
-                1,
-                ndto.getNsubject()
-            );
+            pstmt.setString(1,ndto.getNsubject());
 
 
-            // ★ 내용
-            pstmt.setString(
-                2,
-                ndto.getNcontents()
-            );
+            // 내용
+            pstmt.setString(2,ndto.getNcontents());
 
 
             // 이미지
-            pstmt.setString(
-                3,
-                ndto.getNimage()
-            );
+            pstmt.setString(3,ndto.getNimage());
 
 
-            n =
-                pstmt.executeUpdate();
+            n = pstmt.executeUpdate();
 
         }
         finally {
