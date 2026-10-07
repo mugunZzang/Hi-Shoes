@@ -60,7 +60,46 @@ public class PurchaseDAO_imple implements PurchaseDAO {
        }
     } // end of private void close()---------------
 
-	
+    // 공통 WHERE 생성 (count / list 둘 다 사용)
+    private String buildPurchaseWhere(Map<String, String> paraMap, List<String> values) {
+
+        List<String> conditions = new ArrayList<>();
+
+        String supname   = paraMap.get("supname");
+        String startDate = paraMap.get("startDate");
+        String endDate   = paraMap.get("endDate");
+        String status = paraMap.get("status");   // 입고 상태 컬럼
+
+        
+        if (supname != null && !supname.trim().isEmpty()) {
+            conditions.add(" p.fk_supname = ? ");
+            values.add(supname);
+        }
+
+        if (startDate != null && !startDate.trim().isEmpty()) {
+            conditions.add(" p.purtime >= TO_DATE(?, 'yyyy-mm-dd') ");
+            values.add(startDate);
+        }
+
+        if (endDate != null && !endDate.trim().isEmpty()) {
+            // 종료일 당일 포함: 종료일 + 1일 미만
+            conditions.add(" p.purtime < TO_DATE(?, 'yyyy-mm-dd') + 1 ");
+            values.add(endDate);
+        }
+
+        if ("wait".equals(status)) {
+        	// 납품기한까지 남아있고, 현재 미입고 상태
+            conditions.add(" p.instock = '미입고' AND p.purdeadline >= TRUNC(SYSDATE) ");
+        } else if ("done".equals(status)) {
+        	// 입고처리가 완료된 건
+            conditions.add(" p.instock = '입고' ");
+        } else if ("delay".equals(status)) {
+        	// 기한이 지났지만 입고가 완료되지 않은 건
+            conditions.add(" p.instock = '미입고' AND p.purdeadline < TRUNC(SYSDATE) ");
+        }
+        
+        return conditions.isEmpty() ? "" : " WHERE " + String.join(" AND ", conditions);
+    }
     
 
 	// 발주 전체 저장 메서드
@@ -328,8 +367,17 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 			conn = ds.getConnection();
 			
 			String sql = " SELECT COUNT(*) AS TOTALPURCHASECOUNT"
-					   + " FROM tbl_purchase ";
+					   + " FROM tbl_purchase p ";
+			
+			List<String> values = new ArrayList<>();
+			sql += buildPurchaseWhere(paraMap, values);
+
 			pstmt = conn.prepareStatement(sql);
+			
+			int index = 1;
+			for (String value : values) {
+			    pstmt.setString(index++, value);
+			}
 			
 			rs = pstmt.executeQuery();
 			rs.next();
@@ -349,15 +397,52 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 		
 		try {
 			conn = ds.getConnection();
+			List<String> values = new ArrayList<>();
+			String where = buildPurchaseWhere(paraMap, values);
 			
+			String sql = " SELECT p.purnum, p.fk_supname, TO_CHAR(p.purtime, 'yyyy-mm-dd') AS purtime "
+					   + " , TO_CHAR(p.purdeadline, 'yyyy-mm-dd') AS purdeadline, p.instock,  "
+					   + " COUNT(d.fk_purnum) AS product_count,  "
+					   + " NVL(SUM(d.purqty), 0) AS total_quantity  "
+					   + " FROM tbl_purchase p  "
+					   + " LEFT JOIN tbl_purdetail d  "
+					   + " ON p.purnum = d.fk_purnum  "
+					   + where
+					   + " GROUP BY p.purnum, p.fk_supname, p.purtime, p.purdeadline, p.instock  "
+					   + " ORDER BY p.purtime DESC, p.purnum DESC  "
+					   + " OFFSET (TO_NUMBER(?) - 1) * 10 ROWS  "
+					   + " FETCH NEXT 10 ROWS ONLY  ";
 			
+			pstmt = conn.prepareStatement(sql);
+			int index = 1;                                          
+			for (String value : values) {
+			    pstmt.setString(index++, value);
+			}
+			pstmt.setString(index, paraMap.get("currentShowPageNo"));
 			
+			rs = pstmt.executeQuery();
 			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("purnum", String.valueOf(rs.getInt("purnum")));
+				map.put("fk_supname", rs.getString("fk_supname"));
+				map.put("purtime", rs.getString("purtime"));
+				map.put("purdeadline", rs.getString("purdeadline"));
+				map.put("instock", rs.getString("instock"));
+				map.put("product_count", String.valueOf(rs.getInt("product_count")));
+				map.put("total_quantity", String.valueOf(rs.getInt("total_quantity")));
+				
+				purchaseList.add(map);
+				
+			}
 		} finally {
 			close();
 		}
 		
-		return null;
+		return purchaseList;
 	} // end of public List<Map<String, String>> selectPurchaseList(Map<String, String> paraMap) throws SQLException--------
 
+	
+	
 }

@@ -10,6 +10,8 @@
 %>
 
 <jsp:include page="../adminHeader.jsp" />
+
+
 <script>
     const ctx_Path = "<%= ctx_Path %>";
 </script>
@@ -69,98 +71,84 @@
 
         <ul class="nav nav-tabs mb-4">
 
-            <li class="nav-item">
-                <a class="nav-link active"
-                   href="#">
-                    전체 발주
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link"
-                   href="#">
-                    입고 대기
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link"
-                   href="#">
-                    입고 완료
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link"
-                   href="#">
-                    입고 지연
-                </a>
-            </li>
+			<li class="nav-item">
+			    <a class="nav-link ${requestScope.status == 'all' ? 'active' : ''}"
+			       href="?status=all${requestScope.baseQuery}">
+			        전체 발주
+			    </a>
+			</li>
+			
+			<li class="nav-item">
+			    <a class="nav-link ${requestScope.status == 'wait' ? 'active' : ''}"
+			       href="?status=wait${requestScope.baseQuery}">
+			        입고 대기
+			    </a>
+			</li>
+			
+			<li class="nav-item">
+			    <a class="nav-link ${requestScope.status == 'done' ? 'active' : ''}"
+			       href="?status=done${requestScope.baseQuery}">
+			        입고 완료
+			    </a>
+			</li>
+			
+			<li class="nav-item">
+			    <a class="nav-link ${requestScope.status == 'delay' ? 'active' : ''}"
+			       href="?status=delay${requestScope.baseQuery}">
+			        입고 지연
+			    </a>
+			</li>
 
         </ul>
 
 
         <!-- ==================== 검색 영역 ==================== -->
 
-        <div class="border rounded p-4 mb-4">
-
-            <div class="row g-3 align-items-center">
-
-                <!-- 검색어 -->
-                <div class="col-md-6">
-
-                    <label class="form-label fw-semibold">
-                        검색
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           placeholder="발주번호 / 업체명 / 제품명">
-
-                </div>
-
-
-                <!-- 발주일 -->
-                <div class="col-md-6">
-
-                    <label class="form-label fw-semibold">
-                        발주일
-                    </label>
-
-                    <div class="d-flex align-items-center gap-2">
-
-                        <input type="date"
-                               class="form-control">
-
-                        <span>~</span>
-
-                        <input type="date"
-                               class="form-control">
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- 검색 버튼 -->
-            <div class="d-flex justify-content-end mt-4">
-
-                <button type="button"
-                        class="btn btn-outline-secondary me-2">
-                    초기화
-                </button>
-
-                <button type="button"
-                        class="btn btn-dark">
-                    검색
-                </button>
-
-            </div>
-
-        </div>
-
+		<form name="searchFrm" method="get" class="border rounded p-4 mb-4">
+		
+		  <!-- 탭에서 검색유지하기 위한 input 태그 -->
+		  <input type="hidden" name="status" value="${requestScope.status}">
+		 
+		    <div class="row g-3 align-items-center">
+		
+		        <!-- 공급업체 드롭다운 -->
+		        <div class="col-md-6">
+		            <label class="form-label fw-semibold">공급업체</label>
+		            <select name="supname" class="form-select">
+		                <option value="">전체</option>                <!-- supplierList 에는 공급업체 이름들이 들어있음 -->
+		                <c:forEach var="sup" items="${requestScope.supplierList}">
+		                    <option value="${sup}" ${sup == requestScope.supname ? 'selected' : ''}>
+		                        ${sup}
+		                    </option>
+		                </c:forEach>
+		            </select>
+		        </div>
+		
+		        <!-- 발주일 -->
+		        <div class="col-md-6">
+		            <label class="form-label fw-semibold">발주일</label>
+		            <div class="d-flex align-items-center gap-2">
+		                <input type="date" name="startDate" class="form-control"
+		                       value="${requestScope.startDate}">
+		                <span>~</span>
+		                <input type="date" name="endDate" class="form-control"
+		                       value="${requestScope.endDate}">
+		            </div>
+		        </div>
+		
+		    </div>
+		
+		    <!-- 검색 버튼 -->
+		    <div class="d-flex justify-content-end mt-4">
+		        <button type="button" id="btnReset" class="btn btn-outline-secondary me-2">
+		            초기화
+		        </button>
+		        <button type="submit" class="btn btn-dark">
+		            검색
+		        </button>
+		    </div>
+		
+		</form>
 
         <!-- ==================== 목록 상단 ==================== -->
 
@@ -172,24 +160,12 @@
                 </span>
 
                 <span class="text-muted ms-2">
-                    총 4건
+                    총 ${requestScope.totalCountPurchase}건
                 </span>
             </div>
 
 
-            <!-- 정렬 -->
-            <select class="form-select"
-                    style="width: 140px;">
-
-                <option selected>
-                    최신순
-                </option>
-
-                <option>
-                    오래된순
-                </option>
-
-            </select>
+ 
 
         </div>
 
@@ -215,7 +191,7 @@
                 <tbody>
 				    <c:if test="${empty requestScope.purchaseList}">
 				        <tr>
-				            <td colspan="7" class="text-center">
+				            <td colspan="8" class="text-center">
 				                발주내역이 없습니다.
 				            </td>
 				        </tr>
@@ -231,6 +207,19 @@
 				                <td>${purchase.product_count}건</td>
 				                <td>${purchase.total_quantity}개</td>
 				                <td>${purchase.instock}</td>
+				                <td>
+								    <button type="button" 
+								            class="btn btn-sm btn-outline-dark btnQuotation"
+								            data-purnum="${purchase.purnum}">
+								        견적서
+								    </button>
+								
+								    <c:if test="${purchase.instock != '입고'}">
+								        <button type="button" class="btn btn-sm btn-primary">
+								            입고처리
+								        </button>
+								    </c:if>
+								</td>
 				            </tr>
 				        </c:forEach>
 				    </c:if>
@@ -243,51 +232,62 @@
         <!-- ==================== 페이징 ==================== -->
 
         <nav class="mt-4">
-
             <ul class="pagination justify-content-center">
-
-                <li class="page-item disabled">
-                    <a class="page-link"
-                       href="#">
-                        이전
-                    </a>
-                </li>
-
-                <li class="page-item active">
-                    <a class="page-link"
-                       href="#">
-                        1
-                    </a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link"
-                       href="#">
-                        2
-                    </a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link"
-                       href="#">
-                        3
-                    </a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link"
-                       href="#">
-                        다음
-                    </a>
-                </li>
-
+               ${requestScope.pageBar}
             </ul>
-
         </nav>
 
     </div>
 
 </div>
 
+<!-- 견적서 모달  -->
+<div class="modal fade" id="quotationModal" tabindex="-1">
+
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    견적서
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body" id="quotationModalBody">
+
+                <!-- AJAX로 견적서 내용 삽입 -->
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-outline-dark"
+                        id="btnQuotationPrint"
+                        >
+                    인쇄/PDF 저장
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    닫기
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <jsp:include page="../adminFooter.jsp" />

@@ -138,4 +138,28 @@ public class SupplierDAO_imple implements SupplierDAO {
 		return result;
 	} // end of public int supplierRegister(Map<String, String> paraMap) throws SQLException-------------------------
 
+	
+	// 공급업체 이름 조회(SELECT)
+	@Override
+	public List<String> selectSupplierNameList() throws SQLException {
+	    List<String> nameList = new ArrayList<>();
+
+	    try {
+	        conn = ds.getConnection();
+
+	        String sql = " SELECT supname FROM tbl_supplier ORDER BY supname ";
+	        pstmt = conn.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            nameList.add(rs.getString("supname"));
+	        }
+
+	    } finally {
+	        close();
+	    }
+
+	    return nameList;
+	} // end of public List<String> selectSupplierNameList() throws SQLException----------
+
 }

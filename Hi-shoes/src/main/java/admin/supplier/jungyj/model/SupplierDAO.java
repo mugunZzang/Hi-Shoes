@@ -13,5 +13,7 @@ public interface SupplierDAO {
 
 	// 공급업체 등록(INSERT)
 	int supplierRegister(Map<String, String> paraMap) throws SQLException;
-
+	
+	// 공급업체 이름 조회(SELECT)
+	List<String> selectSupplierNameList() throws SQLException;
 }

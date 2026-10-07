@@ -21,6 +21,7 @@ public class PurchaseEstimate extends AbstractController {
 		if("GET".equals(method)) {
 			
 			String purnum = request.getParameter("purnum");
+			String isAjax = request.getParameter("isAjax");
 //			System.out.println("확인용 punum" + punum);
 //			확인용 punum1
 			
@@ -50,8 +51,14 @@ public class PurchaseEstimate extends AbstractController {
 			request.setAttribute("detailList", detailList);
 			request.setAttribute("total", total);
 			
-			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/admin/purchase/adminurchaseEstimate.jsp");
+			if ("true".equals(isAjax)) {
+			    super.setRedirect(false);
+			    super.setViewPage("/WEB-INF/admin/purchase/quotationContent.jsp");
+			}
+			else {
+			    super.setRedirect(false);
+			    super.setViewPage("/WEB-INF/admin/purchase/adminurchaseEstimate.jsp");
+			}
 		}
 
 	}
