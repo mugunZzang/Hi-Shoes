@@ -12,10 +12,10 @@ let b_zipcodeSearch_click = false;
 
 $(() => {
 	
-	$('span.error').hide();
+	$('p.error').hide();
 //	$('input:text[id="name"]').focus();
 //	또는
-	$('input#name').focus();	
+	$('input#agree').focus();	
 	
 //	$('input#name').blur(() => { alert('name에 있던 포커스를 잃어버렸습니다-1.'); });
 //	$('input#name').bind('blur', () => {alert('name에 있던 포커스를 잃어버렸습니다-2.');});
@@ -32,20 +32,20 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);
+			$('form[name="registerFrm"] :input').prop("disabled", true);
 			$(e.target).prop("disabled", false).val("").focus();
 			
 			//$(e.target).next().show();
 			// 또는 
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 공백이 아닌 글자를 입력했을 경우 
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
 			//$(e.target).next().show();
 			// 또는	
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
@@ -61,20 +61,20 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);
+			$('form[name="registerFrm"] :input').prop("disabled", true);
 			$(e.target).prop("disabled", false).val("").focus();
 			
 			//$(e.target).next().next().next().show();
 			// 또는 
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 공백이 아닌 글자를 입력했을 경우 
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
 			//$(e.target).next().next().next().hide();
 			// 또는	
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 userid 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 
@@ -93,20 +93,20 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);
+			$('form[name="registerFrm"] :input').prop("disabled", true);
 			$(e.target).prop("disabled", false).val("").focus();
 			
 			//$(e.target).next().next().next().show();
 			// 또는 
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 비밀번호가 정규표현식에 맞는 경우
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
 			//$(e.target).next().next().next().hide();
 			// 또는	
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 pwd 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
@@ -120,22 +120,22 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);
+			$('form[name="registerFrm"] :input').prop("disabled", true);
 			
 			$('input#pwd').prop("disabled", false).val("").focus();
 			$(e.target).prop("disabled", false).val("").focus();
 			
 			//$(e.target).next().next().next().show();
 			// 또는 
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 비밀번호와 비밀번호 확인 값이 같은 경우
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
 			//$(e.target).next().next().next().hide();
 			// 또는	
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 pwdcheck 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
@@ -154,20 +154,20 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);			
+			$('form[name="registerFrm"] :input').prop("disabled", true);			
 			$(e.target).prop("disabled", false).val("").focus();
 			
 			//$(e.target).next().next().next().show();
 			// 또는 
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 이메일이 정규표현식에 위배되지 않은 경우
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
 			//$(e.target).next().next().next().hide();
 			// 또는	
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
@@ -186,16 +186,16 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);			
+			$('form[name="registerFrm"] :input').prop("disabled", true);			
 			$(e.target).prop("disabled", false).val("").focus();
 			
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 이메일이 정규표현식에 위배되지 않은 경우
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 hp2 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
@@ -216,16 +216,16 @@ $(() => {
 	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
 	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
 	         */
-			$('table#tblMemberRegister :input').prop("disabled", true);			
+			$('form[name="registerFrm"] :input').prop("disabled", true);			
 			$(e.target).prop("disabled", false).val("").focus();
 			
-			$(e.target).parent().find('span.error').show();			
+			$(e.target).parent().parent().find('p.error').show();			
 		}
 		else {
 			// 이메일이 정규표현식에 위배되지 않은 경우
-			$('table#tblMemberRegister :input').prop("disabled", false);	
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
 			
-			$(e.target).parent().find('span.error').hide();	
+			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 hp3 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
@@ -254,7 +254,7 @@ $(() => {
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// === "우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
-	$('img#zipcodeSearch').on('click', function(){
+	$('#zipcodeSearch').on('click', function(){
 		
 		b_zipcodeSearch_click = true;
 		
@@ -367,7 +367,7 @@ $(() => {
 	////////////////////////////////////////////////////////////////////////////////////
 	
 	// "아이디중복확인" 을 클릭했을 때 이벤트 처리하기 시작 //
-	$('img#idcheck').on('click', function(){
+	$('#idcheck').on('click', function(){
 		b_idcheck_click = true;
 		// "아이디 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
 		
@@ -414,12 +414,12 @@ $(() => {
 				
 				if(json.isExists){
 					// 입력한 userid가 이미 사용 중이라면
-					$('span#idcheckResult').html($('input#userid').val() + " 은 이미 사용중이므로 다른 아이디를 입력하세요.").css({"color":"red"});
+					$('#idcheckResult').html($('input#userid').val() + " 은 이미 사용중이므로 다른 아이디를 입력하세요.").css({"color":"red"});
 					$('input#userid').val("");
 				}
 				else {
 					// 입력한 userid가 존재하지 않는 경우라면
-					$('span#idcheckResult').html($('input#userid').val() + " 은 사용가능 합니다.").css({"color":"navy"});
+					$('#idcheckResult').html($('input#userid').val() + " 은 사용가능 합니다.");
 				}
 			},
 			error: function(request, status, error){
@@ -431,7 +431,7 @@ $(() => {
 	// "아이디중복확인" 을 클릭했을 때 이벤트 처리하기 끝 //
 	
 	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기 시작 //
-	$('span#emailcheck').on('click', function(){		
+	$('#emailcheck').on('click', function(){		
 		b_emailcheck_click = true;
 		// "이메일 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
 		
@@ -466,12 +466,12 @@ $(() => {
 				
 				if(json.isExists){
 					// 입력한 userid가 이미 사용 중이라면
-					$('span#emailCheckResult').html($('input#email').val() + " 은 이미 사용중이므로 다른 이메일을 입력하세요.").css({"color":"red"});
+					$('#emailCheckResult').html($('input#email').val() + " 은 이미 사용중이므로 다른 이메일을 입력하세요.").css({"color":"red"});
 					$('input[name="email"]').val("");
 				}
 				else {
 					// 입력한 email가 존재하지 않는 경우라면
-					$('span#emailCheckResult').html($('input#email').val() + " 은 사용가능 합니다.").css({"color":"navy"});
+					$('#emailCheckResult').html($('input#email').val() + " 은 사용가능 합니다.");
 				}
 			},
 			error: function(request, status, error){
