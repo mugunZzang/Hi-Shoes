@@ -167,10 +167,109 @@ public class ProductDAO_imple implements ProductDAO {
 	    return totalCountProduct;
 	}
 
-	// 업체별 신발 갯수 가져오기
+	// 업체별 거래 갯수 가져오기
 	@Override
-	public List<Map<String, String>> sup_cnt() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Map<String, String>> sup_cnt() throws Exception{
+		
+		List<Map<String, String>> sup_map_List = new ArrayList<>();
+		   
+		   try {
+			   conn = ds.getConnection();
+			   
+			   String sql = " select "
+			   		+ "       p.fk_supname as sup, "
+			   		+ "       round( "
+			   		+ "           sum(d.purqty) / "
+			   		+ "           (select sum(d2.purqty) "
+			   		+ "              from tbl_purchase p2 "
+			   		+ "              join tbl_purdetail d2 "
+			   		+ "                on p2.purnum = d2.fk_purnum "
+			   		+ "             where p2.instock = '입고' "
+			   		+ "           ) * 100 "
+			   		+ "       , 2) as pct "
+			   		+ " from tbl_purchase p "
+			   		+ " join tbl_purdetail d "
+			   		+ "  on p.purnum = d.fk_purnum "
+			   		+ " where p.instock = '입고' "
+			   		+ " group by p.fk_supname "
+			   		+ " order by p.fk_supname ";
+			   
+			   pstmt = conn.prepareStatement(sql);
+			   
+			   rs = pstmt.executeQuery();
+			   
+			   while(rs.next()) {
+				   Map<String,String> paraMap = new HashMap<>();
+				   paraMap.put("sup", rs.getString("sup") );
+				   paraMap.put("pct", String.valueOf(rs.getDouble("pct")));
+				   
+				   sup_map_List.add(paraMap);
+			   }
+		   } finally {
+			   close();
+		   }
+		   
+		   return sup_map_List;
+	}
+
+	// 업체별 카테고리별 총 금액 가져오기
+	@Override
+	public List<Map<String, String>> sup_price() throws Exception {
+		
+		List<Map<String, String>> sup_price_map_List = new ArrayList<>();
+		   
+		   try {
+			   conn = ds.getConnection();
+			   
+			   String sql = " select "
+			   		+ "       p.fk_supname as sup, "
+			   		+ "       c2.catename as category, "
+			   		+ "       round(\r\n"
+			   		+ "           sum(d.purqty * c1.purprice) / "
+			   		+ "           ( "
+			   		+ "               select sum(pd.purqty * ct.purprice) "
+			   		+ "               from tbl_purchase pur "
+			   		+ "               join tbl_purdetail pd "
+			   		+ "                 on pur.purnum = pd.fk_purnum "
+			   		+ "               join tbl_stock st "
+			   		+ "                 on pd.fk_snum = st.snum "
+			   		+ "               join tbl_catalogue ct "
+			   		+ "                 on st.fk_pname = ct.pname "
+			   		+ "               where pur.instock = '입고' "
+			   		+ "					and pur.fk_supname = p.fk_supname "
+			   		+ "           ) * 100 "
+			   		+ "       , 2) as pct "
+			   		+ " from tbl_purchase p "
+			   		+ " join tbl_purdetail d "
+			   		+ "  on p.purnum = d.fk_purnum "
+			   		+ " join tbl_stock s "
+			   		+ "  on d.fk_snum = s.snum "
+			   		+ " join tbl_catalogue c1 "
+			   		+ "  on s.fk_pname = c1.pname "
+			   		+ " join tbl_category c2 "
+			   		+ "  on c1.fk_catenum = c2.catenum "
+			   		+ " where p.instock = '입고' "
+			   		+ " group by p.fk_supname, c2.catename "
+			   		+ " order by p.fk_supname, c2.catename; "
+			   		+ " where p.instock = '입고' "
+			   		+ " group by p.fk_supname "
+			   		+ " order by p.fk_supname ";
+			   
+			   pstmt = conn.prepareStatement(sql);
+			   
+			   rs = pstmt.executeQuery();
+			   
+			   while(rs.next()) {
+				   Map<String,String> paraMap = new HashMap<>();
+				   paraMap.put("sup", rs.getString("sup") );
+				   paraMap.put("pct", String.valueOf(rs.getDouble("pct")));
+				   
+				   sup_price_map_List.add(paraMap);
+			   }
+		   } finally {
+			   close();
+		   }
+		   
+		   return sup_price_map_List;
 	}
 }

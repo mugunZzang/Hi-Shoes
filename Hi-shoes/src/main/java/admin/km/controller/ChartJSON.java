@@ -24,7 +24,7 @@ public class ChartJSON extends AbstractController {
 	  Map<String,Object> paraMap = new HashMap<>();
 		
 	  List<Map<String,String>> sup_map_List =  pdao.sup_cnt();
-	  // List<Map<String,String>> sup_price_map_List =  pdao.sup_price();
+	  List<Map<String,String>> sup_price_map_List =  pdao.sup_price();
   	  
   	  JSONArray json_arr = new JSONArray(); // []
   	  

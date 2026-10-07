@@ -12,5 +12,8 @@ public interface ProductDAO {
 	int getTotalCountProduct(Map<String,String> paraMap) throws Exception;
 
 	// 업체별 거래 갯수 가져오기
-	List<Map<String, String>> sup_cnt();
+	List<Map<String, String>> sup_cnt() throws Exception;
+
+	// 업체별 카테고리별 총 금액 가져오기
+	List<Map<String, String>> sup_price() throws Exception;
 }
