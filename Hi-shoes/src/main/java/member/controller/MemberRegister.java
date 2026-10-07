@@ -25,7 +25,8 @@ public class MemberRegister extends AbstractController {
 			super.setViewPage("/WEB-INF/member/memberRegister.jsp");
 		}
 		else {
-			String name = request.getParameter("name");
+			String company = request.getParameter("company");
+			String busiNum = request.getParameter("busiNum");
 			String userid = request.getParameter("userid");
 			String pwd = request.getParameter("pwd");
 			String email = request.getParameter("email");
@@ -36,25 +37,20 @@ public class MemberRegister extends AbstractController {
 			String address = request.getParameter("address");
 			String detailaddress = request.getParameter("detailaddress");
 			String extraaddress = request.getParameter("extraaddress");
-			String gender = request.getParameter("gender");
-			String birthday = request.getParameter("birthday");
-			
+						
 			String mobile = hp1 + hp2 + hp3;
 			
 			MemberDTO member = new MemberDTO();
 			member.setUserid(userid);
 			member.setPwd(pwd);
-			member.setName(name);
+			member.setCompany(company);
+			member.setBusiNum(busiNum);
 			member.setEmail(email);
 			member.setMobile(mobile);
 			member.setPostcode(postcode);
 			member.setAddress(address);
 			member.setDetailaddress(detailaddress);
 			member.setExtraaddress(extraaddress);
-			member.setGender(gender);
-			
-			// 문자열이 2001-09-02 처럼 표준 ISO 형식일 경우는 포맷지정 없이 바로 LocalDate 타입으로 변환이 가능하다.
-			member.setBirthday(LocalDate.parse(birthday));
 			
 			/*
 			 * [참고]
@@ -88,8 +84,8 @@ public class MemberRegister extends AbstractController {
 					session.setAttribute("loginuser", loginuser);
 					// session(세션)에 로그인 되어진 사용자 정보인 loginuser 를 키이름을 "loginuser" 으로 저장시켜두는 것이다. 
 					
-					String message = name + "님의 회원가입을 환영합니다!";
-					String loc = request.getContextPath() + "/index.up";  // 시작페이지로 이동한다.
+					String message = company + "님의 회원가입을 환영합니다!";
+					String loc = request.getContextPath() + "/index.go";  // 시작페이지로 이동한다.
 					
 					request.setAttribute("message", message);
 					request.setAttribute("loc", loc);

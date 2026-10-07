@@ -32,14 +32,31 @@
 			
 			<div class="mb-4 row">
 				<div class="col-12 col-lg-2 pt-2">
-					<label for="name" class="form-label">이름&nbsp;<span class="star">*</span></label>
+					<label for="company" class="form-label">사명&nbsp;<span class="star">*</span></label>
 				</div>			  
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-			  		<input type="text" class="form-control" name="name" id="name" maxlength="30" class="requiredInfo" placeholder="이름을 입력 해주세요.">
+			  		<input type="text" class="form-control" name="company" id="company" maxlength="30" class="requiredInfo" placeholder="사명을 입력 해주세요.">
 			  	</div>
 			  	
-			  	<p class="error">이름은 필수입력 사항입니다.</p>
+			  	<p class="error">사명은 필수입력 사항입니다.</p>
+			  </div>			  
+			</div>
+			
+			<div class="mb-4 row">
+				<div class="col-12 col-lg-2 pt-2">
+			  		<label for="busiNum" class="form-label">사업자등록번호&nbsp;<span class="star">*</span></label>
+			  	</div>
+			  <div class="col-12 col-lg-10 row">
+			  	<div class="col-12 col-lg-6">
+				  	<input type="text" class="form-control" name="busiNum" id="busiNum" maxlength="40" class="requiredInfo" placeholder="사업자등록번호를 입력 해주세요.">					
+			  	</div>
+			  	<div  class="col-12 col-lg-6 mt-1">
+			  		<%-- 아이디중복체크 --%>
+			  		<button type="button" id="idcheck" class="d-grid d-lg-block btn btn-sm btn-danger">사업자등록번호 중복 확인</button>
+			  	</div>		  		
+				<p id="busiNumcheckResult"></p>
+		  		<p class="error">사업자등록번호는 하이픈(-) 없이 숫자 10자리로만 입력해주세요.</p>			  	
 			  </div>			  
 			</div>
 			
@@ -105,7 +122,7 @@
 			
 			<div class="mb-4 row">
 				<div class="col-12 col-lg-2 pt-2">
-			  		<label for="hp2" class="form-label">연락처</label>
+			  		<label for="hp2" class="form-label">연락처&nbsp;<span class="star">*</span></label>
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="phonenumber col-12 col-lg-6 d-flex justify-content-center align-items-center">
@@ -122,7 +139,7 @@
 			
 			<div class="mb-4 row">
 				<div class="col-12 col-lg-2 pt-2">
-			  		<label for="postcode" class="form-label">우편번호</label>
+			  		<label for="postcode" class="form-label">우편번호&nbsp;<span class="star">*</span></label>
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-2">
@@ -138,7 +155,7 @@
 			
 			<div class="mb-4 row">
 				<div class="col-12 col-lg-2 pt-2">
-					<label for="address" class="form-label">주소</label>
+					<label for="address" class="form-label">주소&nbsp;<span class="star">*</span></label>
 				</div>			  
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-10">
@@ -181,7 +198,7 @@
 			
 			<div class="row">
 				<div class="col-12 col-lg-6 mx-auto text-center">
-					<input type="button" class="btn btn-success btn-lg container-fluid" value="가입하기" onclick="goRegister()" />
+					<input type="button" class="btn btn-primary btn-lg container-fluid" value="가입하기" onclick="goRegister()" />
 				</div>
 			</div>
 		</form>

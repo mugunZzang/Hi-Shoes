@@ -21,11 +21,11 @@ $(() => {
 //	$('input#name').bind('blur', () => {alert('name에 있던 포커스를 잃어버렸습니다-2.');});
 //	$('input#name').on('blur', () => {alert('name에 있던 포커스를 잃어버렸습니다-3.');});
 	
-	$('input#name').on("blur", (e) => {
+	$('input#company').on("blur", (e) => {
 		
 		//$(e.target) 은 이벤트가 발생되어진 엘리먼트(태그)를 가리키는 것이다.				
-		const name = $(e.target).val().trim();
-		if(name == "") {
+		const company = $(e.target).val().trim();
+		if(company == "") {
 			// 입력하지 않거나 공백만 입력했을 경우
 			/*   
 	            >>>> .prop() 와 .attr() 의 차이 <<<<            
@@ -47,8 +47,38 @@ $(() => {
 			// 또는	
 			$(e.target).parent().parent().find('p.error').hide();	
 		}
-	});	// 아이디가 name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
+	});	// 아이디가 company 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
+	$('input#busiNum').on("blur", (e) => {
+			
+		const regExp_busiNum = /^[0-9]{10}$/g;
+		// 숫자 10자리 정규표현식 객체 생성
+		
+		const bool = regExp_busiNum.test($(e.target).val());
+		
+		if(!bool) {
+			// 사업자등록번호가 정규표현식에 위배된 경우
+			/*   
+	            >>>> .prop() 와 .attr() 의 차이 <<<<            
+	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
+	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
+	         */
+			$('form[name="registerFrm"] :input').prop("disabled", true);
+			$(e.target).prop("disabled", false).val("").focus();
+			
+			//$(e.target).next().next().next().show();
+			// 또는 
+			$(e.target).parent().parent().find('p.error').show();			
+		}
+		else {
+			// 사업자등록번호가 정규표현식에 맞는 경우
+			$('form[name="registerFrm"] :input').prop("disabled", false);	
+			
+			//$(e.target).next().next().next().hide();
+			// 또는	
+			$(e.target).parent().parent().find('p.error').hide();	
+		}
+	});	// 아이디가 busiNum 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
 	$('input#userid').on("blur", (e) => {
 			
