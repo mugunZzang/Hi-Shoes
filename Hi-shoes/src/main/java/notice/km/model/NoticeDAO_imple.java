@@ -381,4 +381,30 @@ public class NoticeDAO_imple implements NoticeDAO {
         return result;
     }
 
+    // 공지사항 삭제하기
+	@Override
+	public int noticeDelete(String num) throws Exception{
+		int n = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			System.out.println(num);
+			
+			String sql = " delete from tbl_notice"
+					   + " where nnum = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, num);
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
 }

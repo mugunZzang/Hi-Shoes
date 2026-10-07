@@ -166,4 +166,11 @@ public class ProductDAO_imple implements ProductDAO {
 
 	    return totalCountProduct;
 	}
+
+	// 업체별 신발 갯수 가져오기
+	@Override
+	public List<Map<String, String>> sup_cnt() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

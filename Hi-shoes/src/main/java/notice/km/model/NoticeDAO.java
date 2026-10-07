@@ -22,4 +22,7 @@ public interface NoticeDAO {
 	// 공지사항 수정하기
 	int noticeUpdate(NoticeDTO ndto) throws Exception;
 
+	// 공지사항 삭제하기
+	int noticeDelete(String num) throws Exception;
+
 }

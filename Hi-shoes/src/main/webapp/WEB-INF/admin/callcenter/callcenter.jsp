@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%
+	String ctx_Path = request.getContextPath();
+%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -35,16 +37,13 @@ function goSearch(frm, type) {
 
 function goDelete(num, type) {
     if (confirm("삭제하시겠습니까?")) {
-        
-        alert("삭제되었습니다.");
-        
         // 실제 삭제 처리할 코드
         $.ajax({
-            	 url:"${pageContext.request.contextPath}/admin/callcenter/Delete.go", 
+        		url:"<%= ctx_Path %>/admin/callcenter/delete.go", 
             	 method:"post",
             	 data: {
-                     num: num,
-                     type: type
+                     "num": num,
+                     "type": type
                     },
                  dataType:"json",
                  success:function(json){
@@ -162,7 +161,7 @@ function goDelete(num, type) {
 			                <td>${notice.nwritedate}</td>
 			                <td class="text-center"><button type="button"
 		            						class="btn btn-danger"
-		           						onclick="goDelete(${notice.nnum}, 'notice'); event.stopPropagation();" >
+		           						onclick="event.stopPropagation(); goDelete(${notice.nnum}, 'notice'); " >
 		        					삭제
 		    						</button></td>
 			            </tr>

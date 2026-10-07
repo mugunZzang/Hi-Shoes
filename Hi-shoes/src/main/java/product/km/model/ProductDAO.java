@@ -10,4 +10,7 @@ public interface ProductDAO {
 
 	// 페이징 처리할 갯수 구하기
 	int getTotalCountProduct(Map<String,String> paraMap) throws Exception;
+
+	// 업체별 거래 갯수 가져오기
+	List<Map<String, String>> sup_cnt();
 }

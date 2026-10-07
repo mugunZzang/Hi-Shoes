@@ -22,4 +22,7 @@ public interface FaqDAO {
 	// db 작성
 	int faqUpdate(FaqDTO fdto) throws Exception;
 
+	// faq 삭제
+	int faqDelete(String num) throws Exception;
+
 }

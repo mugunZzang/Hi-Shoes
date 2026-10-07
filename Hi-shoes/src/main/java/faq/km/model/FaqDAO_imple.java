@@ -464,4 +464,31 @@ public class FaqDAO_imple implements FaqDAO {
         return result;
     }
 
+
+	@Override
+	public int faqDelete(String num) throws Exception {
+		
+		int n = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			System.out.println(num);
+			
+			String sql = " delete from tbl_faq"
+					   + " where fnum = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, num);
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int faqDelete(String num) throws Exception
+
 }

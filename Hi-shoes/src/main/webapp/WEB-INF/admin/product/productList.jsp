@@ -1,10 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%
+	String ctx_Path = request.getContextPath();
+%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:include page="../adminHeader.jsp" />  
 <script type="text/javascript">
+
+	$(function(){
+		
+	});
+	
+	function goDelete(pnum){
+		 if (confirm("삭제하시겠습니까?")) {
+		        // 실제 삭제 처리할 코드
+		        $.ajax({
+		        		url:"<%= ctx_Path %>/admin/product/productDelete.go", 
+		            	 method:"post",
+		            	 data: {
+		                     "pnum": pnum,
+		                    },
+		                 dataType:"json",
+		                 success:function(json){
+		                	 if (json.result == 1) {
+		                         alert("삭제되었습니다.");
+
+		                         
+		                         location.reload();
+		                     }
+		                     else {
+		                         alert("삭제에 실패했습니다.");
+		                     }
+		                 },
+		                 error: function(request, status, error){
+		  				    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  		         }
+		             });
+		    } else {
+		        // 취소를 눌렀을 때
+		        return;
+		    }
+	}
 
 </script>
 
@@ -78,7 +115,8 @@
                     <th style="width:10%; text-align:center;">상품번호</th>
                     <th style="width:25%; text-align:center;">상품명</th>
                     <th style="width:40%; text-align:center;">상품내용</th>
-                    <th style="width:15%; text-align:center;">배송비</th>
+                    <th style="width:5%; text-align:center;">배송비</th>
+                    <th style="width:10%; text-align:center;">삭제유무</th>
                 </tr>
             </thead>
 
@@ -107,6 +145,12 @@
                             <td align="center">
                                 ${product.deliveryfee}원
                             </td>
+                            
+                            <td class="text-center"><button type="button"
+		            						class="btn btn-danger"
+		           						onclick="event.stopPropagation(); goDelete(${product.pnum}); " >
+		        					삭제
+		    				</button></td>
 
                         </tr>
 

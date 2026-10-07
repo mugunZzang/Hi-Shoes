@@ -9,14 +9,8 @@
   let total_fileSize = 0; // 첨부한 파일의 총량을 누적하는 용도 
 
   $(function(){
-	  
+  
 	  $('span.error').hide();
-	  
-	  $('input[name="pqty"]').on('keyup', function(e){
-		  // $(this).val("1");
-		  // 또는
-		     $(e.target).val("1");
-	  });
 	  
 	  // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 시작 <<== //
 	  $('input.img_file').on('change', function(e){
@@ -480,6 +474,8 @@
 	  
 	  
   });// end of $(function(){})-----------------------
+  
+
 
 </script>
 
@@ -536,7 +532,7 @@
 				<td width="25%" class="prodInputName">제품명</td>
 				<td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;" >
 					<input type="text" style="width: 300px;" name="pname" class="box infoData" />
-					<button type="button" style="border-radius: 4px;">제품명 찾기</button>
+					<button type="button" style="border-radius: 4px;" class="btnPname" data-bs-toggle="modal" data-bs-target="#productModal">제품명 찾기</button>
 					<span class="error">필수입력</span>
 				</td>
 			</tr>
@@ -585,8 +581,105 @@
 			</tr>
 		</tbody>
 		</table>
-		
+
 	</form>
+	
+	<!-- 제품 검색 모달 -->
+<div class="modal fade"
+     id="productModal"
+     tabindex="-1"
+     aria-labelledby="productModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+        <div class="modal-content">
+
+            <!-- 모달 헤더 -->
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="productModalLabel">
+                    제품 검색
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <!-- 모달 본문 -->
+            <div class="modal-body">
+
+                <!-- 제품명 검색 -->
+                <div class="input-group mb-3">
+
+                    <input type="text"
+                           id="catalogueSearchWord"
+                           class="form-control"
+                           placeholder="제품명을 입력하세요">
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            id="btncatalogueSearchSubmit">
+                        검색
+                    </button>
+
+                </div>
+
+
+                <!-- 제품 조회 결과 -->
+                <table class="table table-bordered"
+                       id="catalogueTbl">
+
+                    <colgroup>
+                        <col style="width: 100%;">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th class="text-center align-middle">
+                                제품명
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <!-- JS로 검색 결과 생성 -->
+
+                    </tbody>
+
+                </table>
+                
+                <!-- 페이지 바  -->
+                <nav class="my-3">
+                <ul class="pagination justify-content-center" id="cataloguePageBar">
+                </ul>
+            </nav>
+
+            </div>
+
+
+            <!-- 모달 푸터 -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    닫기
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 </div>
 </div>
