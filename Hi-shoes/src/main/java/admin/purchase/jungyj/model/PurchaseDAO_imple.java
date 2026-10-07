@@ -268,4 +268,96 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 		return purchaseDetailList;
 	} // end of public List<Map<String, String>> selectPurchaseDetail(String purnum) throws SQLException-----------
 
+	// 발주 목록 조회(SELECT)
+	@Override
+	public List<Map<String, String>> selectPurchaseList() throws SQLException {
+		List<Map<String, String>> purchase_map_list = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT "
+					   + "    p.purnum, "
+					   + "    p.fk_supname, "
+					   + "    TO_CHAR(p.purtime, 'yyyy-mm-dd') AS purtime, "
+					   + "    TO_CHAR(p.purdeadline, 'yyyy-mm-dd') AS purdeadline, "
+					   + "    p.instock, "
+					   + "    COUNT(pd.purdetailnum) AS product_count, "
+					   + "    SUM(pd.purqty) AS total_quantity "
+					   + " FROM tbl_purchase p "
+					   + " JOIN tbl_purdetail pd "
+					   + "    ON p.purnum = pd.fk_purnum "
+					   + " GROUP BY "
+					   + "    p.purnum, "
+					   + "    p.fk_supname, "
+					   + "    p.purtime, "
+					   + "    p.purdeadline, "
+					   + "    p.instock "
+					   + " ORDER BY p.purtime DESC ";
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("purnum", String.valueOf(rs.getInt("purnum")));
+				map.put("fk_supname", rs.getString("fk_supname"));
+				map.put("purtime", rs.getString("purtime"));
+				map.put("purdeadline", rs.getString("purdeadline"));
+				map.put("instock", rs.getString("instock"));
+				map.put("product_count", String.valueOf(rs.getInt("product_count")));
+				map.put("total_quantity", String.valueOf(rs.getInt("total_quantity")));
+				
+				purchase_map_list.add(map);
+			}
+		} finally {
+			close();
+		}
+		
+		return purchase_map_list;
+	} // end of public List<Map<String, String>> selectPurchaseList() throws SQLException-----------------------
+
+	
+    // 전체 발주 개수
+	@Override
+	public int getTotalCountPurchase(Map<String, String> paraMap) throws SQLException {
+		int totalCountPurchase = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT COUNT(*) AS TOTALPURCHASECOUNT"
+					   + " FROM tbl_purchase ";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			rs.next();
+			totalCountPurchase = rs.getInt("TOTALPURCHASECOUNT");
+			
+		} finally {
+			close();
+		}
+		
+		return totalCountPurchase;
+	} // end of public int getTotalCountPurchase(Map<String, String> paraMap) throws SQLException----------------
+
+    // 현재 페이지의 발주 목록 페이징 처리 O
+	@Override
+	public List<Map<String, String>> selectPurchaseList(Map<String, String> paraMap) throws SQLException {
+		List<Map<String, String>> purchaseList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			
+			
+			
+		} finally {
+			close();
+		}
+		
+		return null;
+	} // end of public List<Map<String, String>> selectPurchaseList(Map<String, String> paraMap) throws SQLException--------
+
 }

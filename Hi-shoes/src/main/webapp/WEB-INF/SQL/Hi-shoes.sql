@@ -269,6 +269,33 @@ select P.purdetailnum, P.purqty, P.purqty, P.purdprice,
 from tbl_purdetail P INNER JOIN tbl_stock S
 ON P.fk_snum = S.snum
 where fk_purnum = 1 
-order by purdetailnum 
+order by purdetailnum ;
 
-SELECT * FROM tbl_purdetail
+SELECT * FROM tbl_purdetail;
+
+
+SELECT
+    p.purnum,
+    p.fk_supname,
+    to_char(p.purtime, 'yyyy-mm-dd') AS purtime,
+    to_char(p.purdeadline, 'yyyy-mm-dd') AS purdeadline,
+    p.instock,
+
+    COUNT(pd.purdetailnum) AS product_count,
+    SUM(pd.purqty) AS total_quantity
+
+FROM tbl_purchase p
+JOIN tbl_purdetail pd
+    ON p.purnum = pd.fk_purnum
+
+GROUP BY
+    p.purnum,
+    p.fk_supname,
+    p.purtime,
+    p.purdeadline,
+    p.instock
+ORDER BY p.purtime DESC;
+
+
+SELECT CEIL(COUNT(*)/?) AS TOTALPAGE 
+FROM tbl_purchase
