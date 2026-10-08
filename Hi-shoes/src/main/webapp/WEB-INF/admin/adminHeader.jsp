@@ -91,12 +91,180 @@
 <script type="text/javascript" src="<%= ctxPath%>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js" ></script>
 
 <style type="text/css">
-	* {
-		font-family: "Noto Sans KR", sans-serif;
-		  font-optical-sizing: auto;
-		  font-weight: 400;
-		  font-style: normal;
-	}
+   * {
+      font-family: "Noto Sans KR", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+   }
+   
+/*==============버튼 색상==================*/
+
+.btn-secondary {
+    --bs-btn-bg: #336600;
+    --bs-btn-border-color: #336600;
+    --bs-btn-hover-bg: #254d00;
+    --bs-btn-hover-border-color: #254d00;
+}
+
+/*=============테이블 헤더=================*/
+#container table thead th{
+ background-color:#E3EDE0 !important;
+ font-size: 12pt;
+}
+
+/*=============테이블 데이터=================*/
+#container table tbody td{
+ font-size:10pt;
+}
+
+/*=============페이지바 디자인=================*/
+
+
+/* 1. 페이지바 전체 컨테이너 */
+#pageBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px 0;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 30px;
+}
+
+#pageBar ul.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 2. 모든 버튼 기본 스타일 초기화 (부트스트랩 테두리/배경 제거) */
+#pageBar ul.pagination li a,
+#pageBar ul.pagination li span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  color: #888888 !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  border: none !important;            /* 연한 회색 테두리 박스 제거 */
+  background: none !important;        /* 기본 배경색 제거 */
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* 3. 첫 번째(맨처음) 버튼: 기존 글자 투명 처리 + "«" 기호 덮어씌우기 */
+#pageBar ul.pagination li:first-child a,
+#pageBar ul.pagination li:first-child span {
+  font-size: 0 !important; /* 자바에서 넘어온 "맨처음" 글자를 아예 0px로 숨김 */
+  color: transparent !important;
+}
+
+#pageBar ul.pagination li:first-child a::after,
+#pageBar ul.pagination li:first-child span::after {
+  content: "«";             /* << 화살표 기호 표시 */
+  font-size: 16px !important;
+  color: #222222 !important;
+  display: inline-block;
+}
+
+/* 4. 마지막(마지막) 버튼: 기존 글자 투명 처리 + "»" 기호 덮어씌우기 */
+#pageBar ul.pagination li:last-child a,
+#pageBar ul.pagination li:last-child span {
+  font-size: 0 !important; /* 자바에서 넘어온 "마지막" 글자를 아예 0px로 숨김 */
+  color: transparent !important;
+}
+
+#pageBar ul.pagination li:last-child a::after,
+#pageBar ul.pagination li:last-child span::after {
+  content: "»";             /* >> 화살표 기호 표시 */
+  font-size: 16px !important;
+  color: #222222 !important;
+  display: inline-block;
+}
+
+/* 5. 선택된 페이지 (Active) - 검은 정사각형 스타일 */
+#pageBar ul.pagination li.active a,
+#pageBar ul.pagination li.active span,
+#pageBar ul.pagination li a.active {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
+   
+   
+   
+   
+   
+   
+   
+/*================ 헤더 메뉴 색깔 변화 ================*/
+.nav-link:hover {
+    color: #006400 !important;
+}
+
+
+/*=============== 헤더 메뉴 드롭다운 만들기 ===============*/
+/* 헤더 드롭다운 */
+.header-dropdown {
+    position: relative;
+}
+
+/* 기본적으로 숨김 */
+.header-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 150px;
+    background-color: white;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 2000;
+}
+
+/* 마우스를 올리면 표시 */
+.header-dropdown:hover .header-dropdown-menu {
+    display: block;
+}
+
+/* 하위 메뉴 */
+.header-dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333333;
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* 하위 메뉴에 마우스를 올렸을 때 */
+.header-dropdown-menu a:hover {
+    background-color: #f2f2f2;
+    color: #006400;
+}
+
+/* === 공지사항 메뉴탭 === */
+.nav-tabs .nav-link {
+    color: black;
+}
+
+.nav-tabs .nav-link.active {
+    color: black;
+}
+
+
+
 
 /* =========================================
    관리자 사이드바 (변수)
@@ -156,6 +324,8 @@ body.sidebar-open .admin-sidebar {
     font-weight: 600;
     border-left: 4px solid #315B48;
 }
+
+
 
 /* =========================================
    드롭다운 메뉴 (대메뉴 버튼 + 하위 메뉴)
@@ -217,6 +387,8 @@ body.sidebar-open .admin-sidebar {
 .admin-sidebar a.menu-single.active {
     padding-left: 21px;              /* active 의 border-left 4px 만큼 보정 */
 }
+
+
 
 /* =========================================
    사이드바 토글 버튼
