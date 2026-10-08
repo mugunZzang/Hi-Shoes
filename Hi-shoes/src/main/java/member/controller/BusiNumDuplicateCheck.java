@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
 
-public class IdDuplicateCheck extends AbstractController {
+public class BusiNumDuplicateCheck extends AbstractController {
 
 	private MemberDAO mdao = new MemberDAO_imple();
 	
@@ -17,9 +17,9 @@ public class IdDuplicateCheck extends AbstractController {
 		String method = request.getMethod();	//"GET" 도는 "POST"
 		
 		if("POST".equals(method)) {
-			String userid = request.getParameter("userid");			
+			String busiNum = request.getParameter("busiNum");			
 			
-			boolean isExists = mdao.idDuplicateCheck(userid);
+			boolean isExists = mdao.busiNumDuplicateCheck(busiNum);
 			/*
 			boolean isExists 에 저장되어진 데이터를 
 			/MyMVC/src/main/webapp/js/member/memberRegister.js 로
@@ -39,8 +39,7 @@ public class IdDuplicateCheck extends AbstractController {
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp");
-		}		
-		
+		}	
 	}
 
 }

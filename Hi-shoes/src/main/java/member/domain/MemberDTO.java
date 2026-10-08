@@ -14,8 +14,14 @@ public class MemberDTO {
 	private String address;              // 주소
 	private String detailaddress;        // 상세주소
 	private String extraaddress;         // 참고항목
+	private String idle;                 // 휴면유무      활동중  /  휴면중
+	private String registerday;          // 가입일자 
+	private String lastpwdchangedate;    // 마지막으로 암호를 변경한 날짜  
+	private String status;               // 회원탈퇴유무    가입중 / 탈퇴
+	private String ban;					 // 정지유무		정상  /  정지
 	
 	
+		
 	public String getUserid() {
 		return userid;
 	}
@@ -75,6 +81,36 @@ public class MemberDTO {
 	}
 	public void setExtraaddress(String extraaddress) {
 		this.extraaddress = extraaddress;
+	}
+	public String getIdle() {
+		return idle;
+	}
+	public void setIdle(String idle) {
+		this.idle = idle;
+	}
+	public String getRegisterday() {
+		return registerday;
+	}
+	public void setRegisterday(String registerday) {
+		this.registerday = registerday;
+	}
+	public String getLastpwdchangedate() {
+		return lastpwdchangedate;
+	}
+	public void setLastpwdchangedate(String lastpwdchangedate) {
+		this.lastpwdchangedate = lastpwdchangedate;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getBan() {
+		return ban;
+	}
+	public void setBan(String ban) {
+		this.ban = ban;
 	}
 	
 	////////////////////////////////////////////////////////////

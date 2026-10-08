@@ -5,6 +5,8 @@
     String ctxPath = request.getContextPath();
 %>    
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,6 +28,7 @@
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/js/jquery-4.0.0.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js" ></script>
+
 </head>
 <body>
 	<header class="container-fluid">
@@ -37,17 +40,43 @@
 					</a>
 				</h1>								
 			</div>
-			<div class="join-wrap nav nav-pills">
-				<a href="<%=ctxPath %>/login/login_cookie.go">
-					<img alt="login" src="<%= ctxPath %>/images/login.svg">
-					<span>LOGIN</span>
-				</a>
-				
-				<a href="<%=ctxPath %>/member/memberRegister.go">
-					<img alt="join" src="<%= ctxPath %>/images/join.svg">
-					<span>JOIN</span>
-				</a>
-			</div>
+			<c:if test="${empty sessionScope.loginuser}">
+				<div class="join-wrap nav nav-pills">
+					<a href="<%=ctxPath %>/login/login_cookie.go">
+						<img alt="login" src="<%= ctxPath %>/images/login.svg">
+						<span>LOGIN</span>
+					</a>
+					
+					<a href="<%=ctxPath %>/member/memberRegister.go">
+						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<span>JOIN</span>
+					</a>
+				</div>
+			</c:if>
+			
+			<c:if test="${not empty sessionScope.loginuser}">
+				<div class="join-wrap nav nav-pills">
+					<a href="#">
+						<img alt="login" src="<%= ctxPath %>/images/login.svg">
+						<span>MY<br/>PAGE</span>
+					</a>
+					
+					<a href="#">
+						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<span>CART</span>
+					</a>
+					
+					<a href="#">
+						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<span>CS<br/>CENTER</span>
+					</a>
+					
+					<a href="#" onclick='javascript:location.href="<%= ctxPath%>/login/logout.go"'>
+						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<span>LOGOUT</span>
+					</a>
+				</div>			
+			</c:if>
 		</section>
 		<section class="header-bottom">
 			<nav>

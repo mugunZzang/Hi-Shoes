@@ -11,6 +11,9 @@ public interface MemberDAO {
 	// 회원가입을 해주는 메서드 (tbl_member 테이블에 insert)
 	int registerMember(MemberDTO member) throws SQLException;
 	
+	// 사업자등록번호중복검사
+	boolean busiNumDuplicateCheck(String busiNum) throws SQLException;
+	
 	// ID 중복검사 (tbl_member 테이블에서 userid 가 존재하면 true 를 리턴해주고, userid 가 존재하지 않으면 false 를 리턴한다) 
 	boolean idDuplicateCheck(String userid) throws SQLException;
 
@@ -19,5 +22,6 @@ public interface MemberDAO {
 
 	// 로그인 처리
 	MemberDTO login(Map<String, String> paraMap) throws SQLException;
+	
 	
 }

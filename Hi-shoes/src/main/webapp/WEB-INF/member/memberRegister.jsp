@@ -53,7 +53,7 @@
 			  	</div>
 			  	<div  class="col-12 col-lg-6 mt-1">
 			  		<%-- 아이디중복체크 --%>
-			  		<button type="button" id="idcheck" class="d-grid d-lg-block btn btn-sm btn-danger">사업자등록번호 중복 확인</button>
+			  		<button type="button" id="busiNumcheck" class="d-grid d-lg-block btn btn-sm btn-danger">사업자등록번호 중복 확인</button>
 			  	</div>		  		
 				<p id="busiNumcheckResult"></p>
 		  		<p class="error">사업자등록번호는 하이픈(-) 없이 숫자 10자리로만 입력해주세요.</p>			  	
@@ -160,11 +160,11 @@
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-10">
 			  		<div class="col-12 col-lg-6">
-			  			<input type="text" class="form-control" name="address" id="address" size="40" maxlength="200" placeholder="주소"/>
+			  			<input type="text" class="form-control" name="address" id="address" size="40" maxlength="200" placeholder="주소"/>			  			
 			  		</div>
 			  		<div class="col-12 col-lg-12 d-flex justify-content-between align-items-center gap-2">
-				  		<input type="text" class="form-control" name="detailaddress" id="detailaddress" size="40" maxlength="200" placeholder="상세주소"/>
-				  		<input type="text" class="form-control" name="extraaddress" id="extraaddress" size="40" maxlength="200" placeholder="참고항목"/>
+				  		<input type="text" class="form-control" name="detailaddress" id="detailAddress" size="40" maxlength="200" placeholder="상세주소"/>
+				  		<input type="text" class="form-control" name="extraaddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목"/>
 				  	</div>
 			  	</div>			  	
 			  	<p class="error">주소를 입력하세요.</p>
