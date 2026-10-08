@@ -355,6 +355,8 @@ public class ProductDAO_imple implements ProductDAO {
 					+ " from tbl_catalogue A JOIN tbl_product B "
 					+ " ON A.pname = B.fk_pname ";
 			
+			pstmt = conn.prepareStatement(sql);
+			
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
@@ -383,11 +385,18 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			String category = paraMap.get("category");	// 임의로 하나
 			String str_ssize = paraMap.get("str_ssize");		// 사이즈 "270,275,290" 요런식으로 받아옴
-			String str_brand = paraMap.get("str_brand");		// 브랜드 "아디다스,아식스,뉴발란스" 요런식으로 받아옴
+			String brand = paraMap.get("brand");		// 브랜드 "아디다스,아식스,뉴발란스" 요런식으로 받아옴
 			String str_color = paraMap.get("str_color");		// 색상 "BLACK,WHITE,SILVER" 
 			String keyword = paraMap.get("keyword");		// 검색어
 			String min_price = paraMap.get("min_price");		// 최소가격 "10000"
 			String max_price = paraMap.get("max_price");
+			System.out.println("category : " +category );
+			System.out.println("str_ssize : " +str_ssize);
+			System.out.println("brand : " + brand );
+			System.out.println("keyword : " + keyword);
+			System.out.println("min_price : " + min_price);
+			System.out.println("max_price : " + max_price);
+			System.out.println("---------------------------");
 			
 			// 상품명, 브랜드에  키워드가 포함되는거
 			String sql = " select ceil(count(distinct A.fk_pname) / 12) as cnt "
@@ -400,8 +409,8 @@ public class ProductDAO_imple implements ProductDAO {
 					+ "    ON B.pname = D.fk_pname "
 					+ " where "
 					+ " C.catename like ? " ;
-			if (!str_brand.isBlank()) {
-				sql += " and B.brand in (" + str_brand + ") ";
+			if (!brand.isBlank()) {
+				sql += " and B.brand = ? ";
 			}
 			if (!str_ssize.isBlank()) {
 				sql += " and D.ssize in (" + str_ssize + ") ";
@@ -414,18 +423,29 @@ public class ProductDAO_imple implements ProductDAO {
 			sql += " and B.saleprice between ? and ? "
 					+ " and A.fk_pname like ? " ;
 			
+			
+			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, "%" + category + "%");
-			pstmt.setInt(2, Integer.parseInt(min_price));
-			pstmt.setInt(3, Integer.parseInt(max_price));
-			pstmt.setString(4, "%" + keyword + "%");
-			
+			if (!brand.isBlank()) {
+				pstmt.setString(1, brand);
+				pstmt.setString(2, "%" + category + "%");
+				pstmt.setInt(3, Integer.parseInt(min_price));
+				pstmt.setInt(4, Integer.parseInt(max_price));
+				pstmt.setString(5, "%" + keyword + "%");
+
+			} else {
+				pstmt.setString(1, "%" + category + "%");
+				pstmt.setInt(2, Integer.parseInt(min_price));
+				pstmt.setInt(3, Integer.parseInt(max_price));
+				pstmt.setString(4, "%" + keyword + "%");
+			}
+
 			rs = pstmt.executeQuery();
 			rs.next();
 			
 			totalProductPage = rs.getInt("cnt");
-			
+			System.out.println("페이지수 : " + rs.getInt("cnt"));
 
 			
 		} finally {
@@ -449,7 +469,7 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			String category = paraMap.get("category");	// 임의로 하나
 			String str_ssize = paraMap.get("str_ssize");		// 사이즈 "270,275,290" 요런식으로 받아옴
-			String str_brand = paraMap.get("str_brand");		// 브랜드 "아디다스,아식스,뉴발란스" 요런식으로 받아옴
+			String brand = paraMap.get("brand");		// 브랜드 "아디다스,아식스,뉴발란스" 요런식으로 받아옴
 			String str_color = paraMap.get("str_color");		// 색상 "BLACK,WHITE,SILVER" 
 			String keyword = paraMap.get("keyword");		// 검색어
 			String min_price = paraMap.get("min_price");		// 최소가격 "10000"
@@ -466,8 +486,8 @@ public class ProductDAO_imple implements ProductDAO {
 					+ "    ON B.pname = D.fk_pname "
 					+ " where "
 					+ " C.catename like ? ";
-			if (!str_brand.isBlank()) {
-				sql += " and B.brand in (" + str_brand + ") ";
+			if (!brand.isBlank()) {
+				sql += " and B.brand = '" + brand + "' ";
 			}
 			if (!str_ssize.isBlank()) {
 				sql += " and D.ssize in (" + str_ssize + ") ";

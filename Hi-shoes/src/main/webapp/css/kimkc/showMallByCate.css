@@ -70,6 +70,9 @@ select {
    왼쪽 FILTER
 ========================================================= */
 
+
+
+
 .filter-sidebar {
 
     position: absolute;
@@ -504,7 +507,7 @@ select {
 
 /* 가격 표시 */
 
-.price-value {
+.price-value, .span-price-min, .span-price-max{
 
     margin-top: 5px;
 
@@ -516,6 +519,8 @@ select {
 
     font-weight: 700;
 }
+
+
 
 
 /* =========================================================
@@ -639,6 +644,7 @@ select {
 .shop-content {
  	width: 1202px;
 
+	min-height: 970px;
 }
 
 
