@@ -15,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import product.km.domain.ProductDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
 
@@ -271,5 +272,126 @@ public class ProductDAO_imple implements ProductDAO {
 		   }
 		   
 		   return sup_price_map_List;
+	}
+
+	// 제품 삭제
+	@Override
+	public int productDelete(String pnum) throws Exception {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_product "
+					 +   " where pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+	// 카테고리 제품명 읽어오기
+	@Override
+	public List<Map<String, String>> ProductNameSelect(String searchWord) throws Exception {
+		
+		List<Map<String, String>> ProductNameList = new ArrayList<>();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select pname from tbl_catalogue "
+					  +  " where pname like '%' || ? || '%' " ;
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, searchWord);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String,String> map = new HashMap<>();
+				
+				map.put("pname", rs.getString("pname"));
+				
+				ProductNameList.add(map);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return ProductNameList;
+	}
+
+	// 판매번호 채번하기
+	@Override
+	public int getPnumOfProduct() throws Exception {
+		
+		int pnum = 0;
+		   
+		   try {
+			   
+			   conn = ds.getConnection();
+			   
+			   String sql = " Select seq_pnum.nextval AS PNUM "
+					      + " From dual ";
+			   
+			   pstmt = conn.prepareStatement(sql);
+			   rs = pstmt.executeQuery();
+			   
+			   rs.next();
+			   pnum = rs.getInt("PNUM");
+			   
+			   
+		   } finally {
+			   close();
+		   }
+		   
+		   return pnum;
+	}
+
+	// 판매상품 insert 해주기
+	@Override
+	public int productInsert(ProductDTO pdto) {
+		
+		int n = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " insert into tbl_product(pnum, pname, fk_cnum, pcompany, pimage1, pimage2, prdmanual_systemFileName, prdmanual_orginFileName, pqty, price, saleprice, fk_snum, pcontent, point) "
+	                  + " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         pstmt.setInt(1, pdto.getPnum());
+	         pstmt.setString(2, pdto.getPname());
+	         pstmt.setInt(3, pdto.getFk_cnum());    
+	         pstmt.setString(4, pdto.getPcompany()); 
+	         pstmt.setString(5, pdto.getPimage1());    
+	         pstmt.setString(6, pdto.getPimage2()); 
+	         pstmt.setString(7, pdto.getPrdmanual_systemFileName());
+	         pstmt.setString(8, pdto.getPrdmanual_orginFileName());
+	         pstmt.setInt(9, pdto.getPqty()); 
+	         pstmt.setInt(10, pdto.getPrice());
+	         pstmt.setInt(11, pdto.getSaleprice());
+	         pstmt.setInt(12, pdto.getFk_snum());
+	         pstmt.setString(13, pdto.getPcontent());
+	         pstmt.setInt(14, pdto.getPoint());
+	         
+	         n = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return n;
 	}
 }

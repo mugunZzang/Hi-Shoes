@@ -112,9 +112,9 @@
 
             <thead>
                 <tr class="table-light">
-                    <th style="width:10%; text-align:center;">상품번호</th>
-                    <th style="width:25%; text-align:center;">상품명</th>
-                    <th style="width:40%; text-align:center;">상품내용</th>
+                    <th style="width:10%; text-align:center;">제품번호</th>
+                    <th style="width:25%; text-align:center;">제품명</th>
+                    <th style="width:40%; text-align:center;">제품내용</th>
                     <th style="width:5%; text-align:center;">배송비</th>
                     <th style="width:10%; text-align:center;">삭제유무</th>
                 </tr>

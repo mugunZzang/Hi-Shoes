@@ -3,12 +3,106 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%
+	String ctx_Path = request.getContextPath();
+%>
+
+<style type="text/css">
+	table#tblProdInput {border: solid gray 0	px; 
+	                    border-collapse: collapse; }
+	                    
+    table#tblProdInput td {border: solid gray 0px; 
+	                       padding-left: 10px;
+	                       height: 50px; }
+	                       
+    .prodInputName {background-color: #e6fff2; 
+                    font-weight: bold; }	                       	                    
+	
+	.error {color: red; font-weight: bold; font-size: 9pt;}
+	
+	div.fileDrop{ display: inline-block; 
+                  width: 100%; 
+                  height: 100px;
+                  overflow: auto;
+                  background-color: #fff;
+                  padding-left: 10px;}
+                 
+    div.fileDrop > div.fileList > span.delete{display:inline-block; width: 20px; border: solid 1px gray; text-align: center;} 
+    div.fileDrop > div.fileList > span.delete:hover{background-color: #000; color: #fff; cursor: pointer;}
+    div.fileDrop > div.fileList > span.fileName{padding-left: 10px;}
+    div.fileDrop > div.fileList > span.fileSize{padding-right: 20px; float:right;} 
+    span.clear{clear: both;} 
+   
+</style>
+
 <jsp:include page="../adminHeader.jsp" />  
 <script type="text/javascript">
-
+  
   let total_fileSize = 0; // 첨부한 파일의 총량을 누적하는 용도 
 
   $(function(){
+	  
+	   
+	   $('button#btnproductSearchSubmit').on('click', function(){
+		   
+	       let searchWord = $('input#productSearchWord').val();
+	       
+	       if(searchWord.trim() == "") {
+	    	   
+	    	   alert("검색어를 입력해주세요!");
+	    	   return;
+	       }
+	       
+	       
+	       $.ajax({
+	    	   
+	    	   url:"<%= ctx_Path %>/admin/product/productNameSelect.go", 
+          	   method:"post",
+          	   data: {
+                   "searchWord": searchWord
+                  },
+               dataType:"json",
+               success:function(json){
+				//	console.log(JSON.stringify(json));
+					/*
+					 [{"pname":"노아 플랫폼 숏 부츠"}
+					 ,{"pname":"로웰 4 아이슈"}
+					 ,{"pname":"밸롭 아쿠아슈즈 프리즘"}
+					 ,{"pname":"아디제로 페이서"}
+					 ,{"pname":"아웃도어 샌들"}
+					 ,{"pname":"아치-핏 폼 플립플랍"}]
+					*/
+				
+					/* let v_pname = "";  
+					
+					$.each(json, function(index, item){
+						v_pname += item.pname + " , ";
+					});
+					
+					console.log(v_pname); */
+					// 노아 플랫폼 숏 부츠 , 로웰 4 아이슈 ,   아치-핏 폼 플립플랍 ,  
+					
+					let v_html = ``;
+					for(let i=0;i<json.length;i++){
+						
+						v_html += `<tr onclick="goChoice('\${json[i].pname}');" style="cursor:pointer;">
+						             <td>
+										\${json[i].pname}
+									 </td>
+								   </tr>`
+					}// end of for
+					
+					$('#productNamebody').html(v_html);
+               },
+               error: function(request, status, error){
+				    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		         }
+	    	   
+	       });
+
+	   });// end of $('button#btnproductSearchSubmit').on('click', function(){});
+	   
+	   ////////////////////////////////////////////////////////////////////////////////////////////
   
 	  $('span.error').hide();
 	  
@@ -56,16 +150,6 @@
 	   
 		   fileReader.readAsDataURL(input_file.files[0]); 
 		   // FileReader.readAsDataURL() --> 파일을 읽고, result속성에 파일을 나타내는 URL을 저장 시켜준다.
-		   
-		   fileReader.onload = function(){  // FileReader.onload --> 파일 읽기 완료 성공시에만 작동하도록 하는 것임.
-			// console.log(fileReader.result);
-			   /*
-		         data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAg 
-		         이러한 형태로 출력되며, img.src 의 값으로 넣어서 사용한다.
-		       */
-		      
-		       document.getElementById("previewImg").src = fileReader.result; 
-		   }; 
 		  
 		   /////////////////////////////////////////////////
 		   // 첨부한 파일의 총량을 누적하는 용도
@@ -73,7 +157,7 @@
 		   /////////////////////////////////////////////////
 		   
 	  }); 
-	  // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 끝 <<== //
+
 	  
 	  
 	  /////////////////////////////////////////////////////////////////////////////
@@ -156,10 +240,10 @@
 		    let file_arr = []; // 첨부되어진 추가이미지 파일 정보를 담아둘 배열
 		   
 		    if(files != null && files != undefined) {
-		    	<%--  console.log("files.length 는 => ", files.length);
+		    	  console.log("files.length 는 => ", files.length);
 	                  // files.length 는 => 1 이 나온다.
 	                  // files.length 는 => 4 가 나온다.
-	            --%> 
+	            
 	            
 	            for(let i=0; i<files.length; i++){
 	            	const f = files[i];
@@ -263,15 +347,6 @@
 				   	fileReader.readAsDataURL(imgfile);
 				   	 // FileReader.readAsDataURL() --> 파일을 읽고, result속성에 파일을 나타내는 URL을 저장 시켜준다.
 				   		 
-				    fileReader.onload = function(){ // FileReader.onload --> 파일 읽기 완료 성공시에만 작동하도록 하는 것임. 
-	   			       // console.log(fileReader.result);
-	   		    	   /*
-	   		              data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAg 
-	   		              이러한 형태로 출력되며, img.src 의 값으로 넣어서 사용한다.
-	   		           */
-				   		        
-				   	   document.getElementById("previewImg").src = fileReader.result;
-				   	};
 				  // ===> 추가이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 끝 <=== //                  
 			    	  
 	            }// end of for-----------------------
@@ -431,18 +506,18 @@
              
              $.ajax({
             <%-- url:"<%= ctxPath%>/shop/admin/productRegister.up", --%>
-            	 url:"${pageContext.request.contextPath}/shop/admin/productRegister.up", 
+            	 url:"${pageContext.request.contextPath}/admin/product/productRegister.go", 
             	 method:"post",
             	 data:formData,
             	 processData:false,  // 파일 전송시 설정 
                  contentType:false,  // 파일 전송시 설정
                  dataType:"json",
                  success:function(json){
-                	 console.log("~~~ 확인용 : " + JSON.stringify(json));
+                	 // console.log("~~~ 확인용 : " + JSON.stringify(json));
                      // ~~~ 확인용 : {"result":1}
-                     
+                     alert("등록이 완료되었습니다.");
                      if(json.result == 1) {
-                         location.href="${pageContext.request.contextPath}/shop/mallHomeMore.up"; 
+                         location.href="${pageContext.request.contextPath}/admin/product/productList.go"; 
                      }
                  },
                  error: function(request, status, error){
@@ -475,6 +550,13 @@
 	  
   });// end of $(function(){})-----------------------
   
+  function goChoice(pname) {
+
+	  // console.log(pname);
+	  $('input[name="pname"]').val(pname);
+
+	  $('#productModal').modal('hide'); 
+  }
 
 
 </script>
@@ -531,9 +613,9 @@
 			<tr>
 				<td width="25%" class="prodInputName">제품명</td>
 				<td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;" >
-					<input type="text" style="width: 300px;" name="pname" class="box infoData" />
-					<button type="button" style="border-radius: 4px;" class="btnPname" data-bs-toggle="modal" data-bs-target="#productModal">제품명 찾기</button>
+					<input type="text" style="width: 300px;" name="pname" class="box infoData" readonly/>
 					<span class="error">필수입력</span>
+					<button type="button" style="border-radius: 4px;" class="btnPname" data-bs-toggle="modal" data-bs-target="#productModal">제품명 찾기</button>	
 				</td>
 			</tr>
 			<tr>
@@ -558,7 +640,7 @@
 			<tr>
 				<td width="25%" class="prodInputName" style="padding-bottom: 10px;">배송비</td>
 				<td width="75%" align="left" style="border-top: hidden; border-bottom: hidden; padding-bottom: 10px;">
-					<input type="text" style="width: 100px;" name="point" class="box infoData positiveNumber" /> 원
+					<input type="text" style="width: 100px;" name="deliveryfee" class="box infoData positiveNumber" /> 원
 					<span class="error">필수입력</span>
 					<span class="positiveNumber_error"></span>
 				</td>
@@ -584,6 +666,10 @@
 
 	</form>
 	
+</div>
+
+</div>
+
 	<!-- 제품 검색 모달 -->
 <div class="modal fade"
      id="productModal"
@@ -618,13 +704,13 @@
                 <div class="input-group mb-3">
 
                     <input type="text"
-                           id="catalogueSearchWord"
+                           id="productSearchWord"
                            class="form-control"
                            placeholder="제품명을 입력하세요">
 
                     <button type="button"
                             class="btn btn-primary"
-                            id="btncatalogueSearchSubmit">
+                            id="btnproductSearchSubmit">
                         검색
                     </button>
 
@@ -633,7 +719,7 @@
 
                 <!-- 제품 조회 결과 -->
                 <table class="table table-bordered"
-                       id="catalogueTbl">
+                       id="productTbl">
 
                     <colgroup>
                         <col style="width: 100%;">
@@ -647,7 +733,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody id="productNamebody">
 
                         <!-- JS로 검색 결과 생성 -->
 
@@ -657,7 +743,7 @@
                 
                 <!-- 페이지 바  -->
                 <nav class="my-3">
-                <ul class="pagination justify-content-center" id="cataloguePageBar">
+                <ul class="pagination justify-content-center" id="productPageBar">
                 </ul>
             </nav>
 
@@ -679,9 +765,6 @@
 
     </div>
 
-</div>
-
-</div>
 </div>
 <jsp:include page="../adminFooter.jsp" />  
     
