@@ -297,5 +297,39 @@ GROUP BY
 ORDER BY p.purtime DESC;
 
 
-SELECT CEIL(COUNT(*)/?) AS TOTALPAGE 
+SELECT CEIL(COUNT(*)/10) AS TOTALPAGE 
 FROM tbl_purchase
+
+SELECT COUNT(*) AS TOTALPURCHASECOUNT
+FROM tbl_purchase
+
+SELECT * FROM tbl_purchase
+
+
+-------- **** 상품구매 후기 테이블 생성하기 **** ----------
+create table tbl_purchase_reviews
+(review_seq          number 
+,fk_userid           varchar2(20)   not null   -- 사용자ID       
+,fk_pnum             number(8)      not null   -- 제품번호(foreign key)
+,contents            varchar2(4000) not null
+,writeDate           date default sysdate
+,constraint PK_purchase_reviews primary key(review_seq)
+,constraint UQ_purchase_reviews unique(fk_userid, fk_pnum)
+,constraint FK_purchase_reviews_userid foreign key(fk_userid) references tbl_member(userid) on delete cascade 
+,constraint FK_purchase_reviews_pnum foreign key(fk_pnum) references tbl_product(pnum) on delete cascade
+);
+-- 로그인하여 실제 해당 제품을 구매했을 때만 딱 1번만 작성할 수 있는 것. 제품후기를 삭제했을 경우에는 다시 작성할 수 있는 것임. 
+
+
+create sequence seq_purchase_reviews
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_PURCHASE_REVIEWS이(가) 생성되었습니다.
+
+select *
+from tbl_purchase_reviews
+order by review_seq desc;

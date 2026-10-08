@@ -444,5 +444,127 @@ public class PurchaseDAO_imple implements PurchaseDAO {
 	} // end of public List<Map<String, String>> selectPurchaseList(Map<String, String> paraMap) throws SQLException--------
 
 	
+
+	// 입고처리 버튼 클릭시 재고 테이블의 수량 UPDATE
+	@Override
+	public int purdetailStockUpdate(String purnum) throws SQLException {
+
+		int updateSuccessCount = 0; // 성공한 UPDATE 건수를 누적할 변수
+		
+		// 발주 상세 N 건 조회
+		// 발주 상세 테이블에서 해당 발주 번호에 대한 발주 상세건 조회
+		// 발주 상세건에 대해서 List에 저장
+		// 이후 List의 크기만큼 반복하면서 UPDATE
+		// Update 시 재고테이블의 snum과 같은것을 확인하여 List에서 꺼낸 후 발주 상세의 수량을 합침
+		// 변경 결과는 boolean 이면 될듯
+		List<Map<String, Integer>> purdetailList = new ArrayList<>();
+		try {
+			// Transaction 처리
+			conn = ds.getConnection();
+			conn.setAutoCommit(false);   // 오토커밋 해제
+			
+			// 발주 상세 테이블에서 해당 발주 번호에 대한 발주 상세건 조회
+			String sql = " SELECT fk_snum, purqty "
+					   + " FROM tbl_purdetail "
+					   + " WHERE fk_purnum = TO_NUMBER(?) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, purnum);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, Integer> map = new HashMap<>();
+				
+				map.put("fk_snum", rs.getInt("fk_snum"));
+				map.put("purqty", rs.getInt("purqty"));
+				
+				purdetailList.add(map);
+			} // end of while-------------
+			
+			if(purdetailList.size() == 0) {
+				System.out.println("현재 선택한 발주번호는 발주상세가 존재하지 않음");
+			}
+			rs.close();
+			pstmt.close();
+			
+			
+			// 이후 List의 크기만큼 반복하면서 UPDATE
+			sql = " UPDATE tbl_stock SET sqty = sqty + ? "
+			    + " WHERE snum = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			for(int i = 0; i < purdetailList.size(); i++) {
+			    // List에서 i번째 Map을 꺼낸다.
+			    Map<String, Integer> currentMap = purdetailList.get(i);
+			    
+			    // Map에서 Key("purqty", "fk_snum")를 이용해 정수 값을 추출합니다.
+			    int purqty = currentMap.get("purqty");
+			    int fk_snum = currentMap.get("fk_snum");
+			    
+			    // ? 자리에 맞게 파라미터를 세팅합니다.
+			    pstmt.setInt(1, purqty);   // 첫 번째 ? (sqty = sqty + ?)
+			    pstmt.setInt(2, fk_snum);  // 두 번째 ? (WHERE snum = ?)
+			    
+			    // 쿼리 실행
+			    int row = pstmt.executeUpdate(); 
+				
+			    updateSuccessCount += row;
+			} // end of for-------------------------
+			
+			// 발주 테이블에서 해당 행 입고여부 '입고'로 바꾸기
+			
+			pstmt.close();
+			
+			sql = " UPDATE tbl_purchase SET instock='입고' "
+			    + " WHERE purnum = TO_NUMBER(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, purnum);
+			int n = 0;
+			n = pstmt.executeUpdate();
+			
+			if(n == 1) {
+				System.out.println("발주 테이블 입고여부 변경 완료");
+			} else {
+				System.out.println("발주 테이블 입고여부 변경 실패");
+			}
+			
+			if(updateSuccessCount == purdetailList.size()) {
+			    //전부 성공한 경우에만 커밋
+			    conn.commit();
+			    System.out.println("발주 상품 " + updateSuccessCount + "건 재고 반영 성공! 커밋 완료.");
+			    
+			} else {
+			    // 단 하나라도 반영이 안 되었거나(0건 수정), 비정상적이라면 전체 취소
+			    conn.rollback();
+			    System.out.println("오류 발생: 요청 건수(" + purdetailList.size() + ")와 수정 건수(" + updateSuccessCount + ") 불일치로 인한 롤백 처리.");
+			}
+			
+			pstmt.close();
+		}  catch (SQLException | NumberFormatException e) {
+	        e.printStackTrace();
+	        if (conn != null) conn.rollback();
+	        updateSuccessCount = 0;
+	        
+	    } finally {
+	    	if (conn != null) conn.setAutoCommit(true);   // 커넥션 풀이면 원복
+			close();
+			
+		}
+		
+		return updateSuccessCount;
+		
+	} // end of public int purdetailStockUpdate(String purnum) throws SQLException-------------------
+
+	
 	
 }
+
+
+
+
+
+
+
+
+

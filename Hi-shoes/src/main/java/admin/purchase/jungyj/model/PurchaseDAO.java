@@ -24,4 +24,7 @@ public interface PurchaseDAO {
     // 현재 페이지의 발주 목록 페이징 처리 O
 	List<Map<String, String>> selectPurchaseList(Map<String, String> paraMap) throws SQLException;
 
+	// 입고처리 버튼 클릭시 재고 테이블의 수량 UPDATE
+	int purdetailStockUpdate(String purnum) throws SQLException;
+
 }

@@ -215,7 +215,11 @@
 								    </button>
 								
 								    <c:if test="${purchase.instock != '입고'}">
-								        <button type="button" class="btn btn-sm btn-primary">
+								        <button type="button"
+								                class="btn btn-sm btn-primary"
+								                id="instockUpdate"
+								                data-purnum="${purchase.purnum}"
+								                data-instock="${purchase.instock}">
 								            입고처리
 								        </button>
 								    </c:if>
