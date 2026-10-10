@@ -189,7 +189,7 @@
         <!-- Modal body -->
         <div class="modal-body">
           <div id="pwFind">
-          	<iframe style="border: none; width: 100%; height: 300px;" src="<%= ctxPath%>/login/pwdFind.go">  
+          	<iframe style="border: none; width: 100%; height: 400px;" src="<%= ctxPath%>/login/pwdFind.go">  
           	</iframe>
           </div>
         </div>

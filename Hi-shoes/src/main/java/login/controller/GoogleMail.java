@@ -54,7 +54,7 @@ public class GoogleMail {
     	MimeMessage msg = new MimeMessage(ses);
 
     	// 제목 설정
-    	String subject = "localhost:9090/MyMVC/index.up 회원님의 비밀번호를 찾기위한 인증코드 발송";
+    	String subject = "하이슈즈 회원님의 비밀번호를 찾기위한 인증코드 발송";
     	msg.setSubject(subject);
     	        
     	// 보내는 사람의 메일주소
@@ -67,7 +67,17 @@ public class GoogleMail {
     	msg.addRecipient(Message.RecipientType.TO, toAddr);
     	        
     	// 메시지 본문의 내용과 형식, 캐릭터 셋 설정
-    	msg.setContent("발송된 인증코드 : <span style='font-size:14pt; color:red;'>"+certification_code+"</span>", "text/html;charset=UTF-8"); 
+    	//msg.setContent("발송된 인증코드 : <span style='font-size:14pt; color:red;'>"+certification_code+"</span>", "text/html;charset=UTF-8"); 
+    	
+    	msg.setContent("<table style=\"max-width:650px; border-collapse:collapse;\">"
+    			+ "    <tr>"
+    			+ "      <td style=\"padding: 8px; font-size:16px; color:#1D1D1D;\">발송된 인증코드: </td>"
+    			+ "      <td style=\"padding: 8px; font-size:20px; color:#87A922; font-weight:bold;\">"+certification_code+"</td>"
+    			+ "    </tr>"
+    			+ "    <tr>"
+    			+ "      <td colspan=\"2\" style=\"padding: 8px; font-size:16px; color:#1D1D1D;\">인증코드 입력란에 상단의 인증코드를 입력해주세요.</td>"
+    			+ "    </tr>"
+    			+ "  </table>", "text/html;charset=UTF-8");
     	        
     	// 메일 발송하기
     	Transport.send(msg);

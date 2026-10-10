@@ -42,12 +42,12 @@
 			$('input:text[name="email"]').val("${requestScope.email}");
 			
 			if(${requestScope.isUserExist == true}) {
-				$('button.btn-success').hide();
+				$('button.btn-searchPwd').hide();
 			}
 			
 		}
 		
-		$('button.btn-success').on('click', function(){
+		$('button.btn-searchPwd').on('click', function(){
 			goFind();
 		});
 		
@@ -113,7 +113,7 @@
 </script>
 
 <div class="container my-3">
-	<form class="row gap-3 mb-3">
+	<form class="row gap-3 mb-3" name="pwdFindFrm">
 		<div class="col-12 my-auto">
 			  <label for="userid" class="d-none">아이디</label>
 			  <input type="text" class="form-control mb-3 me-sm-2" id="userid" name="userid" size="25" autocomplete="off" placeholder="아이디를 입력 해주세요.">
@@ -123,7 +123,7 @@
 		</div>
 	  	
 	  	<div class="col-12">
-	  		<button type="submit" class="btn btn-md btn-primary w-100">비밀번호 찾기</button>	
+	  		<button type="button" class="btn-searchPwd btn btn-md btn-primary w-100">비밀번호 찾기</button>	
 	  	</div>
 	  
 	</form>
@@ -132,7 +132,7 @@
 	
 		<c:if test="${requestScope.isUserExist == false}">
 			<div class="col-12 my-auto">
-				<span style="color:red;">사용자 정보가 없습니다.</span> 
+				<p class="error">사용자 정보가 없습니다.</p> 
 			</div>			
 		</c:if>
 	
@@ -152,7 +152,7 @@
 		
 		<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false}">
 			<div class="col-12 my-auto">
-				<span style="color:red;">메일 발송이 실패 했습니다.</span>
+				<p class="error">메일 발송을 실패하였습니다.</p>
 			</div>				
 		</c:if>
 		

@@ -45,14 +45,25 @@
 }
 
 /* 비밀번호 찾기 */
-#temp-certificate .request-text {
+#div_findResult .request-text {
 	font-weight:400;
 	font-size:15px;
 	color:#7C7C7C;
 }
 
-#temp-certificate .request-text span {
+#div_findResult .request-text span {
 	font-weight: 500;
 	color:#114232;
 }
 
+
+#div_findResult .error {
+	color:#ff0000;
+}
+
+p.updeatedPwd {
+	font-size: 18px;
+    font-weight: 500;
+    color: #114232;
+    word-break: keep-all;
+}
