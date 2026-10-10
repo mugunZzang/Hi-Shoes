@@ -159,7 +159,7 @@
         <!-- Modal body -->
         <div class="modal-body">
           <div id="idFind">
-          	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 200px;" src="<%= ctxPath%>/login/idFind.go"> 
+          	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 300px;" src="<%= ctxPath%>/login/idFind.go"> 
           	</iframe>
           </div>
         </div>
@@ -176,7 +176,7 @@
 
 
 <%-- ****** 비밀번호 찾기 Modal 시작 ****** --%>
-  <div class="modal fade" id="passwdFind" data-bs-backdrop="static" tabindex="-1"> <%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%>
+  <div class="modal fade" id="passwdFind" tabindex="-1"> <%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
       

@@ -449,7 +449,7 @@ $(() => {
 				}
 				else {
 					// 입력한 busiNum가 존재하지 않는 경우라면
-					$('#busiNumcheckResult').html($('input#busiNum').val() + " 은 사용가능 합니다.");
+					$('#busiNumcheckResult').html($('input#busiNum').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
 				}
 			},
 			error: function(request, status, error){
@@ -513,7 +513,7 @@ $(() => {
 				}
 				else {
 					// 입력한 userid가 존재하지 않는 경우라면
-					$('#idcheckResult').html($('input#userid').val() + " 은 사용가능 합니다.");
+					$('#idcheckResult').html($('input#userid').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
 				}
 			},
 			error: function(request, status, error){
@@ -565,7 +565,7 @@ $(() => {
 				}
 				else {
 					// 입력한 email가 존재하지 않는 경우라면
-					$('#emailCheckResult').html($('input#email').val() + " 은 사용가능 합니다.");
+					$('#emailCheckResult').html($('input#email').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
 				}
 			},
 			error: function(request, status, error){

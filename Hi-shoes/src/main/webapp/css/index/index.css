@@ -24,6 +24,10 @@ header .join-wrap a {
 	text-align:center;
 }
 
+header .join-wrap a img {
+	margin-bottom: 3px;
+}
+
 header .join-wrap a span {	
 	display:block;
 	font-weight: 400;

@@ -5,7 +5,7 @@
 
 <%
     String ctxPath = request.getContextPath();
-    //    /MyMVC
+	// Hi-shoes
 %>
 
 <%-- Bootstrap CSS --%>
@@ -22,58 +22,142 @@
 <script type="text/javascript" src="<%= ctxPath%>/js/jquery-4.0.0.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js" ></script>
 
+<script type="text/javascript">
+
+	$(function(){
+		
+		const method = "${requestScope.method}";
+		
+		//console.log("~~ 확인용 method : ", method);
+		/*
+			~~ 확인용 method :  GET
+		*/		
+		
+		if(method == "GET") {
+			$('div#div_findResult').hide();
+		}
+		
+		if(method == "POST") {
+			$('input:text[name="userid"]').val("${requestScope.userid}");
+			$('input:text[name="email"]').val("${requestScope.email}");
+			
+			if(${requestScope.isUserExist == true}) {
+				$('button.btn-success').hide();
+			}
+			
+		}
+		
+		$('button.btn-success').on('click', function(){
+			goFind();
+		});
+		
+		$('input:text[name="email"]').on('keyup', function(e){
+			if(e.keyCode == 13) {
+				goFind();
+			}
+		});
+		
+		// === 인증하기 버튼 클릭 시 이벤트 처리하기 시작 === //
+		$('button.btn-info').on('click', () => {
+			const input_confirmCode = $('input:text[name="input_confirmCode"]').val().trim();
+			
+			if(input_confirmCode == "") {
+				alert("인증코드를 입력하세요!");
+				return;
+			}
+			
+			const frm = document.verifyCertificationFrm;
+			frm.userCertificationCode.value = input_confirmCode;
+			frm.userid.value = $('input:text[name="userid"]').val();
+			
+			frm.action = "<%=ctxPath%>/login/verifyCertification.go";
+			frm.method = "post";
+			frm.submit();
+			
+		});
+		// === 인증하기 버튼 클릭 시 이벤트 처리하기 끝 === //
+		
+	});// end of $(function(){})-------------------
+	
+	
+	// Function Declaration
+	function goFind(){
+		
+	  const userid = $('input:text[name="userid"]').val().trim();
+	  
+	  if(userid == "") {
+		  alert("아이디를 입력하세요!!");
+		  return; // goFind() 함수 종료
+	  }
+	  
+	  const email = $('input:text[name="email"]').val();
+	  
+	  const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+		// 이메일 정규표현식 객체 생성 
+		
+	  const bool = regExp_email.test(email);
+		
+	  if(!bool) {
+		  // 이메일이 정규표현식에 위배된 경우
+		  alert("이메일을 올바르게 입력하세요!!");
+		  return; // goFind() 함수 종료
+	  }
+	  
+	  const frm = document.pwdFindFrm;
+	  frm.action = "<%= ctxPath%>/login/pwdFind.go";
+	  frm.method = "post";
+	  frm.submit();		
+		
+	}// end of function goFind()-------------------
+
+</script>
 
 <div class="container my-3">
-	<form class="row mb-4">
-		<div class="col-9 my-auto">
-			  <label for="inlineFormInputName3" class="d-none">아이디</label>
-			  <input type="text" class="form-control mb-3 me-sm-2" id="inlineFormInputName3" placeholder="아이디를 입력 해주세요.">
+	<form class="row gap-3 mb-3">
+		<div class="col-12 my-auto">
+			  <label for="userid" class="d-none">아이디</label>
+			  <input type="text" class="form-control mb-3 me-sm-2" id="userid" name="userid" size="25" autocomplete="off" placeholder="아이디를 입력 해주세요.">
 			
-			  <label for="inlineFormInputGroupUsername3" class="d-none">이메일</label>		  			    
-		      <input type="text" class="form-control" id="inlineFormInputGroupUsername3" placeholder="이메일을 입력해주세요.">
+			  <label for="email" class="d-none">이메일</label>		  			    
+		      <input type="text" class="form-control" id="email" name="email" size="25" autocomplete="off" placeholder="이메일을 입력해주세요.">
 		</div>
 	  	
-	  	<div class="col-3">
-	  		<button type="submit" class="btn btn-md btn-primary w-100 h-100">비밀번호<br/>찾기</button>	
+	  	<div class="col-12">
+	  		<button type="submit" class="btn btn-md btn-primary w-100">비밀번호 찾기</button>	
 	  	</div>
 	  
 	</form>
 	
-	<div class="row" id="temp-certificate">
-		<div class="col-9 my-auto">
-			<p class="request-text">
-				인증코드를 <span>aaa@bbb.com</span>으로 발송하였습니다.
-				인증코드를 입력해주세요
-			</p> 
-			<input type="text" class="form-control" name="input_confirmCode" placeholder="인증코드 입력">
-		</div>
-		
-		<div class="col-3">
-			<button type="button" class="btn btn-md btn-info w-100 h-100">인증하기</button>
-		</div>			
-	</div>
+	<div class="row gap-3" id="div_findResult">
 	
-	
-	<div class="my-3 text-center" if="div_findResult">
 		<c:if test="${requestScope.isUserExist == false}">
-			<span style="color:red;">사용자 정보가 없습니다.</span> 
+			<div class="col-12 my-auto">
+				<span style="color:red;">사용자 정보가 없습니다.</span> 
+			</div>			
 		</c:if>
-		
+	
 		<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == true}">
-			<span style="font-size: 10pt;">
-				인증코드가 ${requestScope.email}로 발송되었습니다.<br/>
-				인증코드를 입력해주세요
-			</span> 
-			<br>
-			<input type="text" name="input_confirmCode">
-			<br><br>
-			<button type="button" class="btn btn-info">인증하기</button>
+			<div class="col-12 my-auto">
+				<p class="request-text">
+					인증코드를 <span>${requestScope.email}</span>으로 발송하였습니다.
+					인증코드를 입력해주세요.
+				</p> 
+				<input type="text" class="form-control" name="input_confirmCode" placeholder="인증코드 입력"/>
+			</div>
+			
+			<div class="col-12">
+				<button type="button" class="btn btn-md btn-info w-100">인증하기</button>
+			</div>			
 		</c:if>
 		
 		<c:if test="${requestScope.isUserExist == true && requestScope.sendMailSuccess == false}">
-			<span style="color:red;">메일 발송이 실패 했습니다.</span>
+			<div class="col-12 my-auto">
+				<span style="color:red;">메일 발송이 실패 했습니다.</span>
+			</div>				
 		</c:if>
-	</div>
+		
+	</div>	
+	
 </div>
 
 <%-- 인증하기 form --%>

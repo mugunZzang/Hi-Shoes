@@ -57,22 +57,22 @@
 			<c:if test="${not empty sessionScope.loginuser}">
 				<div class="join-wrap nav nav-pills">
 					<a href="#">
-						<img alt="login" src="<%= ctxPath %>/images/login.svg">
+						<img alt="login" src="<%= ctxPath %>/images/mypage.svg">
 						<span>MY<br/>PAGE</span>
 					</a>
 					
 					<a href="#">
-						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<img alt="join" src="<%= ctxPath %>/images/cart.svg">
 						<span>CART</span>
 					</a>
 					
 					<a href="#">
-						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<img alt="join" src="<%= ctxPath %>/images/cscenter.svg">
 						<span>CS<br/>CENTER</span>
 					</a>
 					
 					<a href="#" onclick='javascript:location.href="<%= ctxPath%>/login/logout.go"'>
-						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<img alt="join" src="<%= ctxPath %>/images/logout.svg">
 						<span>LOGOUT</span>
 					</a>
 				</div>			
