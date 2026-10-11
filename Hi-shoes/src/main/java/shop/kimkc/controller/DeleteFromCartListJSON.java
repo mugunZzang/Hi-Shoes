@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import member.kimkc.domain.MemberDTO;
+import member.domain.MemberDTO;
 import shop.kimkc.model.ProductDAO;
 import shop.kimkc.model.ProductDAO_imple;
 

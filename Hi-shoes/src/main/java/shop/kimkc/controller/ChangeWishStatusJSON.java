@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import member.domain.MemberDTO;
 import shop.kimkc.model.ProductDAO;
 import shop.kimkc.model.ProductDAO_imple;
 
@@ -20,7 +21,7 @@ public class ChangeWishStatusJSON extends AbstractController {
 		// TODO Auto-generated method stub
 
 		
-		String userid = request.getParameter("userid");
+		String userid = ((MemberDTO) request.getSession().getAttribute("loginuser")).getUserid();
 		String pnum = request.getParameter("pnum");
 		String isJjim = request.getParameter("isJjim");
 		
