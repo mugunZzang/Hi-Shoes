@@ -367,6 +367,68 @@ a {
 }
 
 
+
+
+
+
+
+/* 가격 영역 */
+.product-price {
+    min-height: 22px;
+    margin-top: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+/* 가격 전체의 기본 스타일 */
+.product-price strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* 정가: 작은 글씨 + 취소선 */
+.product-price .ref-price {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 400;
+    color: #888;
+    text-decoration: line-through;
+    text-decoration-line: line-through;
+    text-decoration-color: #888;
+    margin-right: 3px;
+    vertical-align: baseline;
+}
+
+/* 할인가: 빨간색 + 굵은 글씨 */
+.product-price .sale-price {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #f00000;
+}
+
+/* 할인 없는 일반 가격 */
+.product-price .normal-price {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #222;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* =========================
    반응형
 ========================= */

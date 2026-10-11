@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +15,10 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import shop.kimkc.domain.CatalogueDTO;
-import shop.kimkc.domain.CategoryDTO;
 import shop.kimkc.domain.ProductDTO;
 import shop.kimkc.domain.Product_ImageDTO;
+import shop.kimkc.domain.QnADTO;
+import shop.kimkc.domain.StockDTO;
 
 
 public class ProductDAO_imple implements ProductDAO {
@@ -428,8 +430,8 @@ public class ProductDAO_imple implements ProductDAO {
 			pstmt = conn.prepareStatement(sql);
 			
 			if (!brand.isBlank()) {
-				pstmt.setString(1, brand);
-				pstmt.setString(2, "%" + category + "%");
+				pstmt.setString(1, "%" + category + "%");
+				pstmt.setString(2, brand);
 				pstmt.setInt(3, Integer.parseInt(min_price));
 				pstmt.setInt(4, Integer.parseInt(max_price));
 				pstmt.setString(5, "%" + keyword + "%");
@@ -487,7 +489,8 @@ public class ProductDAO_imple implements ProductDAO {
 					+ " where "
 					+ " C.catename like ? ";
 			if (!brand.isBlank()) {
-				sql += " and B.brand = '" + brand + "' ";
+				//sql += " and B.brand = '" + brand + "' ";
+				sql += " and B.brand = ? ";
 			}
 			if (!str_ssize.isBlank()) {
 				sql += " and D.ssize in (" + str_ssize + ") ";
@@ -499,17 +502,34 @@ public class ProductDAO_imple implements ProductDAO {
 			sql 	+= " and B.saleprice between ? and ? "
 					+ " and A.fk_pname like ? " 
 					+ " ORDER BY A.pnum ASC "
-					+ " OFFSET (?-1)*12 ROW "
+					+ " OFFSET (to_number(?)-1)*12 ROW "
 					+ " FETCH NEXT 12 ROW ONLY ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, "%" + category + "%");
-			pstmt.setInt(2, Integer.parseInt(min_price));
-			pstmt.setInt(3, Integer.parseInt(max_price));
-			pstmt.setString(4, "%" + keyword + "%");
-			pstmt.setInt(5, Integer.parseInt(paraMap.get("currentShowPageNo")));
+			if (!brand.isBlank()) {
+				pstmt.setString(1, "%" + category + "%");
+				pstmt.setString(2, brand);
+				pstmt.setInt(3, Integer.parseInt(min_price));
+				pstmt.setInt(4, Integer.parseInt(max_price));
+				pstmt.setString(5, "%" + keyword + "%");
+				pstmt.setString(6, paraMap.get("currentShowPageNo"));
+
+			} else {
+				pstmt.setString(1, "%" + category + "%");
+				pstmt.setInt(2, Integer.parseInt(min_price));
+				pstmt.setInt(3, Integer.parseInt(max_price));
+				pstmt.setString(4, "%" + keyword + "%");
+				pstmt.setString(5, paraMap.get("currentShowPageNo"));
+			}
 			
+			
+			/*
+			 * pstmt.setString(1, "%" + category + "%"); pstmt.setInt(2,
+			 * Integer.parseInt(min_price)); pstmt.setInt(3, Integer.parseInt(max_price));
+			 * pstmt.setString(4, "%" + keyword + "%"); pstmt.setInt(5,
+			 * Integer.parseInt(paraMap.get("currentShowPageNo")));
+			 */
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -537,6 +557,432 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		
 		return productList;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 선택한 상품옵션의 재고를 가져온다
+	@Override
+	public int isStockEnough(Map<String, String> paraMap) throws SQLException {
+		int stock = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select sqty from tbl_stock "
+					+ " where fk_pname = ? "
+					+ " and ssize = to_number(?) "
+					+ " and color = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("pname"));
+			pstmt.setString(2, paraMap.get("ssize"));
+			pstmt.setString(3, paraMap.get("color"));
+			
+			rs = pstmt.executeQuery();
+			rs.next();
+			
+			stock = rs.getInt("sqty");
+			
+			
+		} finally {
+			close();
+		}
+		
+		return stock;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	// 해당 상품을 찜했는지 알아오기
+	@Override
+	public int isWishlisted(Map<String, String> paraMap) throws SQLException {
+		int isJjim = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select count(*) as cnt from tbl_wishlist where fk_userid = ? and fk_pnum = to_number(?) ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setString(2, paraMap.get("pnum"));
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			isJjim = rs.getInt("cnt");
+			
+			
+					
+ 			
+		} finally {
+			close();
+		}
+		
+		return isJjim;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	// 위시리스트 등록/해제
+	@Override
+	public int changeWishStatus(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = "";
+			
+			// 1이면 테이블에서 삭제
+			if (paraMap.get("isJjim").equals("1")) {
+				sql = " delete from tbl_wishlist where fk_userid = ? and fk_pnum = to_number(?) ";
+			}
+			// 0이면 테이블에 추가
+			else {
+				sql = " insert into tbl_wishlist(fk_userid, fk_pnum) values(?, to_number(?)) ";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setString(2, paraMap.get("pnum"));
+			
+			n = pstmt.executeUpdate();
+			
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	
+	// 해당 옵션을 갖는 재고번호(snum) 조회하기
+	@Override
+	public List<StockDTO> getSnumByOptions(List<StockDTO> optionList) throws SQLException {
+		//List<Integer> snumList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT C.snum "
+					+ " FROM tbl_product A "
+					+ " JOIN tbl_catalogue B ON A.fk_pname = B.pname "
+					+ " JOIN tbl_stock C ON B.pname = C.fk_pname "
+					+ " where C.ssize = ? and C.color = ? and A.pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			for(int i=0; i<optionList.size(); i++) {
+				pstmt.setInt(1, optionList.get(i).getSsize());
+				pstmt.setString(2, optionList.get(i).getColor());
+				pstmt.setString(3, optionList.get(i).getFk_pname());
+				
+				rs = pstmt.executeQuery();
+				rs.next();
+				
+				optionList.get(i).setSnum(rs.getInt("snum"));
+				
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return optionList;
+	}
+
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@SuppressWarnings("unchecked")
+	@Override
+	public int insertCartList(Map<String, Object> paraMap) throws SQLException {
+		int n = 0;
+		
+		String userid = (String) paraMap.get("userid");
+		List<StockDTO> snumList = (List<StockDTO>) paraMap.get("snumList");
+		
+		try {
+			conn = ds.getConnection();
+			
+			// 수량만 변경시
+			String updateSql =
+	                " UPDATE tbl_cart "
+	              + " SET cqty = cqty + ? "
+	              + " WHERE fk_userid = ? "
+	              + " AND fk_snum = ? ";
+
+			// 새로 삽입 시
+	        String insertSql =
+	                " INSERT INTO tbl_cart(fk_userid, fk_snum, cqty) "
+	              + " VALUES(?, ?, ?) ";
+			
+			pstmt = conn.prepareStatement(updateSql);
+			
+			
+			for (int i=0; i<snumList.size(); i++) {
+				
+				pstmt.setInt(1, snumList.get(i).getSqty());
+				pstmt.setString(2, userid);
+				pstmt.setInt(3, snumList.get(i).getSnum());
+				
+				// 업데이트 먼저 해보기 >> 변경된 행이 없으면 return 이 0이된다. >> 즉, 기존에 없던 옵션이라는 뜻
+				int updatedRows = pstmt.executeUpdate();
+				
+				// 적용된 행이 없다면 새로 삽입하기
+				if (updatedRows == 0) {
+					pstmt.close();
+					pstmt = conn.prepareStatement(insertSql);
+					
+					pstmt.setString(1, userid);
+					pstmt.setInt(2, snumList.get(i).getSnum());
+					pstmt.setInt(3, snumList.get(i).getSqty());
+					
+					n += pstmt.executeUpdate();
+					
+					pstmt.close();
+		            pstmt = conn.prepareStatement(updateSql);
+				}
+				// 기존 행이 있다면
+				else {
+					n++;
+				}
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	// 해당 유저의 장바구니 목록 갖고오기
+	@Override
+	public List<Map<String, String>> getCartListByUserid(String userid) throws SQLException {
+		List<Map<String, String>> myCartList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select "
+					+ "    A.pnum, B.pname, B.brand, A.pimage1, D.fk_snum, C.ssize, C.color, D.cqty, B.regprice, B.saleprice, A.deliveryfee "
+					+ " from "
+					+ "    tbl_product A join tbl_catalogue B "
+					+ "    on A.fk_pname = B.pname "
+					+ "    join tbl_stock C "
+					+ "    on B.pname = C.fk_pname "
+					+ "    join tbl_cart D "
+					+ "    on D.fk_snum = C.snum "
+					+ " where  "
+					+ "    D.fk_userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				map.put("pnum", String.valueOf(rs.getInt("pnum")));
+				map.put("pname", rs.getString("pname"));
+				map.put("brand", rs.getString("brand"));
+				map.put("pimage1", rs.getString("pimage1"));
+				map.put("snum", String.valueOf(rs.getInt("fk_snum")));
+				map.put("ssize", String.valueOf(rs.getInt("ssize")));
+				map.put("color", rs.getString("color"));
+				map.put("cqty", String.valueOf(rs.getInt("cqty")));
+				map.put("regprice", String.valueOf(rs.getInt("regprice")));
+				map.put("saleprice", String.valueOf(rs.getInt("saleprice")));
+				map.put("deliveryfee", String.valueOf(rs.getInt("deliveryfee")));
+				
+				myCartList.add(map);
+			}
+					
+			
+			
+		} finally {
+			close();
+		}
+		
+		return myCartList;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	// 특정 장바구니의 수량 변경하기
+	@Override
+	public int changeCartCqty(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+				
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_cart set cqty = to_number(?) "
+					+ " where fk_userid = ? and fk_snum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("cqty"));
+			pstmt.setString(2, paraMap.get("userid"));
+			pstmt.setString(3, paraMap.get("snum"));
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+				
+		return n;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 변경하려는 장바구니 목록의 재고가 충분한지 검사한다.
+	@Override
+	public boolean isStockEnoughForCart(Map<String, String> paraMap) throws SQLException {
+		boolean bool = false;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select * from tbl_stock"
+					+ " where snum = to_number(?) "
+					+ " and sqty > to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("snum"));
+			pstmt.setString(2, paraMap.get("cqty"));
+			
+			rs = pstmt.executeQuery();
+			
+			bool = rs.next();
+			
+		} finally {
+			close();
+		}
+		
+		return bool;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 특정 상품을 장바구니에서 삭제하기
+	@Override
+	public int deleteFromCartList(Map<String, String> paraMap) throws SQLException {
+		int n  = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_cart"
+					+ " where fk_userid = ? and fk_snum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setString(2, paraMap.get("snum"));
+			
+			n = pstmt.executeUpdate();
+			
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+
+//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	// 상품의 QnA목록 총 페이지수 가져오기
+	@Override
+	public int getTotalQnAPage(String pnum) throws SQLException {
+		int totalQnAPage = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT CEIL(COUNT(*)/10) AS PAGE "
+					+ " FROM tbl_qna "
+					+ " where fk_pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			
+			rs = pstmt.executeQuery();
+			rs.next();
+			
+			totalQnAPage = rs.getInt("page");
+			
+		} finally {
+			close();
+		}
+		
+		
+		return totalQnAPage;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 특정 페이지번호에 해당하는 QnA 목록을 조회해온다.
+	@Override
+	public List<QnADTO> getQnAList(Map<String, String> paraMap) throws SQLException {
+		List<QnADTO> qnaList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select qnanum, fk_pnum, fk_userid, to_char(qwritedate, 'yyyy.mm.dd') as qwritedate, qcontents, islock, qanswer "
+					+ " from tbl_qna "
+					+ " where fk_pnum = to_number(?) "
+					+ " ORDER BY qnanum desc "
+					+ "	OFFSET (to_number(?)-1)*10 ROW "
+					+ "	FETCH NEXT 10 ROW ONLY ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("pnum"));
+			pstmt.setString(2, paraMap.get("currentShowPageNo_QnA"));
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				QnADTO dto = new QnADTO();
+				dto.setQnanum(rs.getInt("qnanum"));
+				dto.setFk_pnum(rs.getInt("fk_pnum"));
+				dto.setFk_userid(rs.getString("fk_userid"));
+				dto.setQwritedate(rs.getString("qwritedate"));
+				dto.setQcontents(rs.getString("qcontents"));
+				dto.setIslock(rs.getString("islock"));
+				dto.setQanswer(rs.getString("qanswer"));
+				qnaList.add(dto);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return qnaList;
 	}
 
 

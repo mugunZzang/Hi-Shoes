@@ -8,7 +8,7 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import member.kimkc.domain.MemberDTO;
+import member.domain.MemberDTO;
 import shop.kimkc.domain.ProductDTO;
 import shop.kimkc.model.ProductDAO;
 import shop.kimkc.model.ProductDAO_imple;
@@ -24,16 +24,28 @@ public class ShowMall extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		// ==== 여기 나중에 지워야 함 ==================== //
-		MemberDTO loginuser = new MemberDTO();
-		loginuser.setUserid("kimkc");
-		HttpSession session = request.getSession();
-		session.setAttribute("loginuser", loginuser);
+		//MemberDTO loginuser = new MemberDTO();
+		//loginuser.setUserid("kimkc");
+		//HttpSession session = request.getSession();
+		//session.setAttribute("loginuser", loginuser);
 		//-------------------------------------------//
+		
+		MemberDTO loginuser = (MemberDTO) request.getSession().getAttribute("loginuser");
+		if (loginuser == null) {
+			request.setAttribute("message", "서비스 이용을 원하시면 로그인 하시길바랍니다.");
+		    request.setAttribute("loc", request.getContextPath() + "/index.go");
+		         
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/msg.jsp");
+		         
+		    return;
+		}
+		
 		
 		
 		// 헤더의 검색바의 검색키워드
-		//String searchKeyword = request.getParameter("searchKeyword");
-		String searchKeyword = "";
+		String searchKeyword = request.getParameter("searchKeyword");
+		//String searchKeyword = "";
 		
 		
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -100,10 +112,10 @@ public class ShowMall extends AbstractController {
 		
 		
 		// *** [맨처음][이전] 만들기 *** //
-		pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo=1'>[맨처음]</a></li>";
+		pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo=1'>&lt;&lt;</a></li>";
 		
 		if(pageNo != 1) {
-	    	pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>"; 
+	    	pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo="+(pageNo-1)+"'>&lt;</a></li>"; 
 	    }
 		
 	    while( !(loop > blockSize || pageNo > totalProductPage) ) {
@@ -129,9 +141,9 @@ public class ShowMall extends AbstractController {
 	    // pageNo ==> 11
 	    
 	    if(pageNo <= totalProductPage) {
-	    	pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>"; 
+	    	pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo="+pageNo+"'>&gt;</a></li>"; 
 	    }
-	    pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo="+totalProductPage+"'>[마지막]</a></li>"; 
+	    pageBar += "<li class='page-item'><a class='page-link' href='showMall.go?searchKeyword="+searchKeyword+"&currentShowPageNo="+totalProductPage+"'>&gt;&gt;</a></li>"; 
 	    
 	    
 		request.setAttribute("pageBar", pageBar);

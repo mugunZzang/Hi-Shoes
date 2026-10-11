@@ -21,7 +21,9 @@
     <h1><span>${requestScope.searchKeyword}</span>에 대한 검색결과</h1>
 
 
-    <%-- ==== 상품 목록 ==== --%>
+    <%-- ===================================================== >
+         상품 목록 
+    < ===================================================== --%>
 
     <div class="product-list">
 
@@ -31,11 +33,12 @@
 
 		<c:if test="${not empty requestScope.prodList}"> 
 			<c:forEach var="pdto" items="${requestScope.prodList}">
-		        <!-- 상품 1 -->
+			
+		        <%-- 상품 1개 --%>
 		        <div class="product-item">
 		            <a href="<%=ctxPath %>/shop/productDetail.go?pnum=${pdto.pnum}" class="product-link">
 		
-		                <!-- 상품 이미지 -->
+		                <%-- 대표이미지 --%>
 		                <div class="product-image">
 		                    <img
 		                        src="${pageContext.request.contextPath}/images/kimkc/product/${pdto.pimage1}"
@@ -43,38 +46,46 @@
 		                </div>
 		
 		
-		                <!-- 상품 정보 -->
+		                <%-- 상품 정보들 --%>
 		                <div class="product-info">
 		
-		                    <!-- 브랜드 -->
+		                    <%-- 브랜드 --%>
 		                    <div class="product-brand">
 		                        ${pdto.catalogueDTO.brand}
 		                    </div>
 		
 		
-		                    <!-- 상품명 -->
+		                    <%-- 상품명 --%>
 		                    <div class="product-name">
-		                        <span class="product-badge">
-		                            공용
-		                        </span>
-		
 		                        <span class="product-title">
 		                            ${pdto.catalogueDTO.pname}
 		                        </span>
 		                    </div>
 		
 		
-		                    <!-- 가격 -->
+		                    <%-- 가격 --%>
+		                    <%-- 세일가에 따라 정가가 나올수도 안나올수도~ --%>
 		                    <div class="product-price">
 		                        <strong>
-		                            <fmt:formatNumber value="${pdto.catalogueDTO.saleprice}" type="number" />
+		                        	<c:if test="${pdto.catalogueDTO.regprice > pdto.catalogueDTO.saleprice}">
+		                        		<span class="ref-price">
+		                        			<fmt:formatNumber value="${pdto.catalogueDTO.regprice}" type="number" />
+		                        		</span>
+		                        		<span class="sale-price">
+		                        			<fmt:formatNumber value="${pdto.catalogueDTO.saleprice}" type="number" /> 원
+		                        		</span>
+		                        	</c:if>
+		                        	<c:if test="${pdto.catalogueDTO.regprice <= pdto.catalogueDTO.saleprice}">
+		                        		<span class="normal-price">
+		                        			<fmt:formatNumber value="${pdto.catalogueDTO.saleprice}" type="number" /> 원
+		                        		</span>
+		                        	</c:if>
 		                        </strong>
 		
-		                        <span>원</span>
 		                    </div>
 		
 		
-		                    <!-- 상품 태그 -->
+		                    <%-- 태그인데, 일단 냅둘게요 --%>
 		                    <div class="product-tags">
 		
 		                    </div>
@@ -87,19 +98,27 @@
 			</c:forEach>
 			
 			
-			<%-- 페이지바 --%>
-			<nav class="my-5">
-	           	<div style='display:flex; width:80%; margin: 0 auto;'>
-	             	<ul class="pagination" style='margin:auto;'>
-	             		${requestScope.pageBar}
-	             	</ul>
-	          	</div>
-        	</nav>
+			
 		</c:if>
-
+		
+		
+		
+       	
     </div>
     
     
+    
+    <c:if test="${not empty requestScope.prodList}"> 
+    <%-- 페이지바 --%>
+		<nav class="my-5">
+           	<div style='display:flex; width:80%; margin: 0 auto;'>
+             	<ul class="pagination" style='margin:auto;'>
+             		${requestScope.pageBar}
+             	</ul>
+          	</div>
+       	</nav>
+       	
+    </c:if>
 
 </div>
 

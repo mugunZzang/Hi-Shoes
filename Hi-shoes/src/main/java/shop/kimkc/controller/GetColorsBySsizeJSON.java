@@ -36,6 +36,9 @@ public class GetColorsBySsizeJSON extends AbstractController {
 		}
 		
 		String json = jsonArray.toString();
+		//System.out.println("ssize: " + ssize);
+		//System.out.println("pname: " + pname);
+		//System.out.println("color JSON: " + json);
 		
 		request.setAttribute("json", json);
 		

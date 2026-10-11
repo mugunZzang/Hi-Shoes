@@ -1,6 +1,5 @@
 package shop.kimkc.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +8,8 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import member.kimkc.domain.MemberDTO;
+import member.domain.MemberDTO;
 import shop.kimkc.domain.CatalogueDTO;
-import shop.kimkc.domain.CategoryDTO;
 import shop.kimkc.domain.ProductDTO;
 import shop.kimkc.model.ProductDAO;
 import shop.kimkc.model.ProductDAO_imple;
@@ -24,11 +22,22 @@ public class ShowMallByCate extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		// ==== 여기 나중에 지워야 함 ==================== //
-		MemberDTO loginuser = new MemberDTO();
-		loginuser.setUserid("kimkc");
-		HttpSession session = request.getSession();
-		session.setAttribute("loginuser", loginuser);
+		//MemberDTO loginuser = new MemberDTO();
+		//loginuser.setUserid("kimkc");
+		//HttpSession session = request.getSession();
+		//session.setAttribute("loginuser", loginuser);
 		//-------------------------------------------//
+		// 로그인 했는지 검사해야 함.
+		MemberDTO loginuser = (MemberDTO) request.getSession().getAttribute("loginuser");
+		if (loginuser == null) {
+			request.setAttribute("message", "서비스 이용을 원하시면 로그인 하시길바랍니다.");
+		    request.setAttribute("loc", request.getContextPath() + "/index.go");
+		         
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/msg.jsp");
+		         
+		    return;
+		}
 	
 		// 브랜드 목록을 가져와 필터용 select 태그안에 option으로 넣어주기
 		List<CatalogueDTO> brandList = pdao.getBrandList();
@@ -120,7 +129,7 @@ public class ShowMallByCate extends AbstractController {
 		// currentShowPageNo 은 사용자가 보고자하는 페이지바의 페이지번호 이다.
 		// 카테고리 메뉴에서 카테고리명만을 클릭했을 경우에는 currentShowPageNo 은 null 이 된다.
 		// currentShowPageNo 이 null 이라면 currentShowPageNo 을 1 페이지로 바꾸어야 한다.
-		
+		System.out.println("현재페이지번호: " +currentShowPageNo );
 		if(currentShowPageNo == null) {
 			currentShowPageNo = "1";
 		}
@@ -190,12 +199,12 @@ public class ShowMallByCate extends AbstractController {
 		
 		// *** [맨처음][이전] 만들기 *** //
 		pageBar +=  
-			"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+pre_str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo=1'>&lt;&lt;</a></li>";
 				
 		
 		if(pageNo != 1) {
 	    	pageBar += 
-			"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+pre_str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+(pageNo-1)+"'>&lt;</a></li>";
 	    }
 		
 	    while( !(loop > blockSize || pageNo > totalProductPage) ) {
@@ -206,7 +215,7 @@ public class ShowMallByCate extends AbstractController {
 	    	}
 	    	else {
 	    		pageBar += 
-				"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+pre_str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+				"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
 	    	}
 	    	
 	    	loop++;   // 1 2 3 4 5 6 7 8 9 10 
@@ -224,10 +233,10 @@ public class ShowMallByCate extends AbstractController {
 	    
 	    if(pageNo <= totalProductPage) {
 	    	pageBar += 
-			"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+pre_str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+pageNo+"'>&gt;</a></li>";
 	    }
 	    pageBar += 
-		"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+pre_str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+totalProductPage+"'>[마지막]</a></li>";
+		"<li class='page-item'><a class='page-link' href='showMallByCate.go?category="+category+"&str_ssize="+str_ssize+"&brand="+brand+"&str_color="+str_color+"&keyword="+keyword+"&min_price="+min_price+"&max_price="+max_price+"&currentShowPageNo="+totalProductPage+"'>&gt;&gt;</a></li>";
 	    
 	    
 		request.setAttribute("pageBar", pageBar);

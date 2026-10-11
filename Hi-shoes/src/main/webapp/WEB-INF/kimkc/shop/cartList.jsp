@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String ctxPath = request.getContextPath();
 %>
@@ -9,17 +11,246 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/kimkc/cartList.css" >
 <jsp:include page="../../header.jsp" />
 
+<script type="text/javascript">
+	
+	$(function() {
+		
+		// 결제금액 불러오기
+		getTotalCost();
+		
+		// 체크박스 전체해제/선택
+		$('input#selectAll').on("change", function() {
+			const bool = $(this).prop("checked");
+			
+			$('input.product-checkbox').prop("checked", bool);
+		});
+		
+		
+		// 장바구니 목록 중 하나라도 체크가 해제되면 전체선택도 해제됨
+		$('input.product-checkbox').on("change", function() {
+			let flag = true;
+			
+			$('input.product-checkbox').each(function(index, elmt) {
+				const ischeck = $(elmt).prop("checked");
+				if(!ischeck) {
+					$('input#selectAll').prop("checked", false);
+					flag = false;
+					return false;
+				}
+			});
+
+			if (flag) {
+				$('input#selectAll').prop("checked", true);
+			}
+			
+		});
+		
+		// -------------------------------------------------------------------------
+
+	    // 수량 감소 버튼
+	    $(document).on("click", ".minus-quantity", function() {
+	    	//console.log("- 클릭됨");
+	        const $input = $(this).siblings(".cart-quantity");
+	        let qty = Number($input.val());
+
+	        if (qty < 1) {
+	            qty = 1;
+	        }
+
+	        // 최소 수량은 1개
+	        if (qty > 1) {
+	            qty--;
+	        }
+
+	        $input.val(qty);
+	    });
+
+
+	    // 수량 증가 버튼
+	    $(document).on("click", ".plus-quantity", function() {
+			//console.log("+ 클릭됨");
+	        const $input = $(this).siblings(".cart-quantity");
+	        let qty = Number($input.val());
+
+	        if (qty < 1) {
+	            qty = 1;
+	        }
+
+	        // 최대 수량은 999개
+	        if (qty < 999) {
+	            qty++;
+	        }
+
+	        $input.val(qty);
+	    });
+	    
+	 	// -------------------------------------------------------------------------
+	});
+	
+	// -------------------------------------------------------------------------
+	
+	// 총 결제금액 적용하기
+	function getTotalCost() {
+		let totalOrderPrice = 0;    // 정상가 기준 주문금액
+	    let totalDiscountPrice = 0; // 총 할인금액
+	    let totalDeliveryFee = 0;   // 배송비
+
+	    const products = $(".cart-product");
+
+	    products.each(function(index) {
+
+	        const product = $(this);
+
+	        // 상품 가격
+	        const regprice = Number(product.attr("data-regprice")) || 0;
+	        const saleprice = Number(product.attr("data-saleprice")) || 0;
+
+	        // 해당 상품의 현재 수량
+	        const cqty = Number(product.find(".cart-quantity").val()) || 0;
+
+	        // 정상가 기준 주문금액
+	        totalOrderPrice += regprice * cqty;
+
+	        // 정상가보다 판매가가 낮은 상품만 할인 계산
+	        if (regprice > saleprice) {
+	            totalDiscountPrice += (regprice - saleprice) * cqty;
+	        }
+
+	        // 배송비는 첫 번째 상품에서 한 번만 가져온다.
+	        if (index === 0) {
+	            totalDeliveryFee = Number(product.attr("data-deliveryfee")) || 0;
+	        }
+	    });
+
+	    // 최종 결제금액
+	    const finalPrice =
+	        totalOrderPrice - totalDiscountPrice + totalDeliveryFee;
+
+	    // 천 단위 콤마 및 원 표시
+	    const formatPrice = price =>
+	        price.toLocaleString("en") + "원";
+
+	    $(".total-order-price").text(formatPrice(totalOrderPrice));
+	    $(".total-discount-price").text(formatPrice(totalDiscountPrice));
+	    $(".total-delivery-fee").text(formatPrice(totalDeliveryFee));
+	    $(".final-price").text(formatPrice(finalPrice));
+	}
+	
+	
+	
+	
+	
+	
+	
+	// -------------------------------------------------------------------------
+	
+	// 수량 변경 버튼
+	function changeCartCqty(snum, btn) {
+		if (confirm("해당 상품의 수량을 변경하시겠습니까?")) {
+			
+			// 클릭한 버튼이 속한 상품 영역에서 수량을 가져온다.
+		    const product = $(btn).closest(".cart-product");
+		    const cqty = Number(product.find(".cart-quantity").val());
+			
+			$.ajax({
+				url: "<%= ctxPath %>/shop/changeCartCqtyJSON.go",
+		        type: "POST",
+		        data: {
+		            snum: snum,
+		            userid: "${sessionScope.loginuser.userid}",
+		            cqty: cqty
+		        },
+		        dataType: "json",
+		        success: function(json) {
+					if(json.n == 1) {
+						alert("수량이 변경되었습니다.");
+						// 수량 변경후 결제금액 적용
+						getTotalCost();
+					}
+					else if(json.n == -1) {
+						alert("재고수량 이상으로 수량을 변경할 수 없습니다.");
+					}
+					else {
+						alert("수량변경에 실패하였습니다.");
+					}
+		        	
+				},
+				
+				error: function(request, status, error){
+			    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }	 
+			});
+		}
+	}
+	
+	// -------------------------------------------------------------------------
+	
+	// 장바구니 삭제버튼
+	function deleteFromCartList(snum) {
+		if (confirm("해당 상품을 장바구니에서 삭제하시겠습니까?")) {
+			
+			$.ajax({
+				url: "<%= ctxPath %>/shop/deleteFromCartListJSON.go",
+		        type: "POST",
+		        data: {
+		            snum: snum
+		        },
+		        dataType: "json",
+		        success: function(json) {
+					if(json.n == 1) {
+						alert("해당 상품이 장바구니에서 삭제되었습니다.");
+						// 삭제이후 결제금액 적용
+						getTotalCost();
+					}
+					
+					else {
+						alert("삭제에 실패하였습니다.");
+					}
+		        	
+				},
+				
+				error: function(request, status, error){
+			    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }	 
+			});
+		}
+	}
+	
+	
+	// -------------------------------------------------------------------------
+	
+	// 계속 쇼핑하기 버튼
+	function gotoIndex() {
+		location.href = "<%=ctxPath %>/index.go";
+	}
+	
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="container">
-    <!-- 장바구니 -->
+    
 
 
 <div class="cart-container">
 
-    <!-- 페이지 제목 -->
+    
     <h1>장바구니</h1>
 
 
-    <!-- 전체 선택 -->
+    <%-- 전체 선택 --%>
     <div class="cart-select-all">
         <label>
             <input type="checkbox" id="selectAll">
@@ -28,259 +259,117 @@
     </div>
 
 
-    <!-- 일반배송 상품 영역 -->
+    <%-- 상품 영역 --%>
     <div class="cart-section">
 
-        <!-- 배송 종류 + 상품 개수 -->
+        <%-- 상품 개수 --%>
         <div class="cart-section-title">
-            <span>일반배송 상품</span>
-            <strong>3개</strong>
+            <span>장바구니 상품</span>
+           	<strong>${fn:length(requestScope.myCartList)}개</strong>
+            <%-- size 왜 안먹는지 몰겠음 ;; --%>
         </div>
 
 
-        <!-- 상품 목록 -->
+        <%-- 상품 목록 --%>
         <div class="cart-product-list">
 
-
-            <!-- 상품 1 -->
-            <div class="cart-product">
-
-                <!-- 선택 -->
-                <div class="product-check">
-                    <input type="checkbox" class="product-checkbox">
-                </div>
-
-
-                <!-- 상품 이미지 -->
-                <div class="product-image">
-                    <img src="images/product1.jpg" alt="나이키 운동화">
-                </div>
-
-
-                <!-- 상품 정보 -->
-                <div class="product-info">
-
-                    <strong class="brand">
-                        나이키
-                    </strong>
-
-                    <span class="product-name">
-                        NIKE COURT VISION LO NN 100
-                    </span>
-
-                    <span class="product-size">
-                        245
-                    </span>
-
-                </div>
-
-
-                <!-- 수량 -->
-                <div class="product-quantity">
-
-                    <div class="quantity-control">
-                        <button type="button">-</button>
-                        <input type="text" value="1">
-                        <button type="button">+</button>
-                    </div>
-
-                    <button type="button" class="option-change">
-                        변경
-                    </button>
-
-                </div>
-
-
-                <!-- 가격 -->
-                <div class="product-price">
-
-                    <del>99,000원</del>
-
-                    <strong>
-                        79,000원
-                    </strong>
-
-                </div>
-
-
-                <!-- 바로구매 / 삭제 -->
-                <div class="product-actions">
-
-                    <button type="button" class="buy-button">
-                        바로구매
-                    </button>
-
-                    <button type="button" class="delete-button">
-                        삭제
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- 상품 2 -->
-            <div class="cart-product">
-
-                <div class="product-check">
-                    <input type="checkbox" class="product-checkbox">
-                </div>
-
-                <div class="product-image">
-                    <img src="images/product2.jpg" alt="나이키 운동화">
-                </div>
-
-                <div class="product-info">
-
-                    <strong class="brand">
-                        나이키
-                    </strong>
-
-                    <span class="product-name">
-                        NIKE COURT VISION LO SUEDE 001
-                    </span>
-
-                    <span class="product-size">
-                        240
-                    </span>
-
-                </div>
-
-
-                <div class="product-quantity">
-
-                    <div class="quantity-control">
-                        <button type="button">-</button>
-                        <input type="text" value="1">
-                        <button type="button">+</button>
-                    </div>
-
-                    <button type="button" class="option-change">
-                        변경
-                    </button>
-
-                </div>
-
-
-                <div class="product-price">
-
-                    <strong>
-                        99,000원
-                    </strong>
-
-                </div>
-
-
-                <div class="product-actions">
-
-                    <button type="button" class="buy-button">
-                        바로구매
-                    </button>
-
-                    <button type="button" class="delete-button">
-                        삭제
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- 상품 3 -->
-            <div class="cart-product">
-
-                <div class="product-check">
-                    <input type="checkbox" class="product-checkbox">
-                </div>
-
-                <div class="product-image">
-                    <img src="images/product3.jpg" alt="아디다스 운동화">
-                </div>
-
-                <div class="product-info">
-
-                    <strong class="brand">
-                        아디다스
-                    </strong>
-
-                    <span class="product-name">
-                        OZGAIA W CBLACK/CBLACK/FTWWHT
-                    </span>
-
-                    <span class="product-size">
-                        220
-                    </span>
-
-                </div>
-
-
-                <div class="product-quantity">
-
-                    <div class="quantity-control">
-                        <button type="button">-</button>
-                        <input type="text" value="2">
-                        <button type="button">+</button>
-                    </div>
-
-                    <button type="button" class="option-change">
-                        변경
-                    </button>
-
-                </div>
-
-
-                <div class="product-price">
-
-                    <strong>
-                        218,000원
-                    </strong>
-
-                </div>
-
-
-                <div class="product-actions">
-
-                    <button type="button" class="buy-button">
-                        바로구매
-                    </button>
-
-                    <button type="button" class="delete-button">
-                        삭제
-                    </button>
-
-                </div>
-
-            </div>
+		
+			 <c:choose>
+
+		        <%-- 장바구니가 비어 있는 경우 --%>
+		        <c:when test="${empty requestScope.myCartList}">
+		            <div class="cart-empty">
+		                <p>장바구니에 담긴 상품이 없습니다.</p>
+		                <p>마음에 드는 상품을 장바구니에 담아보세요.</p>
+		            </div>
+		        </c:when>
+		
+		        <%-- 장바구니에 상품이 있는 경우 --%>
+		        <c:otherwise>
+		
+		            <c:forEach var="cart" items="${requestScope.myCartList}">
+		
+		                <div class="cart-product"
+	                		data-regprice="${cart.regprice}"
+					     	data-saleprice="${cart.saleprice}"
+				    	 	data-deliveryfee="${cart.deliveryfee}">	<%-- 결제금액 계산하려고 넣어둠 --%>
+		
+		                    <%-- 선택 --%>
+		                    <div class="product-check">
+		                        <input type="checkbox" class="product-checkbox">
+		                    </div>
+		
+		                    <%-- 상품 이미지 --%>
+		                    <div class="product-image">
+		                        <img src="<%=ctxPath %>/images/kimkc/product/${cart.pimage1}"
+		                             alt="${cart.pname}">
+		                    </div>
+		
+		                    <%-- 상품 정보 --%>
+		                    <div class="product-info">
+		                        <strong class="brand">${cart.brand}</strong>
+		                        <span class="product-name">${cart.pname}</span>
+		                        <span class="product-size">
+		                            ${cart.ssize} / ${cart.color}
+		                        </span>
+		                    </div>
+		
+		                    <%-- 수량 --%>
+		                    <div class="product-quantity">
+		                        <div class="quantity-control">
+		                            <button type="button" class="minus-quantity">-</button>
+		                            <input type="text" value="${cart.cqty}" class="cart-quantity" readonly>
+		                            <button type="button" class="plus-quantity">+</button>
+		                        </div>
+		
+		                        <button type="button" class="option-change" onclick="changeCartCqty(${cart.snum}, this)">
+		                            변경
+		                        </button>
+		                    </div>
+		
+		                    <%-- 가격 --%>
+		                    <div class="product-price">
+		                        <c:if test="${cart.regprice > cart.saleprice}">
+		                            <del><fmt:formatNumber value="${cart.regprice}" type="number"/>원</del>
+		                        </c:if>
+		
+		                        <strong><fmt:formatNumber value="${cart.saleprice}" type="number"/>원</strong>
+		                    </div>
+		
+		                    <%-- 삭제 --%>
+		                    <div class="product-actions">
+		                        <button type="button" class="delete-button" onclick="deleteFromCartList(${cart.snum})">
+		                            삭제
+		                        </button>
+		                    </div>
+		
+		                </div>
+		
+		            </c:forEach>
+		
+		        </c:otherwise>
+		
+		    </c:choose>
+        
 
         </div>
 
-
-        <!-- 선택 삭제 -->
-        <div class="cart-select-delete">
-
-            <button type="button">
-                선택 삭제
-            </button>
-
-        </div>
 
     </div>
 
 
-    <!-- ==========================
+    <%-- ===================================================== >
          결제 금액
-    =========================== -->
+    < ===================================================== --%>
 
     <div class="cart-summary">
 
-        <!-- 주문금액 -->
+        <%-- 주문금액 --%>
         <div class="summary-item">
 
             <span>주문금액</span>
 
-            <strong>
-                416,000원
-            </strong>
+            <strong class="total-order-price">0원</strong>
 
         </div>
 
@@ -290,14 +379,12 @@
         </div>
 
 
-        <!-- 총 할인금액 -->
+        <%-- 총 할인금액 --%>
         <div class="summary-item">
 
             <span>총 할인금액</span>
 
-            <strong>
-                20,000원
-            </strong>
+            <strong class="total-discount-price">0원</strong>
 
         </div>
 
@@ -307,21 +394,19 @@
         </div>
 
 
-        <!-- 결제 예정 금액 -->
+        <%-- 결제예정금액 --%>
         <div class="summary-item">
 
             <span>결제예정금액</span>
 
-            <strong class="final-price">
-                396,000원
-            </strong>
+            <strong class="final-price">0원</strong>
 
         </div>
 
     </div>
 
 
-    <!-- 금액 상세 -->
+    <%-- 금액 상세 --%>
     <div class="price-detail">
 
         <div class="price-detail-item">
@@ -332,8 +417,8 @@
             </div>
 
             <div>
-                <span>416,000원</span>
-                <span>0원</span>
+                <span class="total-order-price">0원</span>
+                <span class="total-delivery-fee">0원</span>
             </div>
 
         </div>
@@ -346,7 +431,7 @@
             </div>
 
             <div>
-                <span>20,000원</span>
+                <span class="total-discount-price">0원</span>
             </div>
 
         </div>
@@ -354,23 +439,21 @@
     </div>
 
 
-    <!-- ==========================
-         하단 버튼
-    =========================== -->
+    <%-- ===================================================== >
+         하단 버튼 구간
+    < ===================================================== --%>
 
     <div class="cart-buttons">
 
-        <button type="button" class="continue-shopping">
+        <button type="button" class="continue-shopping" onclick="gotoIndex()">
             계속 쇼핑하기
         </button>
 
-        <button type="button" class="selected-order">
-            일반배송 선택상품 주문하기
+        <button type="button" class="selected-order" onclick="">
+            선택상품 주문하기
         </button>
 
-        <button type="button" class="all-order">
-            일반배송 전체상품 주문하기
-        </button>
+        
 
     </div>
 

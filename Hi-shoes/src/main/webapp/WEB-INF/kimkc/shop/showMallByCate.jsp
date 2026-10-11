@@ -124,17 +124,16 @@
 <div class="search-container">
 
 
-    <%-- 전체 쇼핑몰 영역 --%>
-
+   
     <div class="shop-layout">
 
 
-        <%-- 좌측 필터 영역 --%>
-		
-
+        <%-- ===================================================== >
+        	좌측 필터 영역
+   		< ===================================================== --%>
         <aside class="filter-sidebar">
 
-            <!-- 필터 제목 -->
+            <%-- 그냥 제목 --%>
             <div class="filter-header">
 
                 <strong>FILTER</strong>
@@ -145,13 +144,10 @@
 
 
             <%-- 브랜드 필터 --%>
-
             <div class="filter-section">
 
                 <div class="filter-section-header">
                     <strong>브랜드</strong>
-
-                    
                 </div>
 
 
@@ -169,8 +165,6 @@
                         	</c:forEach>
                         
                         </c:if>
-                        <%-- <option value="AKIII CLASSIC">AKIII CLASSIC</option>--%>
-
 
                     </select>
 
@@ -180,15 +174,10 @@
 
 
            	<%-- 사이즈 필터 --%>
-
             <div class="filter-section">
 
                 <div class="filter-section-header">
-
                     <strong>사이즈</strong>
-
-                    
-
                 </div>
 
 
@@ -219,22 +208,16 @@
 
 
             <%-- 색상 필터 --%>
-
             <div class="filter-section">
 
                 <div class="filter-section-header">
-
                     <strong>색상</strong>
-
-                    
-
                 </div>
 
 
                 <div class="filter-section-content">
 
                     <div class="color-filter">
-
 
                         <%-- BLACK --%>
                         <label class="color-item">
@@ -244,7 +227,6 @@
 
                             <span class="color-chip color-black"></span>
                         </label>
-
 						
                         <%-- WHITE --%>
                         <label class="color-item">
@@ -255,7 +237,6 @@
                             <span class="color-chip color-white"></span>
                         </label>
 
-
                         <%-- SILVER --%>
                         <label class="color-item">
                             <input type="checkbox"
@@ -264,7 +245,6 @@
 
                             <span class="color-chip color-silver"></span>
                         </label>
-
 
                         <%-- BROWN --%>
                         <label class="color-item">
@@ -275,7 +255,6 @@
                             <span class="color-chip color-brown"></span>
                         </label>
 
-
                         <%-- IVORY --%>
                         <label class="color-item">
                             <input type="checkbox"
@@ -284,7 +263,6 @@
 
                             <span class="color-chip color-ivory"></span>
                         </label>
-
 
                         <%-- RED --%>
                         <label class="color-item">
@@ -295,7 +273,6 @@
                             <span class="color-chip color-red"></span>
                         </label>
 
-
                         <%-- BLUE --%>
                         <label class="color-item">
                             <input type="checkbox"
@@ -304,7 +281,6 @@
 
                             <span class="color-chip color-blue"></span>
                         </label>
-
 
                         <%-- YELLOW --%>
                         <label class="color-item">
@@ -315,8 +291,7 @@
                             <span class="color-chip color-yellow"></span>
                         </label>
 
-
-                        <%-- 기타 색상 --%>
+                        <%-- 기타 색상(무지개임) --%>
                         <label class="color-item">
 
                             <input type="checkbox"
@@ -335,16 +310,11 @@
 
 
             
-			<%-- 가격 필터 (양방향 슬라이더) --%>
-
+			<%-- 가격 필터 (양방향 슬라이더...) --%>
             <div class="filter-section">
 
                 <div class="filter-section-header">
-
                     <strong>가격</strong>
-
-                    
-
                 </div>
 
 
@@ -384,16 +354,12 @@
             </div>
 
 
-            <%-- 검색어 필터 --%>
 
+            <%-- 검색어 필터 --%>
             <div class="filter-section">
 
                 <div class="filter-section-header">
-
                     <strong>검색어</strong>
-
-                    
-
                 </div>
 
 
@@ -405,8 +371,6 @@
                         	   id="filter-keyword"
                                name="keyword"
                                placeholder="검색어">
-
-                        
 
                     </div>
 
@@ -421,7 +385,6 @@
 
 
             <%-- 필터 버튼들 --%>
-
             <div class="filter-buttons">
 
                 <button type="button"
@@ -444,19 +407,16 @@
 
 
         <%-- 상품 진열 구역 --%>
-
         <main class="shop-content">
 
 
-            <!-- 페이지 제목 -->
-
+            <%-- 제목입니다 --%>
             <h1 class="shop-title">
                 신발
             </h1>
 
 
-            <%-- 카테고리 선택 nav --%>
-
+            <%-- 카테고리 선택 nav 바 --%>
             <nav class="category-nav">
 
                 <a class="category-nav-items"
@@ -493,8 +453,7 @@
 
 
 
-            <%-- 실제 상품 진열될 곳 --%>
-
+            <%-- 상품 진열될 곳 --%>
             <div class="product-list">
 
 
@@ -508,18 +467,15 @@
 
                 <c:if test="${not empty requestScope.prodList}">
 
-                    <c:forEach var="pdto"
-                               items="${requestScope.prodList}">
+                    <c:forEach var="pdto" items="${requestScope.prodList}">
 
-
-                        <!-- 상품 -->
+                        <%-- 상품 1개 --%>
                         <div class="product-item">
 
                             <a href="<%=ctxPath %>/shop/productDetail.go?pnum=${pdto.pnum}"
                                class="product-link">
 
-
-                                <!-- 상품 이미지 -->
+                                <%-- 대표이미지 --%>
                                 <div class="product-image">
 
                                     <img
@@ -529,26 +485,18 @@
                                 </div>
 
 
-
-                                <!-- 상품 정보 -->
+                                <%-- 상품 정보 --%>
                                 <div class="product-info">
 
-
-                                    <!-- 브랜드 -->
+                                    <%-- 브랜드 --%>
                                     <div class="product-brand">
-
                                         ${pdto.catalogueDTO.brand}
-
                                     </div>
 
 
 
-                                    <!-- 상품명 -->
+                                    <%-- 상품명 --%>
                                     <div class="product-name">
-
-                                        <span class="product-badge">
-                                            공용
-                                        </span>
 
                                         <span class="product-title">
                                             ${pdto.catalogueDTO.pname}
@@ -557,28 +505,32 @@
                                     </div>
 
 
-
-                                    <!-- 가격 -->
+                                    <%-- 가격 --%>
                                     <div class="product-price">
 
                                         <strong>
-                                            <fmt:formatNumber
-                                                value="${pdto.catalogueDTO.saleprice}"
-                                                type="number" />
-                                        </strong>
-
-                                        <span>
-                                            원
-                                        </span>
+		                        			<c:if test="${pdto.catalogueDTO.regprice > pdto.catalogueDTO.saleprice}">
+		                        				<span class="ref-price">
+		                        					<fmt:formatNumber value="${pdto.catalogueDTO.regprice}" type="number" />
+		                        				</span>
+		                        				<span class="sale-price">
+		                        					<fmt:formatNumber value="${pdto.catalogueDTO.saleprice}" type="number" /> 원
+		                        				</span>
+		                        			</c:if>
+		                        			<c:if test="${pdto.catalogueDTO.regprice <= pdto.catalogueDTO.saleprice}">
+		                        				<span class="normal-price">
+		                        					<fmt:formatNumber value="${pdto.catalogueDTO.saleprice}" type="number" /> 원
+		                        				</span>
+		                        			</c:if>
+		                       			 </strong>
 
                                     </div>
 
 
 
-                                    <!-- 상품 태그 -->
+                                    <%-- 상품 태그인데.. 일단냅둠 --%>
                                     <div class="product-tags">
                                     </div>
-
 
                                 </div>
 
@@ -588,15 +540,7 @@
 
 
                     </c:forEach>
-					
-					<%-- 페이지바 --%>
-					<nav class="my-5">
-			           	<div style='display:flex; width:80%; margin: 0 auto;'>
-			             	<ul class="pagination" style='margin:auto;'>
-			             		${requestScope.pageBar}
-			             	</ul>
-			          	</div>
-		        	</nav>
+
 
 
                 </c:if>
@@ -606,7 +550,17 @@
 
 
         </main>
-
+        
+        <%-- 페이지바 --%>
+        <c:if test="${not empty requestScope.prodList}">
+			<nav class="my-5">
+	           	<div style='display:flex; width:80%; margin: 0 auto;'>
+	             	<ul class="pagination" style='margin:auto;'>
+	             		${requestScope.pageBar}
+	             	</ul>
+	          	</div>
+        	</nav>
+		</c:if>
     </div>
 
 </div>
