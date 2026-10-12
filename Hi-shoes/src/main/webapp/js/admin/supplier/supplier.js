@@ -36,8 +36,7 @@ $(function () {
     // 공급업체 등록 버튼 클릭 시
     $(document).on("click", "#supplyRegisterModal", function () {
         resetForm();
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("supplyModal"));
-        modal.show();
+		$('#supplyModal').modal('show');
     });
 
     // 숫자 전용 필드: 숫자 외 문자 즉시 제거

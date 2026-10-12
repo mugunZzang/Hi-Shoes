@@ -336,14 +336,14 @@
 	        $("#categoryErrMsg").addClass("d-none").text("");
 	        
 	        // 2. 항상 조회 탭으로 초기화
-	        bootstrap.Tab.getOrCreateInstance(document.getElementById("tab-list")).show();
+	        $('#tab-list').tab('show');
 
 	        // 3. 모달 열기 전에 목록 먼저 조회
 	        loadCategoryList();
 
 	        // 4. 모달 열기
-	        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("categoryModal"));
-	        modal.show();
+	        
+	        $('#categoryModal').modal('show'); // 모달 열기
 	    });	
 	    
 	    
@@ -390,7 +390,7 @@
 				        $("#categoryErrMsg").addClass("d-none").text("");
 
 				        // 2) 조회 탭으로 이동
-				        bootstrap.Tab.getOrCreateInstance(document.getElementById("tab-list")).show();
+				        $('#tab-list').tab('show');
 
 				        // 3) 목록 다시 조회 → 테이블 갱신
 				        loadCategoryList();

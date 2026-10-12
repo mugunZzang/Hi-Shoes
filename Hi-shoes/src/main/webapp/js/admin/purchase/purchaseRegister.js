@@ -19,9 +19,7 @@ $(function () {
 		// 검색어 초기화
 		$('#catalogueSearchWord').val('');
 
-		const catalogueModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('catalogueModal'));
-
-		catalogueModal.show();
+		$('#catalogueModal').modal('show');
 
 		// 전체 제품 1페이지 조회
 		loadCatalogueList(1);
@@ -37,7 +35,7 @@ $(function () {
 		$('#catalogueName').val(pname).removeClass('is-invalid');
 		$('#catalogueName').data('price', price);           // 구매가는 제품명 input에 보관 (추가하기 때 여기서 읽는다)
 
-		bootstrap.Modal.getOrCreateInstance(document.getElementById('catalogueModal')).hide();
+		$('#catalogueModal').modal('hide');
 		
 	});
 	

@@ -36,9 +36,8 @@ $(function(){
 		        $('#quotationModalBody').html(response);
 
 		        // 버튼을 누를 때마다 새로 만들지 않고 기존 모달을 재사용
-		        bootstrap.Modal.getOrCreateInstance(
-		            document.getElementById('quotationModal')
-		        ).show();
+				$('#quotationModal').modal('show');
+
 		    },
 			error: function(request, status, error){
 				alert("code: " + request.status +"\nmessage: " + request.responseText +"\nerror: " + error);
@@ -50,11 +49,8 @@ $(function(){
 	// 인쇄/PDF 저장: 모달에 열려 있는 견적서를 바로 인쇄한다.
 	// (quotationContent.jsp 의 @media print 가 모달 바깥 화면은 숨기고 견적서만 출력한다)
 	$(document).on('click', '#btnQuotationPrint', function() {
-	    window.print();
-
-	    // 예전 방식(견적서 페이지를 새 탭으로 열기)으로 되돌리려면 위 한 줄 대신 아래를 사용
-	    // const purnum = $('#quotationModal').data('purnum');
-	    // window.open(ctx_Path + '/admin/purchase/purchaseEstimate.go?purnum=' + purnum, '_blank');
+	      const purnum = $('#quotationModal').data('purnum');
+	      window.open(ctx_Path + '/admin/purchase/purchaseEstimate.go?purnum=' + purnum, '_blank');
 	});
 	
 	
