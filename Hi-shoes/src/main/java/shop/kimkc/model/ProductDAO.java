@@ -7,6 +7,7 @@ import java.util.Map;
 import shop.kimkc.domain.CatalogueDTO;
 import shop.kimkc.domain.ProductDTO;
 import shop.kimkc.domain.QnADTO;
+import shop.kimkc.domain.ReviewDTO;
 import shop.kimkc.domain.StockDTO;
 
 public interface ProductDAO {
@@ -88,5 +89,17 @@ public interface ProductDAO {
 
 	// 특정 페이지번호에 해당하는 QnA 목록을 조회해온다.
 	List<QnADTO> getQnAList(Map<String, String> paraMap) throws SQLException;
+
+
+	// 특정 상품에 대한 QnA 등록하기
+	int addQnA(Map<String, String> paraMap) throws SQLException;
+
+
+	// 상품의 QnA목록 총 페이지수 가져오기
+	int getTotalReviewPage(String pnum) throws SQLException;
+
+
+	// 특정 페이지번호에 해당하는 리뷰 목록을 조회해온다.
+	List<ReviewDTO> getReviewList(Map<String, String> paraMap) throws SQLException;
 
 }

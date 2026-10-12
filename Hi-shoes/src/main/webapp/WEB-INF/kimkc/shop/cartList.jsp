@@ -200,7 +200,8 @@
 					if(json.n == 1) {
 						alert("해당 상품이 장바구니에서 삭제되었습니다.");
 						// 삭제이후 결제금액 적용
-						getTotalCost();
+						//getTotalCost();
+						location.reload();	// 새로고침 때리기
 					}
 					
 					else {
@@ -224,7 +225,54 @@
 		location.href = "<%=ctxPath %>/index.go";
 	}
 	
+	
+	// -------------------------------------------------------------------------------------------
+	
+	
 
+	// 선택상품 주문하기 버튼 !!!!!!
+	function gotoPurchase() {
+		// 일단, 각 항목들의 재고가 충분한지 검사해야 함.
+		const allCnt = $('input.product-checkbox');	// 전체 장바구니 목록 개수
+		
+		let alertMsg = '';	// 제품명(spec)<br> 요런식으로 붙여갈거임
+		let flag = true;	// 하나라도 재고가 부족하면 false;
+		
+		for(let i=0; i<allCnt; i++) {
+			if($('input.product-checkbox').eq(i).prop("checked")) {
+				const snum = $('input.cart-snum').eq(i).val(); 
+				const cqty = $('input.cart-quantity').eq(i).val();
+				const spec = $('span.product-size').eq(i).text();
+				
+				$.ajax({
+					url: "<%= ctxPath %>/shop/checkStockEnough.go",
+			        type: "POST",
+			        data: {
+			            snum: snum,
+			            cqty: cqty
+			        },
+			        dataType: "json",
+			        success: function(json) {
+						if(json.n == 1) {	// 1 이면 재고부족
+							flag = false;
+							alertMsg += json.pname + "(" + spec + ")<br>";
+						}
+						
+					},
+					
+					error: function(request, status, error){
+				    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				    }	
+				});
+			}
+		}
+		
+		
+		// snum, oqty 만 넘겨서?
+		
+	}
+	
+	
 </script>
 
 
@@ -312,6 +360,7 @@
 		                        <span class="product-size">
 		                            ${cart.ssize} / ${cart.color}
 		                        </span>
+		                        <input type="hidden" class="cart-snum" value="${cart.snum}"/>
 		                    </div>
 		
 		                    <%-- 수량 --%>
@@ -449,7 +498,7 @@
             계속 쇼핑하기
         </button>
 
-        <button type="button" class="selected-order" onclick="">
+        <button type="button" class="selected-order" onclick="gotoPurchase()">
             선택상품 주문하기
         </button>
 

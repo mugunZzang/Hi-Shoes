@@ -18,6 +18,7 @@ import shop.kimkc.domain.CatalogueDTO;
 import shop.kimkc.domain.ProductDTO;
 import shop.kimkc.domain.Product_ImageDTO;
 import shop.kimkc.domain.QnADTO;
+import shop.kimkc.domain.ReviewDTO;
 import shop.kimkc.domain.StockDTO;
 
 
@@ -392,6 +393,7 @@ public class ProductDAO_imple implements ProductDAO {
 			String keyword = paraMap.get("keyword");		// 검색어
 			String min_price = paraMap.get("min_price");		// 최소가격 "10000"
 			String max_price = paraMap.get("max_price");
+			/*
 			System.out.println("category : " +category );
 			System.out.println("str_ssize : " +str_ssize);
 			System.out.println("brand : " + brand );
@@ -399,6 +401,7 @@ public class ProductDAO_imple implements ProductDAO {
 			System.out.println("min_price : " + min_price);
 			System.out.println("max_price : " + max_price);
 			System.out.println("---------------------------");
+			*/
 			
 			// 상품명, 브랜드에  키워드가 포함되는거
 			String sql = " select ceil(count(distinct A.fk_pname) / 12) as cnt "
@@ -447,7 +450,7 @@ public class ProductDAO_imple implements ProductDAO {
 			rs.next();
 			
 			totalProductPage = rs.getInt("cnt");
-			System.out.println("페이지수 : " + rs.getInt("cnt"));
+			//System.out.println("페이지수 : " + rs.getInt("cnt"));
 
 			
 		} finally {
@@ -953,7 +956,7 @@ public class ProductDAO_imple implements ProductDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select qnanum, fk_pnum, fk_userid, to_char(qwritedate, 'yyyy.mm.dd') as qwritedate, qcontents, islock, qanswer "
+			String sql = " select qnanum, fk_pnum, fk_userid, to_char(qwritedate, 'yyyy.mm.dd') as qwritedate, qtitle, qcontents, islock, qanswer "
 					+ " from tbl_qna "
 					+ " where fk_pnum = to_number(?) "
 					+ " ORDER BY qnanum desc "
@@ -972,6 +975,7 @@ public class ProductDAO_imple implements ProductDAO {
 				dto.setFk_pnum(rs.getInt("fk_pnum"));
 				dto.setFk_userid(rs.getString("fk_userid"));
 				dto.setQwritedate(rs.getString("qwritedate"));
+				dto.setQtitle(rs.getString("qtitle"));
 				dto.setQcontents(rs.getString("qcontents"));
 				dto.setIslock(rs.getString("islock"));
 				dto.setQanswer(rs.getString("qanswer"));
@@ -983,6 +987,137 @@ public class ProductDAO_imple implements ProductDAO {
 		}
 		
 		return qnaList;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 특정 상품에 대한 QnA 등록하기
+	@Override
+	public int addQnA(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " INSERT INTO TBL_QNA(QNANUM, FK_PNUM, FK_USERID, QWRITEDATE, QTITLE, QCONTENTS, ISLOCK, QANSWER) "
+						+ " VALUES(seq_qnanum.NEXTVAL, TO_NUMBER(?), ?, SYSDATE, ?, ?, ?, '') ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("fk_pnum"));
+			pstmt.setString(2, paraMap.get("fk_userid"));
+			pstmt.setString(3, paraMap.get("qtitle"));
+			pstmt.setString(4, paraMap.get("qcontents"));
+			pstmt.setString(5, paraMap.get("islock"));
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 상품의 QnA목록 총 페이지수 가져오기
+	@Override
+	public int getTotalReviewPage(String pnum) throws SQLException {
+		int totalReviewPage = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select ceil(count(*)/5) as page "
+					+ " from tbl_product A join tbl_catalogue B "
+					+ " on A.fk_pname = B.pname "
+					+ " join tbl_stock C "
+					+ " on B.pname = C.fk_pname "
+					+ " join tbl_orderdetail D "
+					+ " on C.snum = D.fk_snum "
+					+ " join tbl_review E "
+					+ " on D.odnum = E.fk_odnum "
+					+ " where A.pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			
+			rs = pstmt.executeQuery();
+			rs.next();
+			
+			totalReviewPage = rs.getInt("page");
+			
+		} finally {
+			close();
+		}
+		
+		
+		return totalReviewPage;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 특정 페이지번호에 해당하는 리뷰 목록을 조회해온다.
+	@Override
+	public List<ReviewDTO> getReviewList(Map<String, String> paraMap) throws SQLException {
+		List<ReviewDTO> reviewList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select F.fk_userid, E.fk_odnum, E.rating, E.rcontents, "
+					+ " TO_CHAR(E.rwritedate, 'yyyy.mm.dd hh24:mm:ss') as rwritedate, E.rimage, C.snum, C.ssize, C.color "
+					+ " from tbl_product A join tbl_catalogue B "
+					+ " on A.fk_pname = B.pname "
+					+ " join tbl_stock C "
+					+ " on B.pname = C.fk_pname "
+					+ " join tbl_orderdetail D "
+					+ " on C.snum = D.fk_snum "
+					+ " join tbl_review E "
+					+ " on D.odnum = E.fk_odnum "
+					+ " join tbl_order F "
+					+ " on D.fk_onum = F.onum "
+					+ " where A.pnum = to_number(?)"
+					+ " order by E.rwritedate asc "
+					+ "	OFFSET (to_number(?)-1)*5 ROW "
+					+ "	FETCH NEXT 5 ROW ONLY ";
+					
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("pnum"));
+			pstmt.setString(2, paraMap.get("currentShowPageNo_review"));
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				ReviewDTO rdto = new ReviewDTO();
+				rdto.setFk_userid(rs.getString("fk_userid"));
+				rdto.setFk_odnum(rs.getInt("fk_odnum"));
+				rdto.setRating(rs.getInt("rating"));
+				rdto.setRcontents(rs.getString("rcontents"));
+				rdto.setRwritedate(rs.getString("rwritedate"));
+				rdto.setRimage(rs.getString("rimage"));
+				
+				StockDTO sdto = new StockDTO();
+				sdto.setSnum(rs.getInt("snum"));
+				sdto.setSsize(rs.getInt("ssize"));
+				sdto.setColor(rs.getString("color"));
+				rdto.setStockDTO(sdto);
+				
+				reviewList.add(rdto);
+			}
+			
+			
+			
+		} finally {
+			close();
+		}
+		
+		
+		return reviewList;
 	}
 
 

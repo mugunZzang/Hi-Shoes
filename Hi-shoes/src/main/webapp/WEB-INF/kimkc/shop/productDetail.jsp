@@ -473,6 +473,78 @@
 	}
 	
 	
+	
+	// ---------------------------------------------------------------------------------------------------------
+	
+	// QnA 작성 버튼
+	function showQnAWriteModal() {
+		// 모달 띄워주기
+		const modalElement = document.getElementById('qnaWriteModal');
+
+	    const qnaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+	    qnaModal.show();
+
+	}
+	
+	// QnA 모달 - 등록 버튼
+	function goWriteQnA() {
+		//alert("등록 눌림");
+		const title = $('input#qnaTitle').val();
+		const content = $('textarea#qnaContents').val();
+		let checked = '공개';
+		
+		if ($('input#checkPublic').prop("checked")) {
+			checked = '비공개';
+		}
+		
+		// 유효성 검사 살짝
+		if (!title || title.trim() == "") {
+			console.log(title);
+			alert("제목을 입력하세요.");
+			return;
+		}
+		if (!content || content.trim() == "") {
+			console.log(content);
+			alert("질문 내용을 입력하세요.");
+			return;
+		}
+
+		// 실제 DB에 저장
+		if(confirm("해당 문의를 등록하시겠습니까?")) {
+			$.ajax({
+				url: "<%= ctxPath%>/shop/addQnAJSON.go",
+				type: "POST",
+				data: {
+					pnum: '${requestScope.pnum}',
+					title: title,
+					content: content,
+					checked: checked
+				},
+				dataType: "json",
+
+				success: function(json) {
+					if (json.n == 1) {
+						alert("문의사항이 등록되었습니다.");	
+						location.reload();
+					}
+					else {
+						alert("문의사항 등록에 실패하였습니다.");
+					}
+				},
+
+				error: function(request, status, error){
+			    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }
+			}); 
+			
+		}
+		
+	}
+	
+	//id="btnQnARegister"
+	
+	
 
 </script>
 
@@ -654,13 +726,13 @@
         <button type="button"
                 class="product-tab"
                 data-tab="product-review">
-            상품후기 (<span>163</span>)
+            상품후기 (<span>${fn:length(requestScope.reviewList)}</span>)
         </button>
 
         <button type="button"
                 class="product-tab"
                 data-tab="product-qna">
-            상품 Q&A (<span>12</span>)
+            상품 Q&A (<span>${fn:length(requestScope.qnaList)}</span>)
         </button>
 
     </div>
@@ -695,7 +767,7 @@
         <div class="review-header">
 
             <div class="review-count">
-                총 <strong>163</strong>개의 후기가 있습니다.
+                총 <strong>${fn:length(requestScope.reviewList)}</strong>개의 후기가 있습니다.
             </div>
 
             <select class="review-sort">
@@ -707,90 +779,82 @@
         </div>
 
 
-        <!-- 후기 1개 -->
-        <div class="review-item">
-
-			<div class="review-big-rating">
-		            ★★★★★
-	        </div>
+		<c:if test="${not empty requestScope.reviewList}">
 		
-		    <!-- 후기 기본 정보 -->
-		    <div class="review-info">
+			<c:forEach var="review" items="${requestScope.reviewList}">
+        		<%-- 리뷰 1개 --%>
+		        <div class="review-item">
 		
-		        <div class="review-option-area">
-		            <span class="review-option">옵션</span>
-		            <span class="review-option-value">100, 250</span>
-		        </div>
-		
-		        <div class="review-user-info">
-		
-		            <span class="review-user">
-		                작성자 : h****3
-		            </span>
-		
-		            <span class="review-date">
-		                2023.06.04 05:08:06
-		            </span>
-		
-		        </div>
-		
-		
-		    </div>
-		
-		    <!-- 후기 내용 -->
-		    <div class="review-content">
-		
-		        저희 아이 신발 사줬어요<br>
-		        평소 반스는 250 좀 작은데 나이키는 250이 딱이네요<br>
-		        편하고 좋다고 하네요~
-		
-		    </div>
-
-		</div>
-
-
-        <!-- 후기 2개째 -->
-        <div class="review-item">
-
-			<div class="review-big-rating">
-		            ★★★★★
-	        </div>
-	        
-		    <!-- 후기 기본 정보 -->
-		    <div class="review-info">
-		
+					<div class="review-big-rating">
+						
+				    	<c:forEach begin="1" end="${review.rating}" var="i">
+				            ★
+				        </c:forEach>
+				        <c:forEach begin="1" end="${5 - review.rating}" var="i">
+				            ☆
+				        </c:forEach>
+			        </div>
 				
+				    <%-- 리뷰 정보 --%>
+				    <div class="review-info">
+				    	
+						
+						
+				        <div class="review-option-area">
+				            <span class="review-option">옵션</span>
+				            <span class="review-option-value">${review.stockDTO.ssize}, ${review.stockDTO.color}</span>
+				        </div>
+				
+				        <div class="review-user-info">
+				
+				            <span class="review-user">
+				                작성자 : ${fn:substring(review.fk_userid, 0, 3)}<c:forEach
+				                    begin="3"
+				                    end="${fn:length(review.fk_userid) - 1}">*</c:forEach>
+				            </span>
+				
+				            <span class="review-date">
+				                ${review.rwritedate}
+				            </span>
+				
+				        </div>
+				
+				
+				    </div>
+				
+				    <%-- 리뷰 내용 --%>
+				    <div class="review-content">
+				
+				        ${review.rcontents}
+				
+				    </div>
+				    
+				    <%-- 리뷰 이미지 --%>
+				    <c:if test="${not empty review.rimage}">
+						<div class="review-image mt-3">
+							<img alt="리뷰이미지" src="<%=ctxPath%>/images/kimkc/product/${review.rimage}">
+						</div>
+					</c:if>
 		
-		        <div class="review-option-area">
-		            <span class="review-option">옵션</span>
-		            <span class="review-option-value">100, 250</span>
-		        </div>
-		
-		        <div class="review-user-info">
-		
-		            <span class="review-user">
-		                작성자 : h****3
-		            </span>
-		
-		            <span class="review-date">
-		                2023.06.04 05:08:06
-		            </span>
-		
-		        </div>
+				</div>
+				
+			</c:forEach>
 
+		</c:if>
 		
-		    </div>
-		
-		    <!-- 후기 내용 -->
-		    <div class="review-content">
-		
-		        저희 아이 신발 사줬어요<br>
-		        평소 반스는 250 좀 작은데 나이키는 250이 딱이네요<br>
-		        편하고 좋다고 하네요~
-		
-		    </div>
+		<c:if test="${not empty requestScope.reviewList}"> 
+	   		 <%-- 페이지바 --%>
+			<nav class="my-5">
+	           	<div style='display:flex; width:80%; margin: 0 auto;'>
+	             	<ul class="pagination" style='margin:auto;'>
+	             		${requestScope.pageBar_review}
+	             	</ul>
+	          	</div>
+	       	</nav>
+       	
+    	</c:if>
 
-		</div>
+        
 
     </div>
 
@@ -801,7 +865,11 @@
     <div id="product-qna" class="product-tab-content">
 
         <div class="qna-list pb-5 pt-5">
-
+			
+			
+			<button class="ms-2" onclick="showQnAWriteModal()">Q&A 작성</button>
+			
+			
 			<c:if test="${not empty requestScope.qnaList}">
 				
 				<c:forEach var="qna" items="${requestScope.qnaList}">
@@ -819,7 +887,7 @@
 				        <div class="qna-question">
 				
 				            <span class="qna-title">
-				                사이즈교환
+				                ${qna.qtitle}
 				            </span>
 				
 				            <%-- 공개 여부 --%>
@@ -892,17 +960,17 @@
         
         
         
-        <c:if test="${not empty requestScope.qnadList}"> 
-   		 <%-- 페이지바 --%>
-		<nav class="my-5">
-           	<div style='display:flex; width:80%; margin: 0 auto;'>
-             	<ul class="pagination" style='margin:auto;'>
-             		${requestScope.pageBar_QnA}
-             	</ul>
-          	</div>
-       	</nav>
+        <c:if test="${not empty requestScope.qnaList}"> 
+	   		 <%-- 페이지바 --%>
+			<nav class="my-5">
+	           	<div style='display:flex; width:80%; margin: 0 auto;'>
+	             	<ul class="pagination" style='margin:auto;'>
+	             		${requestScope.pageBar_QnA}
+	             	</ul>
+	          	</div>
+	       	</nav>
        	
-    </c:if>
+    	</c:if>
         
 
     </div>
@@ -911,6 +979,81 @@
 </div>
 
 
+
+<%--  QnA 작성 모달 --%>
+<div class="modal fade" id="qnaWriteModal"
+     tabindex="-1"
+     aria-labelledby="qnaWriteModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <%-- 모달 제목 --%>
+            <div class="modal-header">
+                <h5 class="modal-title" id="qnaWriteModalLabel">
+                    상품 Q&A 작성
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="닫기"></button>
+            </div>
+
+            <%-- 모달 본문 --%>
+            
+            
+            
+            <div class="modal-body">
+            
+	            <div class="mb-3">
+		            <label for="checkPublic">
+		            	비공개
+		            	<input type="checkbox" id="checkPublic" checked/>
+		            </label>
+	            </div>
+            
+                <div class="mb-3">
+                    <label for="qnaTitle" class="form-label">
+                        제목
+                    </label>
+                    <input type="text"
+                           id="qnaTitle"
+                           class="form-control"
+                           placeholder="제목">
+                </div>
+
+                <div class="mb-3">
+                    <label for="qnaContents" class="form-label">
+                        내용
+                    </label>
+                    <textarea id="qnaContents"
+                              class="form-control"
+                              rows="6"
+                              placeholder="질문 내용"></textarea>
+                </div>
+            </div>
+
+            <%-- 하단 버튼들 --%>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    취소
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        id="btnQnARegister"
+                        onclick="goWriteQnA()">
+                    등록
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 <jsp:include page="../../footer.jsp" />

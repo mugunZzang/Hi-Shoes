@@ -129,7 +129,7 @@ public class ShowMallByCate extends AbstractController {
 		// currentShowPageNo 은 사용자가 보고자하는 페이지바의 페이지번호 이다.
 		// 카테고리 메뉴에서 카테고리명만을 클릭했을 경우에는 currentShowPageNo 은 null 이 된다.
 		// currentShowPageNo 이 null 이라면 currentShowPageNo 을 1 페이지로 바꾸어야 한다.
-		System.out.println("현재페이지번호: " +currentShowPageNo );
+		//System.out.println("현재페이지번호: " +currentShowPageNo );
 		if(currentShowPageNo == null) {
 			currentShowPageNo = "1";
 		}

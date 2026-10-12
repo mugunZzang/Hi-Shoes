@@ -1,13 +1,12 @@
 package shop.kimkc.domain;
 
-import java.util.Date;
-
 public class QnADTO {
 	
 	private int qnanum;       		// QnA 번호  
 	private int fk_pnum;         	// 판매번호
 	private String fk_userid;  		// 작성자 id
-	private String qwritedate;      // 작성일자      
+	private String qwritedate;      // 작성일자   
+	private String qtitle;			// 제목
 	private String qcontents;  		// QnA 내용
 	private String islock;     		// 공개여부
 	private String qanswer;         // 답글내용
@@ -57,6 +56,12 @@ public class QnADTO {
 	}
 	public void setQanswer(String qanswer) {
 		this.qanswer = qanswer;
+	}
+	public String getQtitle() {
+		return qtitle;
+	}
+	public void setQtitle(String qtitle) {
+		this.qtitle = qtitle;
 	}
 	
 	
