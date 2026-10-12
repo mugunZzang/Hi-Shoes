@@ -46,21 +46,21 @@
 			      <div class="tab-pane fade" id="list-editInfo" role="tabpanel" aria-labelledby="list-editInfo-list">
 			      
 			      	<%-- TEST 영역 --%>
-			      	<section class="bodycont d-flex center justify-content-center align-items-center col-8">
+			      	<section class="bodycont d-flex center justify-content-center align-items-center col-12 col-lg-6 mx-auto my-5">
 						<div class="center-cont container-sm my-0">
 							<div class="title-wrap">
-								<h4 class="mb-3">정보수정을 위해 본인인증을 먼저 해주세요.</h4>
+								<h4 class="mb-4">정보수정을 위해 본인인증을 먼저 해주세요.</h4>
 							</div>
 							<div class="cont">
 								<form name="loginFrm" action="<%= ctxPath%>/login/login.go" method="post" class="row g-3 align-items-center">
 								  <label for="loginUserid" class="d-none">아이디</label>
-								  <input type="text" name="userid" id="loginUserid" class="form-control mb-2 me-sm-2" size="20" autocomplete="off" placeholder="아이디를 입력 해주세요.">
-								
+								  <input type="text" name="userid" id="loginUserid" class="form-control mb-2 me-sm-2" size="20" autocomplete="off" placeholder="아이디를 입력 해주세요." value="${(sessionScope.loginuser).userid}" disabled>
+									
 								  <label for="loginPwd" class="d-none">비밀번호</label>		  			    
 							      <input type="password" name="pwd" id="loginPwd" class="form-control" size="20" placeholder="비밀번호를 입력해주세요.">						
 								  
 								
-								  <button type="button" id="btnSubmit" class="btn btn-lg btn-primary mb-4">인증하기</button>
+								  <button type="button" id="btnSubmit" class="btn btn-lg btn-primary my-4">인증하기</button>
 								</form>							
 								
 							</div>		
