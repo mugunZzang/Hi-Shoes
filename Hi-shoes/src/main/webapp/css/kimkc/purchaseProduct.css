@@ -412,11 +412,8 @@ button {
 }
 
 
-/* 주문자 정보 input */
 
-.customer-form .form-row > input {
-    border-color: #28b44b;
-}
+
 
 
 /* =========================
@@ -453,11 +450,15 @@ button {
 /* 배송 입력 영역 */
 
 .delivery-form {
-    padding-top: 45px;
+    padding-top: 30px;
     padding-bottom: 30px;
 
+	border-top:2px solid #222;
     border-bottom: 1px solid #ccc;
 }
+
+
+
 
 
 /* 배송 input */
@@ -487,6 +488,7 @@ button {
 .address-input {
     width: 420px;
 
+	padding-top: 5px;
     display: flex;
     flex-direction: column;
 
@@ -541,6 +543,35 @@ button {
     font-size: 11px;
 }
 
+
+
+/* 이름, 휴대폰번호, 주소 행 간격 통일 */
+.delivery-form .form-row {
+    min-height: 38px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* 주소 영역은 여러 입력창을 포함하므로 높이 자동 조절 */
+.delivery-form .address-row {
+    align-items: flex-start;
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* 주소 라벨을 입력창 시작 위치에 맞춤 */
+.delivery-form .address-row > label {
+    padding-top: 8px;
+}
+
+/* 주소 입력창 사이 간격 */
+.delivery-form .address-input {
+   	display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
 /* =========================
    배송 요청사항

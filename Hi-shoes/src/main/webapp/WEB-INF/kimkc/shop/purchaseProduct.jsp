@@ -244,10 +244,6 @@
 
                     <h2>주문 고객정보</h2>
 
-                    <label>
-                        <input type="checkbox" checked>
-                        회원정보와 동일
-                    </label>
 
                 </div>
 
@@ -266,6 +262,7 @@
                             type="text"
                             name="orderName"
                             value="김기찬"
+                            readonly
                         >
 
                     </div>
@@ -283,6 +280,7 @@
                             type="text"
                             name="orderPhone"
                             value="01044633370"
+                            readonly
                         >
 
                     </div>
@@ -300,6 +298,7 @@
                             type="email"
                             name="orderEmail"
                             value="asybal23@naver.com"
+                            readonly
                         >
 
                     </div>
@@ -320,11 +319,11 @@
 
 
                 <!-- 배송 방법 -->
-                <div class="delivery-method">
+                <!-- <div class="delivery-method">
 
                     일반택배
 
-                </div>
+                </div> -->
 
 
                 <div class="delivery-form">
@@ -340,6 +339,8 @@
                         <input
                             type="text"
                             name="receiverName"
+                            value="김기찬"
+                            readonly
                         >
 
                     </div>
@@ -356,6 +357,8 @@
                         <input
                             type="text"
                             name="receiverPhone"
+                            value="01044633370"
+                            readonly
                         >
 
                     </div>
@@ -405,48 +408,7 @@
 
 
                     <!-- 배송 요청사항 -->
-                    <div class="form-row delivery-request-row">
-
-                        <label>
-                            배송시 요청사항
-                        </label>
-
-                        <div class="delivery-request">
-
-                            <select name="deliveryRequest">
-
-                                <option value="">
-                                    배송 시 요청사항을 선택해주세요.
-                                </option>
-
-                                <option value="door">
-                                    문 앞에 놓아주세요.
-                                </option>
-
-                                <option value="security">
-                                    경비실에 맡겨주세요.
-                                </option>
-
-                                <option value="call">
-                                    배송 전 연락해주세요.
-                                </option>
-
-                                <option value="etc">
-                                    직접 입력
-                                </option>
-
-                            </select>
-
-
-                            <input
-                                type="text"
-                                name="deliveryMessage"
-                                placeholder="배송 메시지는 40자 이내로 입력해 주세요."
-                            >
-
-                        </div>
-
-                    </div>
+                    
 
                 </div>
 
@@ -502,9 +464,7 @@
 
                 <span>
                     총 할인금액
-                    <button type="button" class="discount-detail">
-                        ▼
-                    </button>
+                    
                 </span>
 
                 <strong>

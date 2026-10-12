@@ -151,6 +151,7 @@
 			// 클릭한 버튼이 속한 상품 영역에서 수량을 가져온다.
 		    const product = $(btn).closest(".cart-product");
 		    const cqty = Number(product.find(".cart-quantity").val());
+		    
 			
 			$.ajax({
 				url: "<%= ctxPath %>/shop/changeCartCqtyJSON.go",
@@ -232,21 +233,34 @@
 
 	// 선택상품 주문하기 버튼 !!!!!!
 	function gotoPurchase() {
-		// 일단, 각 항목들의 재고가 충분한지 검사해야 함.
-		const allCnt = $('input.product-checkbox');	// 전체 장바구니 목록 개수
 		
-		let alertMsg = '';	// 제품명(spec)<br> 요런식으로 붙여갈거임
+		// 적어도 하나는 체크되어야 함.
+		if($('input.product-checkbox:checked').length == 0) {
+			alert("최소 1개 이상의 상품을 선택해 주세요.");
+			return;
+		}
+		
+		// 일단, 각 항목들의 재고가 충분한지 검사해야 함.
+		const allCnt = $('input.product-checkbox').length;	// 전체 장바구니 목록 개수
+		
+		let alertMsg = '선택하신\n';	// 제품명(spec)<br> 요런식으로 붙여갈거임
 		let flag = true;	// 하나라도 재고가 부족하면 false;
 		
 		for(let i=0; i<allCnt; i++) {
 			if($('input.product-checkbox').eq(i).prop("checked")) {
 				const snum = $('input.cart-snum').eq(i).val(); 
 				const cqty = $('input.cart-quantity').eq(i).val();
-				const spec = $('span.product-size').eq(i).text();
+				const spec = $('span.product-size').eq(i).text().trim();
+				
+				
+				//console.log(snum);
+				//console.log(cqty);
+				//console.log(spec);
 				
 				$.ajax({
 					url: "<%= ctxPath %>/shop/checkStockEnough.go",
 			        type: "POST",
+			        async: false,
 			        data: {
 			            snum: snum,
 			            cqty: cqty
@@ -255,7 +269,11 @@
 			        success: function(json) {
 						if(json.n == 1) {	// 1 이면 재고부족
 							flag = false;
-							alertMsg += json.pname + "(" + spec + ")<br>";
+							alertMsg += json.pname + "(" + spec + ")\n";
+						}
+						else if(json.n == -1) {
+							alert("재고 확인 중 오류가 발생하였습니다.");
+							return;
 						}
 						
 					},
@@ -267,8 +285,19 @@
 			}
 		}
 		
+		// 선택항목 중 하나라도 재고가 부족하면
+		if (!flag) {
+			alert(alertMsg + "상품의 재고가 부족합니다. 선택 수량을 변경해주세요.");
+			return;
+		}
 		
-		// snum, oqty 만 넘겨서?
+		if (flag) {
+			alert("재고가 모두 충분합니다~");
+		}  
+		
+		// 이제 결제 화면에 넘겨줘야 함...		
+		
+
 		
 	}
 	

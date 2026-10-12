@@ -102,4 +102,8 @@ public interface ProductDAO {
 	// 특정 페이지번호에 해당하는 리뷰 목록을 조회해온다.
 	List<ReviewDTO> getReviewList(Map<String, String> paraMap) throws SQLException;
 
+
+	// 구매하려는 제품 옵션의 재고가 충분한지 검사한다.
+	String checkStockEnough(Map<String, String> paraMap) throws SQLException;
+
 }

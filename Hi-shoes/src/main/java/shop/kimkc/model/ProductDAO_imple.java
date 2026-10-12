@@ -868,7 +868,7 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			String sql = " select * from tbl_stock"
 					+ " where snum = to_number(?) "
-					+ " and sqty > to_number(?) ";
+					+ " and sqty >= to_number(?) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("snum"));
@@ -1118,6 +1118,40 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		
 		return reviewList;
+	}
+
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 구매하려는 제품 옵션의 재고가 충분한지 검사한다.
+	@Override
+	public String checkStockEnough(Map<String, String> paraMap) throws SQLException {
+		String pname = "";
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select fk_pname "
+					+ " from tbl_stock "
+					+ " where snum = to_number(?) "
+					+ " and sqty < to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("snum"));
+			pstmt.setString(2, paraMap.get("cqty"));
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				pname = rs.getString("fk_pname");
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return pname;
 	}
 
 
