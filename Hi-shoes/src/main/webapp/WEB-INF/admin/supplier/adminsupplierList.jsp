@@ -1,0 +1,256 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    
+
+<%
+    String ctx_Path = request.getContextPath();
+%>
+    
+<jsp:include page="../adminHeader.jsp" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/mxExtra.css">
+
+<script type="text/javascript">
+	const ctx_Path = "<%= ctx_Path %>";
+</script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/supplier/supplier.js"></script>
+
+<style>
+    /* 공통 CSS 확정 후 정리 예정 (헤더 공통 규칙이 우선 적용됨) */
+    #supplyTbl thead th {
+        background-color: #f8f9fa;
+        font-size: 12pt;
+        font-weight: 600;
+    }
+    #supplyTbl tbody td {
+        font-size: 10pt;
+    }
+
+</style>
+
+
+<div class="container-fluid"
+     id="container"
+     style="position: relative;
+            top: 90px;
+            padding: 0% 7%;">
+
+    <!-- 페이지 제목 + 브레드크럼 -->
+    <div class="d-flex justify-content-between align-items-center"
+         style="padding: 20px 0px;
+                margin-bottom: 15px;">
+
+        <p class="mb-0 fs-4 fw-semibold"> <span class="mx-title-icon"><i class="bi bi-box-seam"></i></span>
+            공급업체 목록
+        </p>
+
+        <nav style="--bs-breadcrumb-divider: '>';">
+
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="<%= ctx_Path %>/admin/adminMain.go"
+                       class="text-decoration-none">
+                        Home
+                    </a>
+                </li>
+                
+                <!-- 이 부분은 아마 발주 목록 조회로 가야하지 않나 생각이 든다. -->
+                <li class="breadcrumb-item">
+                    <a href="#"
+                       class="text-decoration-none">
+                        공급관리
+                    </a>
+                </li>
+
+                <li class="breadcrumb-item active"
+                    aria-current="page">
+                    공급업체 목록
+                </li>
+
+            </ol>
+
+        </nav>
+
+    </div>
+    
+    <!-- 목록 상단: 건수 + 등록 버튼 -->
+    <div class="mx-list-head d-flex justify-content-between align-items-center mb-2">
+
+        <div>
+            <span class="mx-section-title">공급업체 목록</span>
+            <span class="mx-list-count ms-2">
+                총 <strong>${fn:length(requestScope.supplierList)}</strong>곳
+            </span>
+        </div>
+
+        <button type="button"
+                class="btn btn-secondary"
+                id="supplyRegisterModal">
+            <i class="bi bi-plus-lg"></i> 공급업체 등록
+        </button>
+    </div>
+
+    <!-- 실제 페이지 작업 영역 -->
+    <div style="background-color: #ffffff;
+                width: 100%;
+                min-height: 50px;
+                border: 1px solid #eeeeee;
+                border-radius: 6px;
+                padding: 25px;
+                margin-bottom: 50px;">
+
+        <!-- 실제 관리자 페이지 내용 -->
+
+	<div class="mx-table-wrap">
+        <table class="table table-bordered" id="supplyTbl">
+
+            <colgroup>
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 15%;">
+                <col style="width: 20%;">
+                <col style="width: 25%;">
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <th class="text-center align-middle">업체명</th>
+                    <th class="text-center align-middle">사업자등록번호</th>
+                    <th class="text-center align-middle">대표명</th>
+                    <th class="text-center align-middle">연락처</th>
+                    <th class="text-center align-middle">회사이메일</th>
+                </tr>
+            </thead>
+		
+		    <tbody>
+				<c:if test="${empty requestScope.supplierList}">
+			        <tr>
+			            <td colspan="5" class="text-center align-middle">
+			                <div class="mx-empty">
+			                    <i class="bi bi-inbox"></i>
+			                    <p>등록된 공급업체가 없습니다.</p>
+			                </div>
+			            </td>
+			        </tr>
+			    </c:if>
+			
+			    <c:if test="${not empty requestScope.supplierList}">
+			        <c:forEach var="sdto" items="${requestScope.supplierList}">
+			            <tr>
+			                <td class="text-center align-middle mx-strong"><c:out value="${sdto.supname}"/></td>
+			                <td class="text-center align-middle mx-num">
+			                    ${ fn:substring(sdto.sbusinum,0,3) }-${fn:substring(sdto.sbusinum,3,5)}-${fn:substring(sdto.sbusinum,5,10)}
+			                </td>
+			                <td class="text-center align-middle"><c:out value="${sdto.ceo}"/></td>
+			                <td class="text-center align-middle mx-num">
+							    <c:choose>
+							        <c:when test="${fn:length(sdto.smobile) == 11}">
+							            ${fn:substring(sdto.smobile,0,3)}-${fn:substring(sdto.smobile,3,7)}-${fn:substring(sdto.smobile,7,11)}
+							        </c:when>
+							        <c:when test="${fn:length(sdto.smobile) == 10}">
+							            <c:choose>
+							                <c:when test="${fn:startsWith(sdto.smobile,'02')}">
+							                    ${fn:substring(sdto.smobile,0,2)}-${fn:substring(sdto.smobile,2,6)}-${fn:substring(sdto.smobile,6,10)}
+							                </c:when>
+							                <c:otherwise>
+							                    ${fn:substring(sdto.smobile,0,3)}-${fn:substring(sdto.smobile,3,6)}-${fn:substring(sdto.smobile,6,10)}
+							                </c:otherwise>
+							            </c:choose>
+							        </c:when>
+							        <c:otherwise>
+							            <c:out value="${sdto.smobile}"/>
+							        </c:otherwise>
+							    </c:choose>
+							</td>
+			                <td class="text-center align-middle"><c:out value="${sdto.semail}"/></td>
+			            </tr>
+			        </c:forEach>
+			    </c:if>
+							
+		    </tbody>
+
+		</table>
+	</div>
+		
+	 
+	</div>
+
+</div>
+
+
+
+
+<!-- 공급업체 등록 모달 -->
+<div class="modal fade" id="supplyModal" tabindex="-1" aria-labelledby="supplyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="supplyModalLabel">
+            <span class="mx-modal-head-icon"><i class="bi bi-building-add"></i></span>
+            공급업체 등록
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="supplyForm" novalidate>
+
+          <div class="mx-notice mb-3">
+              <i class="bi bi-info-circle"></i>
+              <span class="mx-required" style="margin-left:0;">*</span> 표시 항목은 모두 필수입니다.
+          </div>
+
+          <div class="mb-3">
+            <label for="supplyName" class="form-label">업체명 <span class="text-danger mx-required">*</span></label>
+            <input type="text" id="supplyName" class="form-control" maxlength="100"
+                   placeholder="한글/영어/특수문자 ( ) 만 가능 (최대 100자)">
+            <div class="invalid-feedback">업체명은 한글, 영어, 특수문자 ( ) 만 입력 가능하며 최대 100자입니다.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="bizNo" class="form-label">사업자등록번호 <span class="text-danger mx-required">*</span></label>
+            <input type="text" id="bizNo" class="form-control" maxlength="10" inputmode="numeric"
+                   placeholder="숫자 10자리 (- 제외)">
+            <div class="invalid-feedback">사업자등록번호는 숫자 10자리로 입력해주세요.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="ceoName" class="form-label">대표명 <span class="text-danger mx-required">*</span></label>
+            <input type="text" id="ceoName" class="form-control" maxlength="10"
+                   placeholder="한글/영어 (최대 10자)">
+            <div class="invalid-feedback">대표명은 한글, 영어만 입력 가능하며 최대 10자입니다.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="supplyTel" class="form-label">연락처 <span class="text-danger mx-required">*</span></label>
+            <input type="text" id="supplyTel" class="form-control" maxlength="11" inputmode="numeric"
+                   placeholder="숫자만 입력 (- 제외)">
+            <div class="invalid-feedback">연락처는 숫자만 입력해주세요. (9~11자리)</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="supplyEmail" class="form-label">회사 이메일 <span class="text-danger mx-required">*</span></label>
+            <input type="email" id="supplyEmail" class="form-control" maxlength="100"
+                   placeholder="example@company.com">
+            <div class="invalid-feedback">올바른 이메일 형식이 아닙니다.</div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-secondary" id="btnSupplySave">
+            <i class="bi bi-plus-lg"></i> 등록
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<jsp:include page="../adminFooter.jsp" />

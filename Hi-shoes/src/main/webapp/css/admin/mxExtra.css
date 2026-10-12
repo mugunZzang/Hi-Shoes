@@ -1,0 +1,215 @@
+@charset "UTF-8";
+
+
+/* ==========================================================
+   mxExtra.css  (개인 추가 디자인)
+   - 모든 클래스는 mx- 접두사: 공통 CSS와 충돌 없음
+   - 버튼 / 테이블 헤더 / 페이지바는 정의하지 않음 (공통 CSS 담당)
+   - 기존 태그(.btn, .table 등)에 직접 스타일을 걸지 않고 mx- 클래스를 붙여서만 동작
+   - 폰트 크기: 10 / 12 / 14 / 16pt 만 사용
+   ========================================================== */
+
+:root {
+    --mx-green:       #336600;
+    --mx-green-soft:  #E3EDE0;
+    --mx-green-faint: #F4F8F2;
+    --mx-line:        #E2E6E0;
+    --mx-text:        #2B2F2A;
+    --mx-muted:       #6B726A;
+    --mx-danger:      #C0392B;
+    --mx-warn-bg:     #FFF4D6;
+    --mx-warn-text:   #8A6100;
+    --mx-bad-bg:      #FBE4E1;
+    --mx-bad-text:    #B02A1D;
+}
+
+/* ---------- 1. 카드 안 소제목 (왼쪽 초록 막대) ---------- */
+.mx-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px;
+    padding-left: 10px;
+    border-left: 4px solid var(--mx-green);
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--mx-text);
+}
+.mx-section-title i { color: var(--mx-green); }
+
+/* ---------- 2. 검색 영역 박스 ---------- */
+.mx-search-box {
+    background: var(--mx-green-faint);
+    border: 1px solid #DCE6D7;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+.mx-search-box label {
+    font-size: 12pt;
+    font-weight: 600;
+    color: var(--mx-text);
+    margin-bottom: 6px;
+}
+
+/* ---------- 3. 요약 카드 (전체 / 대기 / 완료 / 지연 건수 등) ---------- */
+.mx-stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.mx-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--mx-line);
+    border-left: 4px solid var(--mx-green);
+    border-radius: 6px;
+}
+.mx-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--mx-green-soft);
+    color: var(--mx-green);
+    font-size: 14pt;
+}
+.mx-stat-label { font-size: 10pt; color: var(--mx-muted); }
+.mx-stat-value { font-size: 16pt; font-weight: 700; color: var(--mx-text); line-height: 1.2; }
+.mx-stat.mx-warn  { border-left-color: #E0A100; }
+.mx-stat.mx-warn  .mx-stat-icon { background: var(--mx-warn-bg); color: var(--mx-warn-text); }
+.mx-stat.mx-bad   { border-left-color: var(--mx-danger); }
+.mx-stat.mx-bad   .mx-stat-icon { background: var(--mx-bad-bg); color: var(--mx-bad-text); }
+
+/* ---------- 4. 목록 위 액션바 (총 N건 + 오른쪽 버튼들) ---------- */
+.mx-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.mx-list-count { font-size: 12pt; color: var(--mx-muted); }
+.mx-list-count b { color: var(--mx-green); font-size: 14pt; }
+
+/* ---------- 5. 상태 뱃지 ---------- */
+.mx-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10pt;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.mx-badge-wait  { background: var(--mx-warn-bg);  color: var(--mx-warn-text); }
+.mx-badge-done  { background: var(--mx-green-soft); color: var(--mx-green); }
+.mx-badge-delay { background: var(--mx-bad-bg);   color: var(--mx-bad-text); }
+
+/* ---------- 6. 빈 목록 안내 ---------- */
+.mx-empty {
+    padding: 48px 0;
+    text-align: center;
+    color: var(--mx-muted);
+    font-size: 12pt;
+}
+.mx-empty i {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 28pt;
+    color: #B9C7B3;
+}
+.mx-empty small { display: block; margin-top: 4px; font-size: 10pt; color: #98A096; }
+
+/* ---------- 7. 폼 보조 ---------- */
+.mx-required { color: var(--mx-danger); margin-left: 2px; font-weight: 700; }
+.mx-hint     { display: block; margin-top: 4px; font-size: 10pt; color: var(--mx-muted); }
+.mx-hint i   { margin-right: 3px; color: var(--mx-green); }
+
+/* 입력창 포커스를 초록으로 (mx-field 안의 입력창만) */
+.mx-field .form-control:focus,
+.mx-field .form-select:focus {
+    border-color: var(--mx-green);
+    box-shadow: 0 0 0 .2rem rgba(51, 102, 0, .15);
+}
+
+/* ---------- 8. 결제 금액 박스 (발주 등록 하단) ---------- */
+.mx-total-box {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 20px;
+    background: var(--mx-green-faint);
+    border: 1px solid #DCE6D7;
+    border-radius: 6px;
+}
+.mx-total-box .mx-total-label  { font-size: 12pt; color: var(--mx-muted); }
+.mx-total-box .mx-total-amount { font-size: 16pt; font-weight: 700; color: var(--mx-danger); }
+
+/* ---------- 9. 사이즈 선택 칩 (발주 등록 사이즈 영역 꾸미기용) ---------- */
+.mx-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    padding: 6px 10px;
+    border: 1px solid #CBD2C9;
+    border-radius: 4px;
+    font-size: 10pt;
+    color: var(--mx-text);
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+.mx-chip:hover { border-color: var(--mx-green); background: var(--mx-green-faint); }
+.mx-chip.is-selected { border-color: var(--mx-green); background: var(--mx-green); color: #fff; }
+
+/* ---------- 10. 테이블 보조 ---------- */
+.mx-table-wrap { border: 1px solid var(--mx-line); border-radius: 6px; overflow: hidden; }
+.mx-table-wrap .table { margin-bottom: 0; }
+.mx-num   { text-align: right; font-variant-numeric: tabular-nums; }   /* 금액 열 */
+.mx-strong { font-weight: 600; color: var(--mx-text); }
+
+/* 수정 중인 행 강조 (JS에서 tr에 mx-editing 추가하면 사용 가능) */
+tr.mx-editing > td { background: #FFFDF2 !important; }
+
+/* ---------- 11. 모달 보조 ---------- */
+.mx-modal-head-icon { color: var(--mx-green); margin-right: 6px; }
+
+/* ---------- 12. 페이지 제목 옆 아이콘 ---------- */
+.mx-title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin-right: 10px;
+    border-radius: 8px;
+    background: var(--mx-green-soft);
+    color: var(--mx-green);
+    font-size: 14pt;
+    vertical-align: middle;
+}
+
+/* ---------- 13. 안내 문구 박스 (페이지 상단 팁 / 주의) ---------- */
+.mx-notice {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    background: #F7FAF5;
+    border: 1px solid #DCE6D7;
+    border-radius: 6px;
+    font-size: 10pt;
+    color: #4A5348;
+}
+.mx-notice i { color: var(--mx-green); font-size: 12pt; }
+.mx-notice.mx-notice-warn { background: #FFFAEB; border-color: #F1E2B0; }
+.mx-notice.mx-notice-warn i { color: #C28A00; }
