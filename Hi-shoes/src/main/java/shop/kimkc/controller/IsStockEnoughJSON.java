@@ -18,36 +18,51 @@ public class IsStockEnoughJSON extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		String pname = request.getParameter("pname");
-		String color = request.getParameter("color");
-		String ssize = request.getParameter("ssize");
-		String selectedCnt = request.getParameter("selectedCnt");
+		String method = request.getMethod();
 		
-		Map<String, String> paraMap = new HashMap<>();
-		
-		paraMap.put("pname", pname);
-		paraMap.put("color", color);
-		paraMap.put("ssize", ssize);
-		
-		
-		int stock = pdao.isStockEnough(paraMap);
-		//System.out.println("재고량 : " +stock);
-		
-		// selectedCnt < stock 이면 n = 1
-		// selectedCnt >= stock 이면 n = -1
-		// 선택한 수량이 재고보다 적으면 1, 아니면 -1
-		int cnt = Integer.parseInt(selectedCnt);
-	    int n = (cnt < stock) ? 1 : -1;
-	    //System.out.println("n = " + n);
+		if (method.equals("POST")) {
+			String pname = request.getParameter("pname");
+			String color = request.getParameter("color");
+			String ssize = request.getParameter("ssize");
+			String selectedCnt = request.getParameter("selectedCnt");
+			
+			Map<String, String> paraMap = new HashMap<>();
+			
+			paraMap.put("pname", pname);
+			paraMap.put("color", color);
+			paraMap.put("ssize", ssize);
+			
+			
+			int stock = pdao.isStockEnough(paraMap);
+			//System.out.println("재고량 : " +stock);
+			
+			// selectedCnt < stock 이면 n = 1
+			// selectedCnt >= stock 이면 n = -1
+			// 선택한 수량이 재고보다 적으면 1, 아니면 -1
+			int cnt = Integer.parseInt(selectedCnt);
+		    int n = (cnt < stock) ? 1 : -1;
+		    //System.out.println("n = " + n);
 
-	    JSONObject jsonObj = new JSONObject();
-	    jsonObj.put("n", n);
-	    String json = jsonObj.toString();
+		    JSONObject jsonObj = new JSONObject();
+		    jsonObj.put("n", n);
+		    String json = jsonObj.toString();
 
-	    request.setAttribute("json", json);
+		    request.setAttribute("json", json);
 
-	    super.setRedirect(false);
-	    super.setViewPage("/WEB-INF/jsonview.jsp");
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/jsonview.jsp");
+			
+		}
+		
+		else {
+			request.setAttribute("message", "잘못된 접근입니다.");
+		    request.setAttribute("loc", request.getContextPath() + "/index.go");
+		         
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/msg.jsp");
+		         
+		    return;
+		}
 		
 
 	}

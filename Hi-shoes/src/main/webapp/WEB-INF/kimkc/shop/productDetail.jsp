@@ -69,6 +69,7 @@
 			
 			$.ajax({
 				url: "<%= ctxPath%>/shop/getColorsBySsizeJSON.go",
+				method: "post",
 				data:{'ssize' : select_ssize,
 						'pname' : '${requestScope.pdto.fk_pname}'},
 				dataType:"json",
@@ -186,6 +187,7 @@
 						'pname' : '${requestScope.pdto.fk_pname}',
 						'selectedCnt' : cur_qty},
 				dataType:"json",
+				method: "post",
 				success:function(json) {
 					//console.log(json);
 					if (json.n == 1) {

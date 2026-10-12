@@ -19,43 +19,59 @@ public class ChangeCartCqtyJSON extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		String userid = ((MemberDTO) request.getSession().getAttribute("loginuser")).getUserid();
-		String snum = request.getParameter("snum");
-		String cqty = request.getParameter("cqty");
+		String method = request.getMethod();
 		
-		
-		
-		int n = 0;
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("snum", snum);
-		paraMap.put("cqty", cqty);
-		
-		// 변경하기 전에, 재고가 충분한지 검사한다.
-		if(pdao.isStockEnoughForCart(paraMap)) {
+		if (method.equals("POST")) {
+			String userid = ((MemberDTO) request.getSession().getAttribute("loginuser")).getUserid();
+			String snum = request.getParameter("snum");
+			String cqty = request.getParameter("cqty");
 			
-			// 충분하면 변경하고
-			paraMap = new HashMap<>();
+			
+			
+			int n = 0;
+			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("snum", snum);
-			paraMap.put("userid", userid);
 			paraMap.put("cqty", cqty);
 			
-			n = pdao.changeCartCqty(paraMap);
+			// 변경하기 전에, 재고가 충분한지 검사한다.
+			if(pdao.isStockEnoughForCart(paraMap)) {
+				
+				// 충분하면 변경하고
+				paraMap = new HashMap<>();
+				paraMap.put("snum", snum);
+				paraMap.put("userid", userid);
+				paraMap.put("cqty", cqty);
+				
+				n = pdao.changeCartCqty(paraMap);
+			}
+			// 부족하면 안함
+			else {
+				n = -1;
+			}
+			
+			
+
+			JSONObject jsonObj = new JSONObject();
+		    jsonObj.put("n", n);
+		    String json = jsonObj.toString();
+
+		    request.setAttribute("json", json);
+
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/jsonview.jsp");
 		}
-		// 부족하면 안함
+		
 		else {
-			n = -1;
+			request.setAttribute("message", "잘못된 접근입니다.");
+		    request.setAttribute("loc", request.getContextPath() + "/index.go");
+		         
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/msg.jsp");
+		         
+		    return;
 		}
 		
 		
-
-		JSONObject jsonObj = new JSONObject();
-	    jsonObj.put("n", n);
-	    String json = jsonObj.toString();
-
-	    request.setAttribute("json", json);
-
-	    super.setRedirect(false);
-	    super.setViewPage("/WEB-INF/jsonview.jsp");
 	}
 
 }
