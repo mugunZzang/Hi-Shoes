@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+.cont-wrap {
+	max-width:1200px;	
+	width: 100%;
+	margin: 60px 0;	
+}
+
+.cont-wrap .tit-wrap {
+	border-bottom: 1px solid #DBDBDB;
+}
+
+.cont-wrap .tit-wrap h2 {
+	margin-bottom:20px;
+}
+
+.body-wrap ul, .body-wrap ol {
+	margin:0;
+	padding:0;
+}  
+
+.list-group-item.active {
+	background-color: #114232;
+	border-color: #114232;
+}
