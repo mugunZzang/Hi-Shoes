@@ -5,8 +5,8 @@
     String ctxPath = request.getContextPath();
 %>   
 
-	<section class="customer-banner">
-		<div class="wrapper">
+	<section class="footer-banner container-fluid">
+		<div class="foot-banner-wrap">
 			<section class="cs-texts">
 				<span>고객센터</span>
 				<span>1588-9667</span>
@@ -17,8 +17,8 @@
 			</section>
 		</div>
 	</section>
-	<footer>
-		<div class="wrapper">
+	<footer class="container-fluid">
+		<div class="footer-wrap">
 			<section>
 				<img alt="푸터 로고" src="<%= ctxPath%>/images/Footer-Logo.svg">
 			</section>
@@ -48,6 +48,7 @@
 			</section>			
 		</div>
 	</footer>
+
 
 </body>
 </html>

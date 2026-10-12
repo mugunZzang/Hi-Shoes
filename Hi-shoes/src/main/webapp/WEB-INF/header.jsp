@@ -5,6 +5,8 @@
     String ctxPath = request.getContextPath();
 %>    
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,29 +28,58 @@
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/js/jquery-4.0.0.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js" ></script>
+
 </head>
 <body>
-	<header class="container">
+	<header class="container-fluid">
 		<section class="header-top d-flex flex-wrap justify-content-center">
 			<div class="logo-wrap d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-				<a href="#">
-					<img alt="헤더 로고" src="<%= ctxPath %>/images/Logo.svg">
-				</a>				
+				<h1>
+					<a href="<%= ctxPath %>/index.go">
+						<img alt="헤더 로고" src="<%= ctxPath %>/images/Logo.svg">
+					</a>
+				</h1>								
 			</div>
-			<div class="join-wrap nav nav-pills">
-				<a href="#">
-					<img alt="login" src="<%= ctxPath %>/images/login.svg">
-					<span>LOGIN</span>
-				</a>
-				
-				<a href="#">
-					<img alt="join" src="<%= ctxPath %>/images/join.svg">
-					<span>JOIN</span>
-				</a>
-			</div>
+			<c:if test="${empty sessionScope.loginuser}">
+				<div class="join-wrap nav nav-pills">
+					<a href="<%=ctxPath %>/login/login_cookie.go">
+						<img alt="login" src="<%= ctxPath %>/images/login.svg">
+						<span>LOGIN</span>
+					</a>
+					
+					<a href="<%=ctxPath %>/member/memberRegister.go">
+						<img alt="join" src="<%= ctxPath %>/images/join.svg">
+						<span>JOIN</span>
+					</a>
+				</div>
+			</c:if>
+			
+			<c:if test="${not empty sessionScope.loginuser}">
+				<div class="join-wrap nav nav-pills">
+					<a href="#">
+						<img alt="login" src="<%= ctxPath %>/images/mypage.svg">
+						<span>MY<br/>PAGE</span>
+					</a>
+					
+					<a href="#">
+						<img alt="join" src="<%= ctxPath %>/images/cart.svg">
+						<span>CART</span>
+					</a>
+					
+					<a href="#">
+						<img alt="join" src="<%= ctxPath %>/images/cscenter.svg">
+						<span>CS<br/>CENTER</span>
+					</a>
+					
+					<a href="#" onclick='javascript:location.href="<%= ctxPath%>/login/logout.go"'>
+						<img alt="join" src="<%= ctxPath %>/images/logout.svg">
+						<span>LOGOUT</span>
+					</a>
+				</div>			
+			</c:if>
 		</section>
 		<section class="header-bottom">
-			<nav class="">
+			<nav>
 				<ul class="main-nav nav nav-pills">
 					<li class="nav-item">
 						<a href="#">운동화</a>
@@ -67,12 +98,13 @@
 					</li>
 				</ul>
 			</nav>
-			
-			<form class="searchbar d-flex rounded-pill" role="search">
+		
+			<form class="col-12 searchbar d-flex rounded-pill" role="search">
 			    <div class="input-group">
 			      <input type="search" class="form-control" placeholder="검색어를 입력해주세요." aria-label="Search">
 			      <button class="search-icon" type="submit">검색</button>
 			    </div>
 		  	</form>
+			
 		</section>
 	</header>
