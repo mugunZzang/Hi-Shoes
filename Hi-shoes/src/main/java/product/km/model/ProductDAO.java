@@ -13,12 +13,6 @@ public interface ProductDAO {
 	// 페이징 처리할 갯수 구하기
 	int getTotalCountProduct(Map<String,String> paraMap) throws Exception;
 
-	// 업체별 거래 갯수 가져오기
-	List<Map<String, String>> sup_cnt() throws Exception;
-
-	// 업체별 카테고리별 총 금액 가져오기
-	List<Map<String, String>> sup_price() throws Exception;
-
 	// 제품 삭제
 	int productDelete(String pnum) throws Exception;
 
@@ -29,5 +23,26 @@ public interface ProductDAO {
 	int getPnumOfProduct() throws Exception;
 
 	// 판매상품 insert 해주기
-	int productInsert(ProductDTO pdto);
+	int productInsert(ProductDTO pdto) throws Exception;
+	
+	// 업체별 입고 완료 총금액  
+	List<Map<String, String>> selectPurchaseChart() throws Exception;
+	
+	// 업체별 입고 완료 갯수 
+	List<Map<String, String>> selectcntChart() throws Exception;
+
+	// 추가이미지 테이블 insert
+	int product_imagefile_insert(Map<String, String> paraMap) throws Exception;
+
+	// 해당 pnum에 해당하는 제품 정보를 불러온다.
+	ProductDTO selectOneProd(String pnum) throws Exception;
+
+	// 해당 pnum에 해당하는 추가이미지 제품 정보를 불러온다.
+	List<String> selectProductImages(String pnum) throws Exception;
+
+	// 제품 테이블 업데이트
+	int productUpdate(Map<String, String> paraMap) throws Exception;
+
+	
+	
 }

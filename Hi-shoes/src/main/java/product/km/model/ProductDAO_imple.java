@@ -76,14 +76,13 @@ public class ProductDAO_imple implements ProductDAO {
 		            + "      , fk_pname "
 		            + "      , pcontent "
 		            + "      , deliveryfee "
-		            + " from tbl_product "
-		            + " where 1 = 1 ";
+		            + " from tbl_product ";
 
 		        String searchWord = paraMap.get("searchWord");
 
 		        if(searchWord != null && !searchWord.trim().isEmpty()) {
 
-		            sql += " and fk_pname like '%' || ? || '%' ";
+		            sql += " where fk_pname like '%' || ? || '%' ";
 		        }
 
 		        sql +=
@@ -137,8 +136,7 @@ public class ProductDAO_imple implements ProductDAO {
 
 	        String sql =
 	              " select count(*) as CNT "
-	            + " from tbl_product "
-	            + " where 1 = 1 ";
+	            + " from tbl_product ";
 
 	        String searchWord = paraMap.get("searchWord");
 
@@ -166,112 +164,6 @@ public class ProductDAO_imple implements ProductDAO {
 	    }
 
 	    return totalCountProduct;
-	}
-
-	// 업체별 거래 갯수 가져오기
-	@Override
-	public List<Map<String, String>> sup_cnt() throws Exception{
-		
-		List<Map<String, String>> sup_map_List = new ArrayList<>();
-		   
-		   try {
-			   conn = ds.getConnection();
-			   
-			   String sql = " select "
-			   		+ "       p.fk_supname as sup, "
-			   		+ "       round( "
-			   		+ "           sum(d.purqty) / "
-			   		+ "           (select sum(d2.purqty) "
-			   		+ "              from tbl_purchase p2 "
-			   		+ "              join tbl_purdetail d2 "
-			   		+ "                on p2.purnum = d2.fk_purnum "
-			   		+ "             where p2.instock = '입고' "
-			   		+ "           ) * 100 "
-			   		+ "       , 2) as pct "
-			   		+ " from tbl_purchase p "
-			   		+ " join tbl_purdetail d "
-			   		+ "  on p.purnum = d.fk_purnum "
-			   		+ " where p.instock = '입고' "
-			   		+ " group by p.fk_supname "
-			   		+ " order by p.fk_supname ";
-			   
-			   pstmt = conn.prepareStatement(sql);
-			   
-			   rs = pstmt.executeQuery();
-			   
-			   while(rs.next()) {
-				   Map<String,String> paraMap = new HashMap<>();
-				   paraMap.put("sup", rs.getString("sup") );
-				   paraMap.put("pct", String.valueOf(rs.getDouble("pct")));
-				   
-				   sup_map_List.add(paraMap);
-			   }
-		   } finally {
-			   close();
-		   }
-		   
-		   return sup_map_List;
-	}
-
-	// 업체별 카테고리별 총 금액 가져오기
-	@Override
-	public List<Map<String, String>> sup_price() throws Exception {
-		
-		List<Map<String, String>> sup_price_map_List = new ArrayList<>();
-		   
-		   try {
-			   conn = ds.getConnection();
-			   
-			   String sql = " select "
-			   		+ "       p.fk_supname as sup, "
-			   		+ "       c2.catename as category, "
-			   		+ "       round(\r\n"
-			   		+ "           sum(d.purqty * c1.purprice) / "
-			   		+ "           ( "
-			   		+ "               select sum(pd.purqty * ct.purprice) "
-			   		+ "               from tbl_purchase pur "
-			   		+ "               join tbl_purdetail pd "
-			   		+ "                 on pur.purnum = pd.fk_purnum "
-			   		+ "               join tbl_stock st "
-			   		+ "                 on pd.fk_snum = st.snum "
-			   		+ "               join tbl_catalogue ct "
-			   		+ "                 on st.fk_pname = ct.pname "
-			   		+ "               where pur.instock = '입고' "
-			   		+ "					and pur.fk_supname = p.fk_supname "
-			   		+ "           ) * 100 "
-			   		+ "       , 2) as pct "
-			   		+ " from tbl_purchase p "
-			   		+ " join tbl_purdetail d "
-			   		+ "  on p.purnum = d.fk_purnum "
-			   		+ " join tbl_stock s "
-			   		+ "  on d.fk_snum = s.snum "
-			   		+ " join tbl_catalogue c1 "
-			   		+ "  on s.fk_pname = c1.pname "
-			   		+ " join tbl_category c2 "
-			   		+ "  on c1.fk_catenum = c2.catenum "
-			   		+ " where p.instock = '입고' "
-			   		+ " group by p.fk_supname, c2.catename "
-			   		+ " order by p.fk_supname, c2.catename; "
-			   		+ " where p.instock = '입고' "
-			   		+ " group by p.fk_supname "
-			   		+ " order by p.fk_supname ";
-			   
-			   pstmt = conn.prepareStatement(sql);
-			   
-			   rs = pstmt.executeQuery();
-			   
-			   while(rs.next()) {
-				   Map<String,String> paraMap = new HashMap<>();
-				   paraMap.put("sup", rs.getString("sup") );
-				   paraMap.put("pct", String.valueOf(rs.getDouble("pct")));
-				   
-				   sup_price_map_List.add(paraMap);
-			   }
-		   } finally {
-			   close();
-		   }
-		   
-		   return sup_price_map_List;
 	}
 
 	// 제품 삭제
@@ -359,32 +251,26 @@ public class ProductDAO_imple implements ProductDAO {
 
 	// 판매상품 insert 해주기
 	@Override
-	public int productInsert(ProductDTO pdto) {
+	public int productInsert(ProductDTO pdto) throws Exception{
 		
 		int n = 0;
 	      
 	      try {
 	         conn = ds.getConnection();
 	         
-	         String sql = " insert into tbl_product(pnum, pname, fk_cnum, pcompany, pimage1, pimage2, prdmanual_systemFileName, prdmanual_orginFileName, pqty, price, saleprice, fk_snum, pcontent, point) "
-	                  + " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+	         String sql = " insert into tbl_product(pnum, fk_pname, pimage1, pimage2, warranty_systemfilename, warranty_originfilename, deliveryfee, pcontent ) "
+	                  + " values(?,?,?,?,?,?,?,?) ";
 	         
 	         pstmt = conn.prepareStatement(sql);
 	         
 	         pstmt.setInt(1, pdto.getPnum());
-	         pstmt.setString(2, pdto.getPname());
-	         pstmt.setInt(3, pdto.getFk_cnum());    
-	         pstmt.setString(4, pdto.getPcompany()); 
-	         pstmt.setString(5, pdto.getPimage1());    
-	         pstmt.setString(6, pdto.getPimage2()); 
-	         pstmt.setString(7, pdto.getPrdmanual_systemFileName());
-	         pstmt.setString(8, pdto.getPrdmanual_orginFileName());
-	         pstmt.setInt(9, pdto.getPqty()); 
-	         pstmt.setInt(10, pdto.getPrice());
-	         pstmt.setInt(11, pdto.getSaleprice());
-	         pstmt.setInt(12, pdto.getFk_snum());
-	         pstmt.setString(13, pdto.getPcontent());
-	         pstmt.setInt(14, pdto.getPoint());
+	         pstmt.setString(2, pdto.getFk_pname());
+	         pstmt.setString(3, pdto.getPimage1());    
+	         pstmt.setString(4, pdto.getPimage2()); 
+	         pstmt.setString(5, pdto.getWarranty_systemfilename());
+	         pstmt.setString(6, pdto.getWarranty_originfilename());
+	         pstmt.setInt(7, pdto.getDeliveryfee());
+	         pstmt.setString(8, pdto.getPcontent());
 	         
 	         n = pstmt.executeUpdate();
 	         
@@ -394,4 +280,216 @@ public class ProductDAO_imple implements ProductDAO {
 	      
 	      return n;
 	}
+	 // 추가이미지 테이블 insert
+	 @Override
+	   public int product_imagefile_insert(Map<String, String> paraMap) throws SQLException {
+		
+		      int n = 0;
+		      
+		      try {
+		         conn = ds.getConnection();
+		         
+		         String sql = " insert into tbl_product_image(imgnum, fk_pnum, image_name) "
+		                    + " values(seq_imgnum.nextval, ?, ?) ";
+		         
+		         pstmt = conn.prepareStatement(sql);
+		         
+		         pstmt.setInt(1, Integer.parseInt(paraMap.get("pnum")) );
+		         pstmt.setString(2, paraMap.get("attachFileName"));
+		         
+		         n = pstmt.executeUpdate();
+		         
+		      } finally {
+		         close();
+		      }
+		      
+		      return n;
+	   }
+	
+	 	// 최근 7일 업체별 입고 완료 총금액
+		@Override
+		public List<Map<String, String>> selectPurchaseChart() throws Exception {
+
+		    List<Map<String, String>> chartList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql =
+		              " select to_char(trunc(p.purtime), 'yyyy-mm-dd') as purdate "
+		            + "      , p.fk_supname as supname "
+		            + "      , sum(pd.purqty * pd.purdprice) as totalamount "
+		            + " from tbl_purchase p "
+		            + " join tbl_purdetail pd "
+		            + "   on p.purnum = pd.fk_purnum "
+		            + " where p.instock = '입고' "
+		            + "   and p.purtime >= trunc(sysdate) - 6 "
+		            + "   and p.purtime < trunc(sysdate) + 1 "
+		            + " group by trunc(p.purtime), p.fk_supname "
+		            + " order by trunc(p.purtime), p.fk_supname ";
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        rs = pstmt.executeQuery();
+
+		        while (rs.next()) {
+
+		            Map<String, String> map = new HashMap<>();
+
+		            map.put("purdate", rs.getString("purdate"));
+		            map.put("supname", rs.getString("supname"));
+		            map.put("totalamount", rs.getString("totalamount"));
+
+		            chartList.add(map);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return chartList;
+		}
+		
+		// 최근 7일 업체별 입고완료 갯수
+		@Override
+		public List<Map<String, String>> selectcntChart() throws Exception {
+
+		    List<Map<String, String>> chartList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " select p.fk_supname as supname "
+		        			   + "      , sum(pd.purqty) as totalqty "
+		        	           + " from tbl_purchase p "
+		        	           + " join tbl_purdetail pd on p.purnum = pd.fk_purnum "
+		        	           + " where p.instock = '입고' "
+		        	           + " group by p.fk_supname "
+		        	           + " order by p.fk_supname ";
+
+		        	pstmt = conn.prepareStatement(sql);
+		        	rs = pstmt.executeQuery();
+
+		        	while (rs.next()) { Map<String, String> map = new HashMap<>();
+
+		        	    map.put("supname", rs.getString("supname"));
+		        	    map.put("totalqty", rs.getString("totalqty"));
+
+		        	    chartList.add(map);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return chartList;
+		}
+
+		// 해당 pnum에 해당하는 제품 정보를 불러온다.
+		@Override
+		public ProductDTO selectOneProd(String pnum) throws Exception {
+			
+			 ProductDTO pdto = null;
+
+			    try {
+			        conn = ds.getConnection();
+
+			        String sql = " select pnum "
+			                   + "      , fk_pname "
+			                   + "      , pimage1 "
+			                   + "      , pimage2 "
+			                   + "      , warranty_systemfilename "
+			                   + "      , warranty_originfilename "
+			                   + "      , deliveryfee "
+			                   + "      , pcontent "
+			                   + " from tbl_product "
+			                   + " where pnum = to_number(?) ";
+
+			        pstmt = conn.prepareStatement(sql);
+			        pstmt.setString(1, pnum);
+
+			        rs = pstmt.executeQuery();
+
+			        if (rs.next()) {
+			            pdto = new ProductDTO();
+
+			            pdto.setPnum(rs.getInt("pnum"));
+			            pdto.setFk_pname(rs.getString("fk_pname"));
+			            pdto.setPimage1(rs.getString("pimage1"));
+			            pdto.setPimage2(rs.getString("pimage2"));
+			            pdto.setWarranty_systemfilename(
+			                rs.getString("warranty_systemfilename")
+			            );
+			            pdto.setWarranty_originfilename(
+			                rs.getString("warranty_originfilename")
+			            );
+			            pdto.setDeliveryfee(rs.getInt("deliveryfee"));
+			            pdto.setPcontent(rs.getString("pcontent"));
+			        }
+
+			    } finally {
+			        close();
+			    }
+
+			    return pdto;
+		}
+
+
+		// 해당 pnum에 해당하는 추가이미지 제품 정보를 불러온다.
+		@Override
+		public List<String> selectProductImages(String pnum) throws Exception {
+			List<String> imageList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " select image_name "
+		                   + " from tbl_product_image "
+		                   + " where fk_pnum = to_number(?) ";
+
+		        pstmt = conn.prepareStatement(sql);
+		        pstmt.setString(1, pnum);
+
+		        rs = pstmt.executeQuery();
+
+		        while (rs.next()) {
+		            imageList.add(rs.getString("image_name"));
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return imageList;
+		}
+
+		// 제품 테이블 업데이트
+		@Override
+		public int productUpdate(Map<String, String> paraMap) throws Exception {
+			
+			int n = 0;
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				String sql = " UPDATE tbl_product SET pcontent = ?, deliveryfee = to_number(?) "
+						   + " WHERE pnum = to_number(?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1,paraMap.get("pcontent"));
+				pstmt.setString(2,paraMap.get("deliveryfee"));
+				pstmt.setString(3,paraMap.get("pnum"));
+				
+				n = pstmt.executeUpdate();
+				
+				
+			} finally {
+				close();
+			}
+			
+			return n;
+			
+		}
+
 }

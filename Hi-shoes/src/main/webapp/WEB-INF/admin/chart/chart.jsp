@@ -8,13 +8,12 @@
 <jsp:include page="../adminHeader.jsp" />
 
 <script src="<%= ctxPath%>/Highcharts-10.3.1/code/highcharts.js"></script>
-<script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/data.js"></script>
-<script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/drilldown.js"></script>
 <script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/exporting.js"></script>
 <script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/export-data.js"></script>
 <script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/accessibility.js"></script>
 
 <style type="text/css">
+
 .highcharts-figure,
 .highcharts-data-table table {
     min-width: 310px;
@@ -62,101 +61,157 @@
     background: #f1f7ff;
 }
 
+
+
 </style>
 		
 <script type="text/javascript">
 
-	$(function(){
-		
-		    $.ajax({
-  			url:"<%= ctxPath%>/admin/chart/ChartJSON.go",
-  			dataType:"json",
-  			success:function(json){
-  				// console.log(JSON.stringify(json));
-  				
-  			  
-  			  let resultArr1 = [];
-  			  let resultArr2 = [];
-  			  
-  			  for(let i=0;i<json.length; i++){
-  				  
-  				  let month_arr = [];
-  				  month_arr.push(Number(json[i].m_01));
-  				  month_arr.push(Number(json[i].m_02));
-  				  month_arr.push(Number(json[i].m_03));
-  				  month_arr.push(Number(json[i].m_04));
-  				  month_arr.push(Number(json[i].m_05));
-  			 	  month_arr.push(Number(json[i].m_06));
-  				  month_arr.push(Number(json[i].m_07));
-  				  month_arr.push(Number(json[i].m_08));
-  				  month_arr.push(Number(json[i].m_09));
-  				  month_arr.push(Number(json[i].m_10));
-  				  month_arr.push(Number(json[i].m_11));
-  				  month_arr.push(Number(json[i].m_12));
-  				  
-  				  let obj = {name: json[i].cname,
-  						     data: month_arr};
-  				  
-  				  resultArr.push(obj); // 배열속에 객체를 넣기
-  			  }// end of for 
-  			  
-  			  //////////////////////////////////////////////////////////////////
-  			Highcharts.chart('chart_container', {
-  			    chart: {
-  			        type: 'column'
-  			    },
-  			    title: {
-  			        align: 'left',
-  			        text: '업체별 신발 횟수'
-  			    },
-  			    subtitle: {
-  			        align: 'left',
-  			        text: ''
-  			    },
-  			    accessibility: {
-  			        announceNewData: {
-  			            enabled: true
-  			        }
-  			    },
-  			    xAxis: {
-  			        type: 'category'
-  			    },
-  			    yAxis: {
-  			        title: {
-  			            text: 'Total percent market share'
-  			        }
+$(function(){
+	$.ajax({
+	    url: "<%= ctxPath%>/admin/chart/chartJSON.go",
+	    dataType: "json",
+	
+	    success: function(json) {
+	
+	        // 업체별 총금액 저장
+	        let suppliers = [];
+	        let amounts = [];
+	
+	        $.each(json, function(index, item) {
+	
+	            let supplier = item.supname;
+	            let amount = Number(item.totalamount);
+	
+	            // 이미 등록된 업체인지 확인
+	            let idx = $.inArray(supplier, suppliers);
+	
+	            if (idx == -1) {
+	                // 새로운 업체라면 업체명과 금액 추가
+	                suppliers.push(supplier);
+	                amounts.push(amount);
+	            }
+	            else {
+	                // 이미 있는 업체라면 기존 금액에 합산
+	                amounts[idx] += amount;
+	            }
+	        });
+	
+	        // 차트 데이터 구성
+	        let resultArr = [{
+	            name: '총금액',
+	            data: amounts
+	        }];
+	
+	        // Highcharts 차트 생성
+	        Highcharts.chart('chart_container', {
+	            chart: {
+	                type: 'column'
+	            },
+	
+	            title: {
+	                text: '업체별 입고 완료 총금액'
+	            },
+	
+	            xAxis: {
+	                categories: suppliers,
+	                title: {
+	                    text: '업체명'
+	                }
+	            },
+	
+	            yAxis: {
+	                min: 0,
+	                title: {
+	                    text: '총금액 (원)'
+	                }
+	            },
+	
+	            tooltip: {
+	                valueSuffix: '원',
+	                valueDecimals: 0
+	            },
+	
+	            plotOptions: {
+	                column: {
+	                    borderWidth: 0
+	                }
+	            },
+	
+	            series: resultArr
+	        });
+	    },
+	
+	    error: function(request, status, error){
+	        alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	      }
+	}); // 1번째 차트 끝
+	
+	$.ajax({
+        url: "<%= ctxPath%>/admin/chart/chartJSON2.go",
+        dataType: "json",
 
-  			    },
-  			    legend: {
-  			        enabled: false
-  			    },
-  			    plotOptions: {
-  			        series: {
-  			            borderWidth: 0,
-  			            dataLabels: {
-  			                enabled: true,
-  			                format: '{point.y:.1f}%'
-  			            }
-  			        }
-  			    },
+        success: function(json) {
 
-  			    tooltip: {
-  			        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-  			        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-  			    },
+            let suppliers = [];
+            let quantities = [];
 
-  			    series: ,
-  			    drilldown: {
-  			        breadcrumbs: {
-  			            position: {
-  			                align: 'right'
-  			            }
-  			        },
-  			        series: 
-  			});
+            $.each(json, function(index, item) {
+                suppliers.push(item.supname);
+                quantities.push(Number(item.totalqty));
+            });
+
+            let resultArr = [{
+                name: '총수량',
+                data: quantities
+            }];
+
+            Highcharts.chart('chart_container2', {
+                chart: {
+                    type: 'column'
+                },
+
+                title: {
+                    text: '업체별 입고 완료 총수량'
+                },
+
+                xAxis: {
+                    categories: suppliers,
+                    title: {
+                        text: '업체명'
+                    }
+                },
+
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '총수량 (개)'
+                    }
+                },
+
+                tooltip: {
+                    valueSuffix: '개',
+                    valueDecimals: 0
+                },
+
+                plotOptions: {
+                    column: {
+                        borderWidth: 0
+                    }
+                },
+
+                series: resultArr
+            });
+        },
+        error: function(request, status, error){
+	        alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	      }
+    });
+	
+
 		
 		
-	});// end of $(function(){
+});// end of $(function(){
 
 
 </script>
@@ -204,6 +259,7 @@
                 padding: 25px;">
                 
                 <div id="chart_container"></div>
+                <div id="chart_container2" ></div>
                 
                 
     </div>

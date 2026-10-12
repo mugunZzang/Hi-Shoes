@@ -128,7 +128,7 @@
                                items="${requestScope.productList}"
                                varStatus="status">
 
-                        <tr>
+                        <tr style="cursor:pointer;" onclick="location.href='<%= ctx_Path %>/admin/product/productEdit.go?pnum=${product.pnum}'">
 
                             <td align="center">
                                 ${product.pnum}
