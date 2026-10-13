@@ -25,6 +25,7 @@
 					url: "<%= ctxPath%>/shop/changeWishStatusJSON.go",
 					data:{'pnum' : '${requestScope.pnum}',
 							'isJjim' : '0'},
+					method: "post",
 					dataType:"json",
 					success:function(json) {
 						alert("상품이 위시리스트에 등록되었습니다.");
@@ -43,6 +44,7 @@
 					data:{'userid' : '${sessionScope.loginuser.userid}',
 							'pnum' : '${requestScope.pnum}',
 							'isJjim' : '1'},
+					method: "post",
 					dataType:"json",
 					success:function(json) {
 						alert("상품이 위시리스트에서 제거하였습니다.");
@@ -372,15 +374,21 @@
 				dataType: "json",
 
 				success: function(json) {
-					
-					if (json.n == options.length) {
+					if (json.n == 1) {
 						if (confirm("장바구니에 상품을 담았습니다. 장바구니로 이동하시겠습니까?")) {
 							// 장바구니 페이지로 이동
-							location.href = "<%= ctxPath%>/shop/cartList.go";	
+							<%-- location.href = "<%= ctxPath%>/shop/cartList.go"; --%>
+							// POST 방식으로 장바구니 페이지 이동
+						    const form = document.createElement("form");
+						    form.method = "POST";
+						    form.action = "<%= ctxPath%>/shop/cartList.go";
+
+						    document.body.appendChild(form);
+						    form.submit();
 						}
 					}
 					else {
-						console.log("여기에요~");
+						//console.log("여기에요~");
 						alert("장바구니 등록에 실패하였습니다.");
 					}
 					
@@ -399,6 +407,14 @@
 		// 바로구매 버튼 클릭 시
 		$('button#button-purchase').on("click", function() {
 			
+			// 옵션이 최소 1개 이상 선택되어야 함
+			const selectedSpecs = $('div.selected-spec');
+
+			if (selectedSpecs.length === 0) {
+				alert("상품 옵션을 선택해 주세요.");
+				return;
+			}
+			
 			const pimage = "<%=ctxPath%>/images/kimkc/product/${requestScope.pdto.pimage1}";
 			//console.log("대표이미지" + pimage);
 			const pname = "${requestScope.pdto.fk_pname}";
@@ -411,7 +427,7 @@
 			const prodList = [];
 			
 			// 선택 옵션란들
-			const selectedSpecs = $('div.selected-spec');
+			//const selectedSpecs = $('div.selected-spec');
 			selectedSpecs.each(function() {
 
 				const spec = $(this).find('.span-shoe-spec').text();
@@ -437,7 +453,7 @@
 			
 
 
-			//console.log(prodList);
+			console.log(prodList);
 			// 이제 결제 화면에 넘겨줘야 함...
 			const frm = document.getElementById('frm-purchase');
 			const input1 = document.querySelector('input[name="prodList"]');

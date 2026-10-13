@@ -106,4 +106,16 @@ public interface ProductDAO {
 	// 구매하려는 제품 옵션의 재고가 충분한지 검사한다.
 	String checkStockEnough(Map<String, String> paraMap) throws SQLException;
 
+
+	// 각종 DB에 구매정보 반영하기
+	int updateOrderList(Map<String, Object> paraMap) throws SQLException;
+
+
+	// 가장 최근의 주문 정보를 갖고옴
+	Map<String, String> getRecentOrder(String userid) throws SQLException;
+
+
+	// snum 갖고오기
+	String getSnumBySpec(Map<String, String> paraMap) throws SQLException;
+
 }

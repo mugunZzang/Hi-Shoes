@@ -2,6 +2,8 @@ package shop.kimkc.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.io.Console;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,15 +58,15 @@ public class AddCartJSON extends AbstractController {
 			    
 			    optionList.add(sdto);
 
-			    System.out.println("상품번호: " + pnum);
-			    System.out.println("사이즈: " + ssize);
-			    System.out.println("색상: " + color);
-			    System.out.println("수량: " + cqty);
+			    //System.out.println("상품번호: " + pnum);
+			    //System.out.println("사이즈: " + ssize);
+			    //System.out.println("색상: " + color);
+			    //System.out.println("수량: " + cqty);
 			}
 			
 			
 			// 해당 옵션을 갖는 재고번호(snum) 조회하기 
-			List<StockDTO> snumList = pdao.getSnumByOptions(optionList);		
+			List<StockDTO> snumList = pdao.getSnumByOptions(optionList);
 			
 			// 실제로 장바구니에 담기
 			Map<String, Object> paraMap = new HashMap<>();

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String ctxPath = request.getContextPath();
 %>
@@ -13,8 +14,13 @@
 
 <script type="text/javascript">
 	
+	let primaryProductName;
+	let finalTotalPrice;
+	
 	$(function() {
 		getTotalCost();
+		primaryProductName = "${requestScope.prodList[0].pname}";
+		
 	});
 	
 	
@@ -39,7 +45,7 @@
 	        //console.log("수량" + cqty);
 	        
 	     	// 정상가 기준 주문금액
-	        totalOrderPrice += regprice * cqty;
+	        totalOrderPrice += saleprice * cqty;
 
 	        // 정상가보다 판매가가 낮은 상품만 할인 계산
 	        if (regprice > saleprice) {
@@ -74,6 +80,98 @@
 	    $('strong#total-price2').text(formatPrice(finalPrice));
 	    
 	    
+	    finalTotalPrice = finalPrice;
+	}
+	
+	
+	
+	// 진짜 결제하러 간다... 결제창 띄우기
+	function gotoPurchase() {
+		
+		const userid = "${sessionScope.loginuser.userid}";
+		const ctxPath = "<%=ctxPath %>";
+		//console.log("userid:", userid);
+		//console.log("ctxPath:", ctxPath);
+		//console.log("finalTotalPrice:", finalTotalPrice);
+		//console.log("primaryProductName:", primaryProductName);
+		
+		const url = ctxPath + "/shop/coinPurchaseEnd.go?finalTotalPrice=" + finalTotalPrice + "&primaryProductName=" + primaryProductName + "&userid=" + userid;
+		
+		//console.log("url:", url);
+	    
+		
+		const width = 1000;
+		const height = 700;
+
+		const left = Math.round(
+		    window.screenX + (window.outerWidth - width) / 2
+		);
+
+		const top = Math.round(
+		    window.screenY + (window.outerHeight - height) / 2
+		);
+
+		const popup = window.open(
+		    url,
+		    "coinPurchaseEnd",
+		    `popup=yes,width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+		);
+
+		if (popup) {
+		    popup.resizeTo(width, height);	// 자꾸 팝업창 쥐똥만해져서 넣었음
+		    popup.focus();
+		}
+	}
+	
+	// 결제 이후에 할일
+	function goUpdatePurchasedList() {
+		// db에 넣을 용도임
+		const purchaseList = [];
+		
+		const allCnt = $(".order-product").length;
+	    for(let i=0; i<allCnt; i++) {
+	    	const saleprice = Number($('strong.discount-price').eq(i).attr("data-saleprice"));
+	    	const cqty = Number($("input.product-cqty").eq(i).val());
+	    	const snum = Number($('input.product-snum').eq(i).val());
+	    	purchaseList.push({
+	    		"snum" : snum,
+	    		"saleprice" : saleprice,
+	    		"cqty" : cqty
+	    	});
+	    }
+	    
+	    //console.log(purchaseList);
+	    
+	    //alert("일단 결제 굿~");
+	    
+	    $.ajax({
+	    	url: "<%=ctxPath%>/shop/updateOrderListJSON.go", 
+			data: {"purchaseList" : JSON.stringify(purchaseList)}, 
+	     	method : "post",  
+					
+		    dataType: "json", 
+							  		  
+			success: function(json) {		
+				if (json.n == 1) {
+					//alert("db 적용 완료!");
+					
+					// 결제 영수증 창으로 이동
+				    const form = document.createElement("form");
+					
+				    form.method = "POST";
+				    form.action = "<%= ctxPath%>/shop/purchaseResult.go";
+
+				    document.body.appendChild(form);
+				    form.submit();
+				}
+				else {
+					alert("주문정보 업데이트에 실패하였습니다.");					
+				}
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+	    });
 	    
 	}
 
@@ -97,7 +195,7 @@
         <!-- 배송 상품 제목 -->
         <div class="order-list-title">
             <span>배송</span>
-            <strong>3개</strong>
+            <strong>${fn:length(requestScope.prodList)}개</strong>
         </div>
 
 
@@ -128,6 +226,7 @@
 	                        ${prod.spec} / ${prod.cqty}개
 	                    </span>
 	                    <input class="product-cqty" type="hidden" value="${prod.cqty}"/>
+	                    <input class="product-snum" type="hidden" value="${prod.snum}"/>
 	
 	                </div>
 	
@@ -143,7 +242,7 @@
 		                    </strong>
 	                    </c:if>
 	                    
-	                    <c:if test="${prod.regprice == prod.saleprice}">
+	                    <c:if test="${prod.regprice <= prod.saleprice}">
 	                    	<del class="regular-price" style="display: none;" data-regprice="${prod.regprice}">
 		                        <fmt:formatNumber value="${prod.regprice}" type="number"/>
 		                    </del>
@@ -504,7 +603,8 @@
             <!-- 결제 버튼 -->
             <button
                 type="button"
-                class="payment-button">
+                class="payment-button"
+                onclick="gotoPurchase()">
                 결제하기
             </button>
 

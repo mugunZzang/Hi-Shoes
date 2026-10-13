@@ -763,6 +763,7 @@ public class ProductDAO_imple implements ProductDAO {
 				else {
 					n++;
 				}
+				
 			}
 			
 		} finally {
@@ -1152,6 +1153,237 @@ public class ProductDAO_imple implements ProductDAO {
 		}
 		
 		return pname;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 각종 DB에 구매정보 반영하기
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateOrderList(Map<String, Object> paraMap) throws SQLException {
+
+		int n = 0;
+		int n1=0, n2=0, n3=0, n4=0;
+		String sql = "";
+		
+		List<Map<String, String>> purchaseList = (List<Map<String, String>>) paraMap.get("purchaseList");
+		String userid = (String) paraMap.get("userid");
+		
+		try {
+			conn = ds.getConnection();
+			conn.setAutoCommit(false);	// 수동커밋
+			
+			// onum 에 넣을값 채번하기
+			sql = " SELECT seq_onum.NEXTVAL AS onum FROM dual ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			rs.next();
+			int onum = rs.getInt("onum");
+					
+			
+			// =========== 1. tbl_order에 삽입 =========== //
+			sql = " INSERT INTO tbl_order(onum, fk_userid, orderstatus, orderdate, arrivaldate) "
+					+ " VALUES(?, ?, default, default, sysdate + 2) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, onum);
+			pstmt.setString(2, userid);
+			
+			n1 = pstmt.executeUpdate();
+			
+			
+			
+			if (n1 == 1) {
+				// =========== 2. tbl_orderdetail에 각 snum으로 삽입 =========== //
+				sql = " INSERT INTO tbl_orderdetail(odnum, fk_onum, fk_snum, oqty, odrprice)"
+						+ " values(seq_odnum.NEXTVAL, ?, ?, ?, ?) ";
+				pstmt = conn.prepareStatement(sql);
+				
+				for (Map<String, String> map : purchaseList) {
+					pstmt.setInt(1, onum);
+					pstmt.setInt(2, Integer.parseInt(map.get("snum")));
+					pstmt.setInt(3, Integer.parseInt(map.get("cqty")));
+					pstmt.setInt(4, Integer.parseInt(map.get("cqty")) * Integer.parseInt(map.get("saleprice")));
+					
+					n2 += pstmt.executeUpdate();
+				}
+				
+			}
+			
+			
+			if (n2 == purchaseList.size()) {
+				// =========== 3. tbl_stock에 각 cqty 만큼 수량 감소 =========== //
+				sql = " UPDATE tbl_stock SET sqty = sqty - ? "
+						+ " WHERE snum = ? ";
+				pstmt = conn.prepareStatement(sql);
+				
+				for (Map<String, String> map : purchaseList) {
+					pstmt.setInt(1, Integer.parseInt(map.get("cqty")));
+					pstmt.setInt(2, Integer.parseInt(map.get("snum")));
+					
+					n3 += pstmt.executeUpdate();
+				}
+				
+				n2 = 1;
+			}
+			
+			
+			if (n3 == purchaseList.size()) {
+				// =========== 4. tbl_cart 에서 해당목록 삭제 =========== //
+				
+				// 삭제하기 전, 장바구니에 해당하는 목록이 있는지 검사한다.
+				// 검사해서 없으면 "바로구매" 로 간주한다.
+				sql = " SELECT * FROM tbl_cart "
+						+ " WHERE fk_userid = ? "
+						+ " AND fk_snum = ? "; 
+				
+				for (Map<String, String> map : purchaseList) {
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, userid);
+					pstmt.setInt(2, Integer.parseInt(map.get("snum")));
+					
+					rs = pstmt.executeQuery();
+					if(!rs.next()) {
+						n4++;
+					}
+				}		
+				
+				// 검사해서 있다면 장바구니 삭제
+				if (n4 != 0) {
+					n4 = 0;
+					
+					sql = " DELETE FROM tbl_cart "
+							+ " WHERE fk_userid = ? "
+							+ " AND fk_snum = ? ";
+					
+					for (Map<String, String> map : purchaseList) {
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, userid);
+						pstmt.setInt(2, Integer.parseInt(map.get("snum")));
+						
+						n4 += pstmt.executeUpdate();
+					}
+					
+				}
+				else {
+					n4 = 1;
+				}
+				
+				
+				n3 = 1;
+			}
+			
+			if (n4 == purchaseList.size()) {
+				n4 = 1;
+			}
+			
+			
+			
+			
+			// 모두 정상 실행되었다면 
+			if(n1*n2*n3*n4 == 1) {
+				conn.commit();
+				conn.setAutoCommit(true);
+				n = 1;
+			}
+			
+			
+			
+		} 
+		
+		// **** SQL 장애 발생시 rollback 하기(rollback) ****	
+		catch (SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+			conn.setAutoCommit(true);
+			n = 0;
+		}
+		
+		finally {
+			close();
+		}
+		
+		return n;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	
+	
+	// 가장 최근의 주문 정보를 갖고옴
+	@Override
+	public Map<String, String> getRecentOrder(String userid) throws SQLException {
+		Map<String, String> orderMap = new HashMap<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT "
+					+ "		  O.onum, "
+					+ "       TO_CHAR(O.orderdate, 'yyyy.mm.dd hh24:mi:ss') AS orderdate, "
+					+ "       SUM(OD.odrprice) AS totalprice "
+					+ " FROM tbl_order O "
+					+ " JOIN tbl_orderdetail OD "
+					+ "    ON O.onum = OD.fk_onum "
+					+ " WHERE O.fk_userid = ? "
+					+ "  AND O.onum = ( "
+					+ "      SELECT MAX(onum) "
+					+ "      FROM tbl_order "
+					+ "      WHERE fk_userid = ? "
+					+ "  ) "
+					+ " GROUP BY O.onum, O.orderdate ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			pstmt.setString(2, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			orderMap.put("onum", String.valueOf(rs.getInt("onum")));
+			orderMap.put("orderdate", rs.getString("orderdate"));
+			orderMap.put("totalprice", String.valueOf(rs.getInt("totalprice")));
+			
+			
+		} finally {
+			close();
+		}
+		
+		return orderMap;
+	}
+
+
+	
+	// snum 갖고오기
+	@Override
+	public String getSnumBySpec(Map<String, String> paraMap) throws SQLException {
+		String snum = "";
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT snum "
+					+ " FROM tbl_stock "
+					+ " WHERE fk_pname = ? "
+					+ " AND ssize = TO_NUMBER(?) "
+					+ " AND color = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("fk_pname"));
+			pstmt.setString(2, paraMap.get("ssize"));
+			pstmt.setString(3, paraMap.get("color"));
+			
+			rs = pstmt.executeQuery();
+			rs.next();
+			
+			snum = String.valueOf(rs.getInt("snum"));
+					
+		} finally {
+			close();
+		}
+		
+		return snum;
 	}
 
 

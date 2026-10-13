@@ -71,7 +71,7 @@ public class ProductDetail extends AbstractController {
 		// 한 페이지당 5개
 		
 		// ===== 페이지바 만들기 ===== //
-		String currentShowPageNo_review = request.getParameter("currentShowPageNo_QnA");
+		String currentShowPageNo_review = request.getParameter("currentShowPageNo_review");
 		
 		if(currentShowPageNo_review == null) {
 			currentShowPageNo_review = "1";

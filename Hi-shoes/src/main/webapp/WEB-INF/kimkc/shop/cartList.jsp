@@ -109,7 +109,7 @@
 	        const cqty = Number(product.find(".cart-quantity").val()) || 0;
 
 	        // 정상가 기준 주문금액
-	        totalOrderPrice += regprice * cqty;
+	        totalOrderPrice += saleprice * cqty;
 
 	        // 정상가보다 판매가가 낮은 상품만 할인 계산
 	        if (regprice > saleprice) {

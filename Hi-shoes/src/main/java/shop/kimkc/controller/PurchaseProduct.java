@@ -42,7 +42,7 @@ public class PurchaseProduct extends AbstractController {
 
 			// 넘겨받은 구매목록 정리하기
 			List<Map<String, String>> prodList = new ArrayList<>();
-			System.out.println("전달받은 JSON: " + request.getParameter("prodList"));
+			//System.out.println("전달받은 JSON: " + request.getParameter("prodList"));
 			JSONArray jsonArray = new JSONArray(request.getParameter("prodList"));
 			
 			for(int i=0; i<jsonArray.length(); i++) {
@@ -54,9 +54,25 @@ public class PurchaseProduct extends AbstractController {
 				map.put("spec", jsonObject.getString("spec"));
 				map.put("regprice", jsonObject.getString("regprice"));
 				map.put("saleprice", jsonObject.getString("saleprice"));
-				map.put("snum", jsonObject.getString("snum"));
-				map.put("cqty", jsonObject.getString("cqty"));
 				
+				if(jsonObject.getString("snum").isBlank()) {
+					//snum 갖고오기
+					Map<String, String> paraMap = new HashMap<>();
+					paraMap.put("fk_pname", jsonObject.getString("pname"));
+					String ssize = jsonObject.getString("spec").split(", ")[0];
+					String color = jsonObject.getString("spec").split(", ")[1];
+					paraMap.put("ssize", ssize);
+					paraMap.put("color", color);
+					String snum = pdao.getSnumBySpec(paraMap);
+					map.put("snum", snum);
+				}
+				else {
+					map.put("snum", jsonObject.getString("snum"));
+				}
+				
+				map.put("cqty", jsonObject.getString("cqty"));
+				/*
+				System.out.println("-------------------------");
 				System.out.println(jsonObject.getString("pimage")); 
 				System.out.println(jsonObject.getString("pname")); 
 				System.out.println(jsonObject.getString("brand"));
@@ -65,8 +81,8 @@ public class PurchaseProduct extends AbstractController {
 				System.out.println(jsonObject.getString("saleprice"));
 				System.out.println(jsonObject.getString("snum"));
 				System.out.println(jsonObject.getString("cqty"));
-				System.out.println("-----------------");
-				
+				System.out.println("-------------------------");
+				*/
 				prodList.add(map);
 			}
 			
@@ -78,7 +94,7 @@ public class PurchaseProduct extends AbstractController {
 			
 			String deliveryfee = request.getParameter("deliveryfee");
 			request.setAttribute("deliveryfee", deliveryfee);
-			System.out.println("배송비" + deliveryfee);
+			//System.out.println("배송비" + deliveryfee);
 			
 			
 			
