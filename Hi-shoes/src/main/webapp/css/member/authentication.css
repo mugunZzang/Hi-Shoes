@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+#memberEditSection h2 {
+	margin-bottom: 10px;
+}
+
+#memberEditSection h2 + p {
+    font-weight: 500;
+    font-size: 15px;
+    color: #87A922;
+    margin-bottom: 14px;
+}
