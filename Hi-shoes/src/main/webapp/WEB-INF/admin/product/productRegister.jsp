@@ -515,9 +515,13 @@
                  success:function(json){
                 	 // console.log("~~~ 확인용 : " + JSON.stringify(json));
                      // ~~~ 확인용 : {"result":1}
-                     alert("등록이 완료되었습니다.");
+                     
                      if(json.result == 1) {
+                    	 alert("등록이 완료되었습니다.");
                          location.href="${pageContext.request.contextPath}/admin/product/productList.go"; 
+                     }
+                     else if(json.bl){
+                    	 alert("중복된 제품이 있어 등록이 되지 않았습니다.");
                      }
                  },
                  error: function(request, status, error){

@@ -492,4 +492,29 @@ public class ProductDAO_imple implements ProductDAO {
 			
 		}
 
+		// 같은 제품명이 있으면 거르는 코드
+		@Override
+		public boolean sameNameProd(String pname) throws Exception{
+			boolean bl = false;
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				String sql = " select * from tbl_product"
+						   + " where fk_pname = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pname);
+				
+				rs = pstmt.executeQuery();
+				
+				bl = rs.next();
+				
+			} finally {
+				close();
+			}
+			return bl;
+		}
+
 }

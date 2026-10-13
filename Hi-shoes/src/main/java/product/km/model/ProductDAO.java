@@ -43,6 +43,9 @@ public interface ProductDAO {
 	// 제품 테이블 업데이트
 	int productUpdate(Map<String, String> paraMap) throws Exception;
 
+	// 같은 제품명이 있으면 거르는 코드
+	boolean sameNameProd(String pname) throws Exception;
+
 	
 	
 }
