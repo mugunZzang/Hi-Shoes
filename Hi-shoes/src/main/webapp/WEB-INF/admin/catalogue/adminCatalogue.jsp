@@ -147,7 +147,7 @@
                 
                 <!-- 이 부분은 아마 발주 목록 조회로 가야하지 않나 생각이 든다. -->
                 <li class="breadcrumb-item">
-                    <a href="#"    
+                    <a href="<%= ctx_Path %>/admin/catalogue/catalogueList.go"
                        class="text-decoration-none">
                         발주관리
                     </a>

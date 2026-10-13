@@ -545,7 +545,7 @@
 
 				// 테이블과 페이지바 교체
 				$("#catalogueTbl tbody").html(html);
-				$("#pageBar").html(json.pageBar);
+				$("#pageBar ul.pagination").html(json.pageBar);
 			},
 
 			error: function(request, status, error){
@@ -737,7 +737,7 @@
                 
                 <!-- 이 부분은 아마 발주 목록 조회로 가야하지 않나 생각이 든다. -->
                 <li class="breadcrumb-item">
-                    <a href="#"
+                    <a href="<%= ctx_Path %>/admin/catalogue/catalogueList.go"
                        class="text-decoration-none">
                         발주관리
                     </a>
@@ -984,19 +984,12 @@
 
 	<%-- === 페이지바 === --%>
 	<nav class="my-2">
-
-       <div style="display:flex;
-                   width:80%;
-                   margin:0 auto;
-                   margin-bottom:150px;">
-
-   	     <ul class="pagination" style="margin:auto;" id="pageBar">
-   	         ${requestScope.pageBar}
-   	     </ul>
-
-   	   </div>
-
-	</nav> 
+	    <div id="pageBar" style="margin-bottom:150px;">
+	        <ul class="pagination">
+	            ${requestScope.pageBar}
+	        </ul>
+	    </div>
+	</nav>
 	
 
 </div>

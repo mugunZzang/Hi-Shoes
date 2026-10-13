@@ -77,40 +77,8 @@ public class PurchaseRegister extends AbstractController {
 			    List<Map<String, String>> catalogueList = cdao.getCatalogueList(paraMap);
 			 
 			    // 페이지바 만들기
-			    String pageBar = "";
-
 			    int currentPage = Integer.parseInt(currentShowPageNo);
-
-			    // 이전
-			    if(currentPage > 1) {
-			        pageBar += "<li class='page-item'>";
-			        pageBar += "<a class='page-link' href='#' data-page='" + (currentPage - 1) + "'>이전</a>";
-			        pageBar += "</li>";
-			    }
-
-			    // 전체 페이지 번호
-			    for(int page = 1; page <= totalPage; page++) {
-
-			        if(page == currentPage) {
-			            pageBar += "<li class='page-item active'>";
-			        }
-			        else {
-			            pageBar += "<li class='page-item'>";
-			        }
-
-			        pageBar += "<a class='page-link' href='#' data-page='" + page + "'>";
-			        pageBar += page;
-			        pageBar += "</a>";
-			        pageBar += "</li>";
-			    }
-
-			    // 다음
-			    if(currentPage < totalPage) {
-			        pageBar += "<li class='page-item'>";
-			        pageBar += "<a class='page-link' href='#' data-page='" + (currentPage + 1) + "'>다음</a>";
-			        pageBar += "</li>";
-			    }
-			    
+			    String pageBar = makeModalPageBar(currentPage, totalPage);
 //			    System.out.println("pageBar = " + pageBar);
 			    
 			    // JSON 생성
@@ -213,6 +181,47 @@ public class PurchaseRegister extends AbstractController {
 			
 			
 		}
+	}
+	
+	// ======= 페이지바 만들기 =======
+	private String makeModalPageBar(int currentPage, int totalPage) {
+
+	    if (totalPage == 0) {
+	        return "";
+	    }
+
+	    StringBuilder sb = new StringBuilder();
+
+	    // 맨처음
+	    sb.append(pageItem(1, "맨처음", false));
+
+	    // 이전
+	    if (currentPage > 1) {
+	    	sb.append(pageItem(currentPage - 1, "‹", false));
+	    }
+
+	    // 전체 페이지 번호
+	    for (int page = 1; page <= totalPage; page++) {
+	        sb.append(pageItem(page, String.valueOf(page), page == currentPage));
+	    }
+
+	    // 다음
+	    if (currentPage < totalPage) {
+	    	sb.append(pageItem(currentPage + 1, "›", false));
+	    }
+
+	    // 마지막
+	    sb.append(pageItem(totalPage, "마지막", false));
+
+	    return sb.toString();
+	}
+
+	// li 하나 생성
+	private String pageItem(int page, String label, boolean active) {
+	    return "<li class='page-item" + (active ? " active" : "") + "'>"
+	         + "<a class='page-link' href='#' data-page='" + page + "'>"
+	         + label
+	         + "</a></li>";
 	}
 
 }

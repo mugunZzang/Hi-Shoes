@@ -93,7 +93,10 @@
                     <a href="<%= ctx_Path %>/admin/adminMain.go" class="text-decoration-none">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="#" class="text-decoration-none">발주관리</a>
+                    <a href="<%= ctx_Path %>/admin/catalogue/catalogueList.go"
+                       class="text-decoration-none">
+                        발주관리
+                    </a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">발주 등록</li>
             </ol>
@@ -271,7 +274,7 @@
      aria-labelledby="catalogueModalLabel"
      aria-hidden="true">
 
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 
         <div class="modal-content">
 
@@ -338,11 +341,14 @@
                 </table>
                 
                 <!-- 페이지 바  -->
-                <nav class="my-3">
-				    <ul class="pagination justify-content-center" id="cataloguePageBar">
-				    </ul>
+				<nav class="my-3">
+				    <div id="pageBar" style="margin-bottom:50px;">
+				        <ul class="pagination justify-content-center" id="cataloguePageBar">
+				            ${requestScope.pageBar}
+				        </ul>
+				    </div>
 				</nav>
-
+				
             </div>
 
 

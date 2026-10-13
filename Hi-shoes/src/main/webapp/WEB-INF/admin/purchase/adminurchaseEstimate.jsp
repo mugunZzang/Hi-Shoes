@@ -39,7 +39,10 @@
                     <a href="<%= ctx_Path %>/admin/adminMain.go" class="text-decoration-none">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="#" class="text-decoration-none">발주관리</a>
+                    <a href="<%= ctx_Path %>/admin/catalogue/catalogueList.go"
+                       class="text-decoration-none">
+                        발주관리
+                    </a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">견적서</li>
             </ol>

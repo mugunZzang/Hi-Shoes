@@ -47,7 +47,10 @@
                 </li>
 
                 <li class="breadcrumb-item">
-                    발주관리
+                    <a href="<%= ctx_Path %>/admin/catalogue/catalogueList.go"
+                       class="text-decoration-none">
+                        발주관리
+                    </a>
                 </li>
 
                 <li class="breadcrumb-item active"
@@ -248,16 +251,18 @@
 
         </div>
 
+    </div>
+    
         <!-- ==================== 페이징 ==================== -->
 
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center" id="pageBar">
-               ${requestScope.pageBar}
-            </ul>
-        </nav>
-
-    </div>
-
+		<nav class="my-2">
+		    <div id="pageBar" style="margin-bottom:150px;">
+		        <ul class="pagination">
+		            ${requestScope.pageBar}
+		        </ul>
+		    </div>
+		</nav>
+		
 </div>
 
 <!-- 견적서 모달  -->
