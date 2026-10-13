@@ -10,7 +10,8 @@ import faq.km.model.FaqDAO;
 import faq.km.model.FaqDAO_imple;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import member.km.domain.MemberDTO;
+import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 import notice.km.domain.NoticeDTO;
 import notice.km.model.NoticeDAO;
 import notice.km.model.NoticeDAO_imple;
@@ -31,206 +32,227 @@ public class Callcenter extends AbstractController {
     @Override
     public void execute(HttpServletRequest request,HttpServletResponse response) throws Exception {
 
-
-        String tab = request.getParameter("tab");
-        String searchType = request.getParameter("searchType");
-        String searchWord = request.getParameter("searchWord");
-        String currentShowPageNo = request.getParameter("currentShowPageNo");
-
-
-        // 탭 기본값
-        if(tab == null || tab.isBlank()) {
-
-            tab = "notice";
-        }
-
-
-        // 검색조건 기본값
-        if(searchType == null) {
-
-            searchType = "";
-        }
-
-
-        // 검색어 기본값
-        if(searchWord == null) {
-
-            searchWord = "";
-        }
-
-        else {
-
-            searchWord = searchWord.trim();
-        }
-
-
-        // 페이지 기본값
-        if(currentShowPageNo == null || currentShowPageNo.isBlank()) {
-
-            currentShowPageNo = "1";
-        }
-
-
-        // 잘못된 페이지 번호가 넘어오는 경우
-        int pageNo;
-
-        try {
-
-            pageNo = Integer.parseInt(currentShowPageNo);
-
-        }
-        catch(NumberFormatException e) {
-            pageNo = 1;
-        }
-
-
-        if(pageNo < 1) {
-
-            pageNo = 1;
-        }
-
-
-        currentShowPageNo = String.valueOf(pageNo);
-
-
-        // =====================================================
-        // 2. 검색조건 Map
-        // =====================================================
-
-        Map<String, String> paraMap = new HashMap<>();
-
-
-        paraMap.put("searchType",searchType);
-        paraMap.put("searchWord",searchWord);
-        paraMap.put("currentShowPageNo",currentShowPageNo);
-
-        int sizePerPage = 10;
-        int blockSize = 10;
-        int totalCount = 0;
-
-        if("notice".equals(tab)) {
-
-            List<NoticeDTO> noticeList = ndao.select_notice_list(paraMap);
-
-            totalCount = ndao.getTotalCountOrder(paraMap);
-
-
-            request.setAttribute("noticeList",noticeList);
-
-
-            int totalPage =(int)Math.ceil((double)totalCount/ sizePerPage);
-
-            if(totalPage == 0) {
-                totalPage = 1;
-            }
-
-
-            String noticePageBar =makePageBar(
-		                            tab,
-		                            pageNo,
-		                            totalPage,
-		                            blockSize,
-		                            searchType,
-		                            searchWord
-                    					);
-
-
-            request.setAttribute("noticePageBar",noticePageBar);
-
-        }
-
-        // 5. FAQ
-
-        else if("faq".equals(tab)) {
-
-
-            List<FaqDTO> faqList = fdao.select_faq_list(paraMap);
-
-
-            /*
-             * FAQ DAO도 검색조건을 포함해서
-             * 전체 개수를 구하도록 수정하는 것을 추천.
-             */
-            totalCount = fdao.getTotalCountOrder(paraMap);
-
-
-            request.setAttribute("faqList",faqList);
-
-
-            int totalPage =(int)Math.ceil((double)totalCount / sizePerPage);
-
-
-            if(totalPage == 0) {
-
-                totalPage = 1;
-            }
-
-
-            String faqPageBar =
-                    makePageBar(
-                            tab,
-                            pageNo,
-                            totalPage,
-                            blockSize,
-                            searchType,
-                            searchWord
-                    );
-
-
-            request.setAttribute("faqPageBar",faqPageBar);
-
-        }
-
-        // 6. 문의사항
-
-        else if("question".equals(tab)) {
-
-
-            List<Map<String, String>> questionList = qdao.select_question_list(paraMap);
-
-
-            totalCount = qdao.getTotalCountOrder(paraMap);
-
-
-            request.setAttribute("questionList",questionList);
-
-
-            int totalPage =(int)Math.ceil((double)totalCount/ sizePerPage);
-
-
-            if(totalPage == 0) {
-
-                totalPage = 1;
-            }
-
-
-            String questionPageBar =
-                    makePageBar(
-                            tab,
-                            pageNo,
-                            totalPage,
-                            blockSize,
-                            searchType,
-                            searchWord
-                    );
-
-
-            request.setAttribute("questionPageBar",questionPageBar);
-
-        }
-
-        request.setAttribute("tab",tab);
-        request.setAttribute("totalCountOrder",totalCount);
-        request.setAttribute("currentShowPageNo",currentShowPageNo);
-        request.setAttribute("sizePerPage",sizePerPage);
-        request.setAttribute("searchType",searchType);
-        request.setAttribute("searchWord",searchWord);
-
-
-        super.setRedirect(false);
-        super.setViewPage("/WEB-INF/admin/callcenter/callcenter.jsp");
-
+    	// === 관리자(admin)로 로그인 했을때만 회원목록 조회가 가능하도록 해야 한다. === //
+		HttpSession session = request.getSession();
+		
+		MemberDTO loginuser = (MemberDTO)session.getAttribute("loginuser");
+		
+		if(loginuser != null && "admin".equals(loginuser.getUserid())) {
+			// 관리자(admin)로 로그인 했을 경우
+
+	        String tab = request.getParameter("tab");
+	        String searchType = request.getParameter("searchType");
+	        String searchWord = request.getParameter("searchWord");
+	        String currentShowPageNo = request.getParameter("currentShowPageNo");
+	
+	
+	        // 탭 기본값
+	        if(tab == null || tab.isBlank()) {
+	
+	            tab = "notice";
+	        }
+	
+	
+	        // 검색조건 기본값
+	        if(searchType == null) {
+	
+	            searchType = "";
+	        }
+	
+	
+	        // 검색어 기본값
+	        if(searchWord == null) {
+	
+	            searchWord = "";
+	        }
+	
+	        else {
+	
+	            searchWord = searchWord.trim();
+	        }
+	
+	
+	        // 페이지 기본값
+	        if(currentShowPageNo == null || currentShowPageNo.isBlank()) {
+	
+	            currentShowPageNo = "1";
+	        }
+	
+	
+	        // 잘못된 페이지 번호가 넘어오는 경우
+	        int pageNo;
+	
+	        try {
+	
+	            pageNo = Integer.parseInt(currentShowPageNo);
+	
+	        }
+	        catch(NumberFormatException e) {
+	            pageNo = 1;
+	        }
+	
+	
+	        if(pageNo < 1) {
+	
+	            pageNo = 1;
+	        }
+	
+	
+	        currentShowPageNo = String.valueOf(pageNo);
+	
+	
+	        // =====================================================
+	        // 2. 검색조건 Map
+	        // =====================================================
+	
+	        Map<String, String> paraMap = new HashMap<>();
+	
+	
+	        paraMap.put("searchType",searchType);
+	        paraMap.put("searchWord",searchWord);
+	        paraMap.put("currentShowPageNo",currentShowPageNo);
+	
+	        int sizePerPage = 10;
+	        int blockSize = 10;
+	        int totalCount = 0;
+	
+	        if("notice".equals(tab)) {
+	
+	            List<NoticeDTO> noticeList = ndao.select_notice_list(paraMap);
+	
+	            totalCount = ndao.getTotalCountOrder(paraMap);
+	
+	
+	            request.setAttribute("noticeList",noticeList);
+	
+	
+	            int totalPage =(int)Math.ceil((double)totalCount/ sizePerPage);
+	
+	            if(totalPage == 0) {
+	                totalPage = 1;
+	            }
+	
+	
+	            String noticePageBar =makePageBar(
+			                            tab,
+			                            pageNo,
+			                            totalPage,
+			                            blockSize,
+			                            searchType,
+			                            searchWord
+	                    					);
+	
+	
+	            request.setAttribute("noticePageBar",noticePageBar);
+	
+	        }
+	
+	        // 5. FAQ
+	
+	        else if("faq".equals(tab)) {
+	
+	
+	            List<FaqDTO> faqList = fdao.select_faq_list(paraMap);
+	
+	
+	            /*
+	             * FAQ DAO도 검색조건을 포함해서
+	             * 전체 개수를 구하도록 수정하는 것을 추천.
+	             */
+	            totalCount = fdao.getTotalCountOrder(paraMap);
+	
+	
+	            request.setAttribute("faqList",faqList);
+	
+	
+	            int totalPage =(int)Math.ceil((double)totalCount / sizePerPage);
+	
+	
+	            if(totalPage == 0) {
+	
+	                totalPage = 1;
+	            }
+	
+	
+	            String faqPageBar =
+	                    makePageBar(
+	                            tab,
+	                            pageNo,
+	                            totalPage,
+	                            blockSize,
+	                            searchType,
+	                            searchWord
+	                    );
+	
+	
+	            request.setAttribute("faqPageBar",faqPageBar);
+	
+	        }
+	
+	        // 6. 문의사항
+	
+	        else if("question".equals(tab)) {
+	
+	
+	            List<Map<String, String>> questionList = qdao.select_question_list(paraMap);
+	
+	
+	            totalCount = qdao.getTotalCountOrder(paraMap);
+	
+	
+	            request.setAttribute("questionList",questionList);
+	
+	
+	            int totalPage =(int)Math.ceil((double)totalCount/ sizePerPage);
+	
+	
+	            if(totalPage == 0) {
+	
+	                totalPage = 1;
+	            }
+	
+	
+	            String questionPageBar =
+	                    makePageBar(
+	                            tab,
+	                            pageNo,
+	                            totalPage,
+	                            blockSize,
+	                            searchType,
+	                            searchWord
+	                    );
+	
+	
+	            request.setAttribute("questionPageBar",questionPageBar);
+	
+	        }
+	
+	        request.setAttribute("tab",tab);
+	        request.setAttribute("totalCountOrder",totalCount);
+	        request.setAttribute("currentShowPageNo",currentShowPageNo);
+	        request.setAttribute("sizePerPage",sizePerPage);
+	        request.setAttribute("searchType",searchType);
+	        request.setAttribute("searchWord",searchWord);
+	
+	
+	        super.setRedirect(false);
+	        super.setViewPage("/WEB-INF/admin/callcenter/callcenter.jsp");
+
+		}
+		else {
+			// 로그인을 안한 경우 또는 일반사용자로 로그인 한 경우 
+	         String message = "관리자만 접근이 가능합니다.";
+	         String loc = "javascript:history.back()";
+	         
+	         request.setAttribute("message", message);
+	         request.setAttribute("loc", loc);
+	         
+	         
+	         super.setRedirect(false);
+	         super.setViewPage("/WEB-INF/msg.jsp");
+		}
     }
+ 
 
 
     // =========================================================
@@ -362,5 +384,6 @@ public class Callcenter extends AbstractController {
         return pageBar.toString();
 
     }
+    
 
 }

@@ -273,14 +273,17 @@
             <ol class="breadcrumb mb-0">
 
                 <li class="breadcrumb-item">
-                    <a href="<%= ctxPath %>/admin/callcenter/callcenter.go"
+                    <a href="#"
                        class="text-decoration-none">
                         Home
                     </a>
                 </li>
 
                 <li class="breadcrumb-item">
-                    고객센터
+                    <a href="<%= ctxPath %>/admin/callcenter/callcenter.go"
+                       class="text-decoration-none">
+                        고객센터
+                    </a>
                 </li>
 
                 <li class="breadcrumb-item active"

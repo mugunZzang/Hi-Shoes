@@ -39,13 +39,14 @@
                     </a>
                 </li>
 
-                <li class="breadcrumb-item"
-                    aria-current="page">
-                    문의사항
+                <li class="breadcrumb-item">
+                    <a href="<%= ctxPath %>/admin/callcenter/callcenter.go"
+                       class="text-decoration-none">
+                        고객센터
+                    </a>
                 </li>
                 
-                 <li class="breadcrumb-item active"
-                    aria-current="page">
+                 <li class="breadcrumb-item active">
                     문의사항 답글작성
                 </li>
 

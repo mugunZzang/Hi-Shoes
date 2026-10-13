@@ -270,7 +270,7 @@
 
                 <li class="breadcrumb-item">
 
-                    <a href="<%= ctxPath %>/admin/callcenter/callcenter.go?tab=faq"
+                    <a href="#"
                        class="text-decoration-none">
 
                         Home
@@ -282,8 +282,10 @@
 
                 <li class="breadcrumb-item">
 
-                    고객센터
-
+					<a href="<%= ctxPath %>/admin/callcenter/callcenter.go"
+                       class="text-decoration-none">
+                       고객센터
+					</a>
                 </li>
 
 
