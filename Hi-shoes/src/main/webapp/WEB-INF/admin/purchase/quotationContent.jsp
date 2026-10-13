@@ -31,7 +31,7 @@
 
 	
 	.supplier-side .label-col { width: 32px; background: #f2f2f2; text-align: center; font-weight: 500; }
-    .buyer-box { background: #eee; border: 1px solid #bbb; padding: 14px 18px; }
+    .buyer-box {  border: 1px solid #bbb; padding: 14px 18px; }
     .buyer-box .to { background: #ddd; text-align: center; font-weight: 600; padding: 8px; margin: -14px -18px 14px; }
     .buyer-box div + div { margin-top: 4px; }
 
@@ -82,11 +82,8 @@
 			</table>
 		</div>
 		<div class="col-6">
-			<div class="buyer-box h-100">
-			    <div class="to"><c:out value="${purchaseMap.supname}"/> 귀하</div>
-			    <div>담당자 : <c:out value="${sessionScope.loginuser.name}"/></div>  <!-- 현재 세션스코프 적용 X -->
-			    <div>연락처 : <c:out value="${sessionScope.loginuser.mobile}"/></div>
-			    <div>이메일 : <c:out value="${sessionScope.loginuser.email}"/></div>
+			<div class="buyer-box">
+			    <div class="to"><c:out value="${sessionScope.loginuser.company}"/> 귀하</div>
 			    <div>발주일 : <c:out value="${purchaseMap.purtime}"/></div>
 			</div>
 	    </div>
