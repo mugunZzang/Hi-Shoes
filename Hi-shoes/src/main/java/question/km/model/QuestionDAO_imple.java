@@ -67,7 +67,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select qnanum, fk_pname, fk_userid, qcontents, qwritedate "
+			String sql = " select qnanum, fk_pname, fk_userid, qcontents, qwritedate, qanswer "
 					   + " from tbl_qna q join tbl_product p "
 					   + " on q.fk_pnum = pnum ";
 			
@@ -113,6 +113,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 				qnaMap.put("fk_userid",rs.getString("fk_userid"));
 				qnaMap.put("qcontents",rs.getString("qcontents"));
 				qnaMap.put("qwritedate",rs.getString("qwritedate"));
+				qnaMap.put("qanswer",rs.getString("qanswer"));
 				
 				questionList.add(qnaMap);
 				
@@ -155,8 +156,9 @@ public class QuestionDAO_imple implements QuestionDAO {
 		   return totalCountOrder;
 	}
 	
+	// 하나 불러오기
 	@Override
-	public Map<String, String> selectQuestionOne(int qnanum) throws Exception {
+	public Map<String, String> selectQuestionOne(String qnanum) throws Exception {
 
 	    Map<String, String> qnaMap = null;
 
@@ -176,11 +178,11 @@ public class QuestionDAO_imple implements QuestionDAO {
 	              + " from tbl_qna q "
 	              + " join tbl_product p "
 	              + " on q.fk_pnum = p.pnum "
-	              + " where q.qnanum = ? ";
+	              + " where q.qnanum = to_number(?) ";
 
 	        pstmt = conn.prepareStatement(sql);
 
-	        pstmt.setInt(1, qnanum);
+	        pstmt.setString(1, qnanum);
 
 	        rs = pstmt.executeQuery();
 
@@ -206,37 +208,31 @@ public class QuestionDAO_imple implements QuestionDAO {
 
 	    return qnaMap;
 	}
-	
+
+	// 문의사항 답변 작성하기
 	@Override
-	public int questionAnswer(Map<String, String> paraMap) throws Exception {
+	public int wirteAnswer(Map<String, String> paraMap) throws Exception {
+		int n = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
 
-	    int result = 0;
-
-	    try {
-
-	        conn = ds.getConnection();
-
-	        String sql =
-	                " update tbl_qna "
-	              + " set qanswer = ? "
-	              + " where qnanum = ? ";
+	        String sql = " update tbl_qna set qanswer = ? "
+	                   + " where qnanum = ? ";
 
 	        pstmt = conn.prepareStatement(sql);
 
 	        pstmt.setString(1, paraMap.get("qanswer"));
-	        pstmt.setInt(2,
-	                Integer.parseInt(paraMap.get("qnanum")));
+	        pstmt.setInt(2, Integer.parseInt(paraMap.get("qnanum")));
 
-	        result = pstmt.executeUpdate();
-
-	    }
-	    finally {
-
-	        close();
-
-	    }
-
-	    return result;
+	        n = pstmt.executeUpdate();
+	        
+		} finally {
+			close();
+		}
+		
+		return n;
 	}
 
 

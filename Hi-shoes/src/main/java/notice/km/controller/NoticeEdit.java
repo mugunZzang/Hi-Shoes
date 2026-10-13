@@ -57,10 +57,8 @@ public class NoticeEdit extends AbstractController {
             int n = ndao.noticeUpdate(ndto);
 
             if (n == 1) {
-                super.setRedirect(false);
-                super.setViewPage(
-                    "WEB-INF/admin/callcenter/callcenter.jsp?tab=notice"
-                );
+                super.setRedirect(true);
+                super.setViewPage(request.getContextPath()+"/admin/callcenter/callcenter.go?tab=notice");
             }
             else {
                 request.setAttribute("message", "공지사항 수정에 실패했습니다.");

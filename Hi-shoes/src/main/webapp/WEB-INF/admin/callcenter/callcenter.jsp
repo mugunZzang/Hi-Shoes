@@ -277,23 +277,39 @@ function goDelete(num, type) {
                 <th style="width: 10%;">글번호</th>
                 <th style="width: 10%;">판매상품명</th>
                 <th style="width: 10%;">아이디</th>
-                <th style="width: 50%;">내용</th>
+                <th style="width: 40%;">내용</th>
                 <th style="width: 20%;">작성일자</th>
+                <th style="width: 10%;">답변여부</th>
             </tr>
           </thead>
             <tbody>
             	<c:if test="${not empty requestScope.questionList}">
 			        <c:forEach var="question" items="${requestScope.questionList}" varStatus="status">
-			            <tr onclick="location.href='questionEdit.go?qnanum=${question.qnanum}'"
-    							style="cursor:pointer;">
-			                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
-						    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
-						    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
-			                <td>${question.fk_pname}</td>
-			                <td>${question.fk_userid}</td>
-			                <td>${question.qcontents}</td>
-			                <td>${question.qwritedate}</td>
-			            </tr>
+			        	<c:if test="${empty question.qanswer}">
+				            <tr onclick="location.href='${pageContext.request.contextPath}/admin/callcenter/questionEdit.go?qnanum=${question.qnanum}'"
+	    							style="cursor:pointer; ">
+				                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
+							    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
+							    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
+				                <td>${question.fk_pname}</td>
+				                <td>${question.fk_userid}</td>
+				                <td>${question.qcontents}</td>
+				                <td>${question.qwritedate}</td>
+				                <td>답글X</td>
+				            </tr>
+			            </c:if>
+			            <c:if test="${not empty question.qanswer}">
+				            <tr>
+				                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
+							    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
+							    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
+				                <td>${question.fk_pname}</td>
+				                <td>${question.fk_userid}</td>
+				                <td>${question.qcontents}</td>
+				                <td>${question.qwritedate}</td>
+				                <td>답글O</td>
+				            </tr>
+			            </c:if>
 			        </c:forEach>
 			    </c:if>
             

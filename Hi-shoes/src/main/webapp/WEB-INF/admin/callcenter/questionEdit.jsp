@@ -3,7 +3,15 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%
+	String ctx_Path = request.getContextPath();
+%>
 <jsp:include page="../adminHeader.jsp"/>
+
+<script type="text/javascript">
+
+
+</script>
 
 <div class="container-fluid"
      style="position:relative;
@@ -69,7 +77,7 @@
 
         <div class="card-body">
 
-            <form action="questionAnswer.go" method="post">
+            <form method="post">
 
                 <!-- 어떤 문의에 답변하는지 구분 -->
                 <input type="hidden"
@@ -80,7 +88,7 @@
 			          class="form-control"
 			          rows="7"
 			          placeholder="답변 내용을 입력해주세요."
-			          required>${requestScope.question.qanswer}</textarea>
+			          required></textarea>
 
                 <div class="text-end mt-3">
 

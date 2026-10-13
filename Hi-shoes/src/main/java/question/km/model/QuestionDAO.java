@@ -3,6 +3,8 @@ package question.km.model;
 import java.util.List;
 import java.util.Map;
 
+import question.km.domin.QuestionDTO;
+
 
 public interface QuestionDAO {
 
@@ -13,9 +15,9 @@ public interface QuestionDAO {
 	int getTotalCountOrder(Map<String, String> paraMap) throws Exception;
 	
 	// 문의사항 하나 불러오기
-	Map<String,String> selectQuestionOne(int qnanum) throws Exception;
+	Map<String, String> selectQuestionOne(String qnanum) throws Exception;
 
-	// 문의사항 작성하기
-	int questionAnswer(Map<String,String> paraMap) throws Exception;
+	// 문의사항 답글 작성하기
+	int wirteAnswer(Map<String, String> paraMap) throws Exception;
 
 }

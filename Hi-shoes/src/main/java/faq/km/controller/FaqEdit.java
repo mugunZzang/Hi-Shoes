@@ -14,8 +14,9 @@ public class FaqEdit extends AbstractController {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    	String method = request.getMethod();
         // GET : 수정 페이지 보여주기
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
+        if ("GET".equals(method)) {
 
             String fnum = request.getParameter("fnum");
 
@@ -28,7 +29,7 @@ public class FaqEdit extends AbstractController {
         }
 
         // POST : 수정하기
-        else if ("POST".equalsIgnoreCase(request.getMethod())) {
+        else {
 
             String fnum = request.getParameter("fnum");
             String category = request.getParameter("category");
@@ -47,11 +48,7 @@ public class FaqEdit extends AbstractController {
             if (n == 1) {
 
                 super.setRedirect(true);
-
-                super.setViewPage(
-                    request.getContextPath()
-                    + "/admin/callcenter/callcenter.go?tab=faq"
-                );
+                super.setViewPage(request.getContextPath()+ "/admin/callcenter/callcenter.go?tab=faq");
             }
         }
     }
