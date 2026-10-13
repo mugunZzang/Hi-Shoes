@@ -328,7 +328,7 @@ public class NoticeDAO_imple implements NoticeDAO {
         try {
             conn = ds.getConnection();
 
-            String sql = " select nnum, nsubject, ncontents "
+            String sql = " select nnum, nsubject, ncontents, nimage "
                        + " from tbl_notice "
                        + " where nnum = ? ";
 
@@ -344,6 +344,7 @@ public class NoticeDAO_imple implements NoticeDAO {
                 ndto.setNnum(rs.getInt("nnum"));
                 ndto.setNsubject(rs.getString("nsubject"));
                 ndto.setNcontents(rs.getString("ncontents"));
+                ndto.setNimage(rs.getString("nimage"));
             }
 
         } finally {

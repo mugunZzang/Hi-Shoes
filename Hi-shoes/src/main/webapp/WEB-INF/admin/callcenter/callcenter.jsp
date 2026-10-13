@@ -190,13 +190,13 @@ function goDelete(num, type) {
     	<form name="faq_search_frm">
 			<select name="searchType">
 				<option value="">검색대상</option>
-				<option value="register">가입/탈퇴</option>
-				<option value="change">정보변경</option>
-				<option value="pay">결제</option>
-				<option value="order">주문</option>
-				<option value="cancle">취소</option>
-				<option value="pinfo">상품정보</option>
-				<option value="delivery">배송</option>
+				<option value="가입/탈퇴">가입/탈퇴</option>
+				<option value="정보변경">정보변경</option>
+				<option value="결제">결제</option>
+				<option value="주문">주문</option>
+				<option value="취소">취소</option>
+				<option value="상품정보">상품정보</option>
+				<option value="배송">배송</option>
 			</select>
 			&nbsp;
 			<button type="button"

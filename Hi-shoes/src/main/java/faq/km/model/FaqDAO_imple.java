@@ -126,58 +126,42 @@ public class FaqDAO_imple implements FaqDAO {
     // =====================================================
 
     @Override
-    public List<FaqDTO> select_faq_list(
-            Map<String, String> paraMap)
-            throws Exception {
+    public List<FaqDTO> select_faq_list(Map<String, String> paraMap)throws Exception {
 
 
-        List<FaqDTO> faqList =
-                new ArrayList<>();
+        List<FaqDTO> faqList = new ArrayList<>();
 
 
         try {
 
-            conn =
-                    ds.getConnection();
+            conn = ds.getConnection();
+
+            String sql =" select fnum, fsubject, fcontents, fcategory "
+            		      + " from tbl_faq ";
 
 
-            String sql =
-                    " select fnum, fsubject, fcontents, fcategory "
-                  + " from tbl_faq ";
-
-
-            String searchType =
-                    paraMap.get("searchType");
-
+            String searchType = paraMap.get("searchType");
 
             // =================================================
             // 카테고리 검색
             // =================================================
 
-            if(searchType != null
-                    && !searchType.isBlank()) {
+            if(searchType != null && !searchType.isBlank()) {
 
-                sql +=
-                    " where fcategory = ? ";
+                sql += " where fcategory = ? ";
 
             }
 
 
-            sql +=
-                    " order by fnum desc "
+            sql +=  " order by fnum desc "
                   + " offset (? - 1) * 10 rows "
                   + " fetch next 10 rows only ";
 
 
-            pstmt =
-                    conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sql);
 
 
-            int currentShowPageNo =
-                    Integer.parseInt(
-                        paraMap.get("currentShowPageNo")
-                    );
-
+            int currentShowPageNo =Integer.parseInt(paraMap.get("currentShowPageNo"));
 
             int index = 1;
 
@@ -186,14 +170,8 @@ public class FaqDAO_imple implements FaqDAO {
             // 검색조건
             // =================================================
 
-            if(searchType != null
-                    && !searchType.isBlank()) {
-
-
-                pstmt.setString(
-                    index++,
-                    searchType
-                );
+            if(searchType != null && !searchType.isBlank()) {
+                pstmt.setString(index++,searchType);
 
             }
 
@@ -202,42 +180,24 @@ public class FaqDAO_imple implements FaqDAO {
             // 페이징
             // =================================================
 
-            pstmt.setInt(
-                index,
-                currentShowPageNo
-            );
+            pstmt.setInt(index,currentShowPageNo);
 
 
-            rs =
-                    pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
 
             while(rs.next()) {
 
 
-                FaqDTO fdto =
-                        new FaqDTO();
+                FaqDTO fdto = new FaqDTO();
 
+                fdto.setFnum(rs.getInt("fnum"));
 
-                fdto.setFnum(
-                    rs.getInt("fnum")
-                );
+                fdto.setFsubject(rs.getString("fsubject"));
 
+                fdto.setFcontents(rs.getString("fcontents"));
 
-                fdto.setFsubject(
-                    rs.getString("fsubject")
-                );
-
-
-                fdto.setFcontents(
-                    rs.getString("fcontents")
-                );
-
-
-                fdto.setFcategory(
-                    rs.getString("fcategory")
-                );
-
+                fdto.setFcategory(rs.getString("fcategory"));
 
                 faqList.add(fdto);
 
