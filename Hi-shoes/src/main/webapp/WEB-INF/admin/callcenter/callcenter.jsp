@@ -160,10 +160,10 @@ function goDelete(num, type) {
 			                <td>${notice.ncontents}</td>
 			                <td>${notice.nwritedate}</td>
 			                <td class="text-center"><button type="button"
-		            						class="btn btn-danger"
-		           						onclick="event.stopPropagation(); goDelete(${notice.nnum}, 'notice'); " >
-		        					삭제
-		    						</button></td>
+		            								class="btn btn-outline-danger"
+		           									onclick="event.stopPropagation(); goDelete(${notice.nnum}, 'notice'); " >
+		        									삭제
+		    										</button></td>
 			            </tr>
 			        </c:forEach>
 			    </c:if>
@@ -175,13 +175,13 @@ function goDelete(num, type) {
 			    </c:if>
 		    </tbody>
         </table>
-        <nav class="my-5">
+        <nav class="my-5" id="pageBar">
 	       <div style='display:flex; width:80%; margin: 0 auto;'>
 	   	     <ul class="pagination" style='margin:auto;'>${requestScope.noticePageBar}</ul>
 	   	   </div>
 		</nav> 
         <div class="text-end">
-        	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;" onclick="location.href='noticeWrite.go'">글작성</button>
+        	<button type="button" class="btn btn-secondary" onclick="location.href='noticeWrite.go'">글작성</button>
         </div>
     </div>
 
@@ -228,7 +228,7 @@ function goDelete(num, type) {
 			                <td>${faq.fcontents}</td>
 			                <td>${faq.fcategory}</td>
 			                <td class="text-center"><button type="button"
-		            						class="btn btn-danger"
+		            						class="btn btn-outline-danger"
 		           						onclick="goDelete(${faq.fnum}, 'faq'); event.stopPropagation();">
 		        					삭제
 		    						</button></td>
@@ -243,16 +243,14 @@ function goDelete(num, type) {
 			    </c:if>
 		    </tbody>
         </table>
-        <nav class="my-5">
-        
-        
+        <nav class="my-5" id="pageBar">
 	       <div style='display:flex; width:80%; margin: 0 auto;'>
 	   	     <ul class="pagination" style='margin:auto;'>${requestScope.faqPageBar}</ul>
 	   	   </div>
 		</nav>
         
         <div class="text-end">
-        	<button type="button" style="border-radius: 10px; font-size: 16px; padding: 6px 10px;" onclick="location.href='faqWrite.go'">글작성</button>
+        	<button type="button" class="btn btn-secondary" onclick="location.href='faqWrite.go'">글작성</button>
         </div>
         
     </div> 	
@@ -320,7 +318,7 @@ function goDelete(num, type) {
 			    </c:if>
         </table>
         
-        <nav class="my-5">
+        <nav class="my-5" id="pageBar">
 	       <div style='display:flex; width:80%; margin: 0 auto;'>
 	   	     <ul class="pagination" style='margin:auto;'>${requestScope.questionPageBar}</ul>
 	   	   </div>

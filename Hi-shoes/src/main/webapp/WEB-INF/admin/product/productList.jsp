@@ -147,7 +147,7 @@
                             </td>
                             
                             <td class="text-center"><button type="button"
-		            						class="btn btn-danger"
+		            						class="btn btn-outline-danger"
 		           						onclick="event.stopPropagation(); goDelete(${product.pnum}); " >
 		        					삭제
 		    				</button></td>
@@ -178,7 +178,7 @@
 
 
         <!-- 페이징 -->
-        <nav class="my-5">
+        <nav class="my-5" id="pageBar">
 
             <div style="display:flex;
                         width:80%;

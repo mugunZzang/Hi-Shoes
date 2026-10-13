@@ -488,7 +488,7 @@
 
 
                 <button type="button"
-                        class="btn btn-primary faq-submit-btn"
+                        class="btn btn-secondary faq-submit-btn"
                         onclick="goWriter()">
 
                     작성하기
@@ -497,7 +497,7 @@
 
 
                 <button type="button"
-                        class="btn btn-secondary faq-cancel-btn"
+                        class="btn btn-outline-danger faq-cancel-btn"
                         onclick="goBack()">
 
                     취소

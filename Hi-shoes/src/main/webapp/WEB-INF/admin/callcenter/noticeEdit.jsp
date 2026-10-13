@@ -331,12 +331,12 @@
 		
 		    </table>
 		
-		    <button type="submit" class="btn btn-primary">
+		    <button type="submit" class="btn btn-secondary">
 		        수정하기
 		    </button>
 		
 		    <button type="button"
-		            class="btn btn-secondary"
+		            class="btn btn-outline-danger"
 		            onclick="location.href='<%= ctxPath%>/admin/callcenter/callcenter.go?tab=notice'">
 		        취소
 		    </button>

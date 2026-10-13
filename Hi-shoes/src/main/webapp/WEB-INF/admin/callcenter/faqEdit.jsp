@@ -449,7 +449,7 @@
 
 
                 <button type="button"
-                        class="btn btn-primary faq-submit-btn"
+                        class="btn btn-secondary faq-submit-btn"
                         onclick="goEdit()">
 
                     수정하기
@@ -458,7 +458,7 @@
 
 
                 <button type="button"
-                        class="btn btn-secondary faq-cancel-btn"
+                        class="btn btn-outline-danger faq-cancel-btn"
                         onclick="goBack()">
 
                     취소

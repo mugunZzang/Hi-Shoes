@@ -382,7 +382,7 @@
             <div class="notice-button-area">
 
                 <button type="button"
-                        class="btn btn-primary notice-submit-btn"
+                        class="btn btn-secondary notice-submit-btn"
                         onclick="goWriter()">
 
                     작성하기
@@ -391,7 +391,7 @@
 
 
                 <button type="button"
-                        class="btn btn-secondary notice-cancel-btn"
+                        class="btn btn-outline-danger notice-cancel-btn"
                         onclick="goBack()">
 
                     취소

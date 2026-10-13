@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
-	String ctx_Path = request.getContextPath();
+	String ctxPath = request.getContextPath();
 %>
 <jsp:include page="../adminHeader.jsp"/>
 
@@ -14,16 +14,44 @@
 </script>
 
 <div class="container-fluid"
-     style="position:relative;
-            top:90px;
-            padding:0% 7%;">
+     id="container"
+     style="position: relative;
+            top: 90px;
+            padding: 0% 7%;">
 
+    <!-- 페이지 제목 + 브레드크럼 -->
     <div class="d-flex justify-content-between align-items-center"
-         style="padding:20px 0px; margin-bottom:15px;">
+         style="padding: 20px 0px;
+                margin-bottom: 15px;">
 
         <p class="mb-0 fs-4 fw-semibold">
-            문의사항
+            문의사항 답글작성
         </p>
+
+        <nav style="--bs-breadcrumb-divider: '>';">
+
+            <ol class="breadcrumb mb-0">
+
+                <li class="breadcrumb-item">
+                    <a href="#"
+                       class="text-decoration-none">
+                        HOME
+                    </a>
+                </li>
+
+                <li class="breadcrumb-item"
+                    aria-current="page">
+                    문의사항
+                </li>
+                
+                 <li class="breadcrumb-item active"
+                    aria-current="page">
+                    문의사항 답글작성
+                </li>
+
+            </ol>
+
+        </nav>
 
     </div>
 
@@ -64,8 +92,9 @@
             </table>
 
         </div>
+   </div>
 
-    </div>
+    
 
 
     <!-- 관리자 답글 -->
@@ -93,12 +122,12 @@
                 <div class="text-end mt-3">
 
                     <button type="submit"
-                            class="btn btn-primary">
+                            class="btn btn-secondary">
                         답글 등록
                     </button>
 
                     <button type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-outline-danger"
                             onclick="history.back();">
                         목록으로
                     </button>
@@ -112,5 +141,7 @@
     </div>
 
 </div>
+
+
 
 <jsp:include page="../adminFooter.jsp"/>

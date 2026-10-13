@@ -657,8 +657,8 @@
 			
 			<tr style="height: 70px;">
 				<td colspan="2" align="center" style="border-left: hidden; border-bottom: hidden; border-right: hidden; padding: 50px 0;">
-				    <input type="button" value="제품등록" id="btnRegister" style="width: 120px;" class="btn btn-success btn-lg me-5" /> 
-				    <input type="reset" value="취소"  style="width: 120px;" class="btn btn-danger btn-lg" />	
+				    <input type="button" value="제품등록" id="btnRegister" style="width: 120px;" class="btn btn-secondary btn-lg me-5" /> 
+				    <input type="reset" value="취소"  style="width: 120px;" class="btn btn-outline-danger btn-lg" />	
 				</td>
 			</tr>
 		</tbody>
@@ -709,7 +709,7 @@
                            placeholder="제품명을 입력하세요">
 
                     <button type="button"
-                            class="btn btn-primary"
+                            class="btn btn-secondary"
                             id="btnproductSearchSubmit">
                         검색
                     </button>
@@ -754,7 +754,7 @@
             <div class="modal-footer">
 
                 <button type="button"
-                        class="btn btn-secondary"
+                        class="btn btn-outline-danger"
                         data-bs-dismiss="modal">
                     닫기
                 </button>

@@ -328,7 +328,7 @@
                            placeholder="제품명을 입력하세요">
 
                     <button type="button"
-                            class="btn btn-primary"
+                            class="btn btn-secondary"
                             id="btnproductSearchSubmit">
                         검색
                     </button>
@@ -373,7 +373,7 @@
             <div class="modal-footer">
 
                 <button type="button"
-                        class="btn btn-secondary"
+                        class="btn btn-outline-danger"
                         data-bs-dismiss="modal">
                     닫기
                 </button>
