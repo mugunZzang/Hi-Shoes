@@ -399,7 +399,54 @@
 		// 바로구매 버튼 클릭 시
 		$('button#button-purchase').on("click", function() {
 			
-			// 일단 보류
+			const pimage = "<%=ctxPath%>/images/kimkc/product/${requestScope.pdto.pimage1}";
+			//console.log("대표이미지" + pimage);
+			const pname = "${requestScope.pdto.fk_pname}";
+			const brand = "${requestScope.pdto.catalogueDTO.brand}";
+			const regprice = "${requestScope.pdto.catalogueDTO.regprice}";
+			const saleprice = "${requestScope.pdto.catalogueDTO.saleprice}";
+			
+
+			// 담을 곳
+			const prodList = [];
+			
+			// 선택 옵션란들
+			const selectedSpecs = $('div.selected-spec');
+			selectedSpecs.each(function() {
+
+				const spec = $(this).find('.span-shoe-spec').text();
+				
+				const cqty = $(this).find('input.spec-quantity').val();
+
+				const snum = '';
+				
+				
+				prodList.push({
+					 //대표이미지, 제품명, 브랜드, 옵션, snum, 수량, 정가, 판매가 등...
+					"pimage" : pimage,
+					"pname" : pname,
+					"brand" : brand,
+					"spec" : spec,
+					"snum" : snum,
+					"cqty" : cqty,
+					"regprice" : regprice,
+					"saleprice" : saleprice
+				});
+
+			});
+			
+
+
+			//console.log(prodList);
+			// 이제 결제 화면에 넘겨줘야 함...
+			const frm = document.getElementById('frm-purchase');
+			const input1 = document.querySelector('input[name="prodList"]');
+			
+			frm.method = "POST";
+			frm.action = "<%= ctxPath %>/shop/purchaseProduct.go";
+			input1.value = JSON.stringify(prodList);	
+			
+			frm.submit();
 			
 		});
 		
@@ -698,7 +745,12 @@
         <%-- 장바구니/바로구매 버튼 --%>
         <div class="product-buttons">
             <button type="button" id="button-cart">장바구니</button>
-            <button type="button" id="button-purchase">바로구매</button>
+            
+            <form id="frm-purchase">
+            	<input name="deliveryfee" type="hidden" value="${requestScope.pdto.deliveryfee}"/>
+            	<input name="prodList" type="hidden"/>
+            	<button type="button" id="button-purchase">바로구매</button>
+            </form>
         </div>
 
     </div>

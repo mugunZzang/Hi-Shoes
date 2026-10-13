@@ -129,10 +129,13 @@
 	    // 천 단위 콤마 및 원 표시
 	    const formatPrice = price =>
 	        price.toLocaleString("en") + "원";
+	        
+	    //console.log("장바구니에서 전달한 배송비" + totalDeliveryFee);
 
 	    $(".total-order-price").text(formatPrice(totalOrderPrice));
 	    $(".total-discount-price").text(formatPrice(totalDiscountPrice));
 	    $(".total-delivery-fee").text(formatPrice(totalDeliveryFee));
+	    $('input[name="deliveryfee"]').val(totalDeliveryFee);
 	    $(".final-price").text(formatPrice(finalPrice));
 	}
 	
@@ -246,12 +249,32 @@
 		let alertMsg = '선택하신\n';	// 제품명(spec)<br> 요런식으로 붙여갈거임
 		let flag = true;	// 하나라도 재고가 부족하면 false;
 		
+		let prodList = [];
+		
+		
 		for(let i=0; i<allCnt; i++) {
 			if($('input.product-checkbox').eq(i).prop("checked")) {
+				const pimage = $('div.product-image').eq(i).find('img').attr('src');
+				const pname = $('span.product-name').eq(i).text();
+				const brand = $('strong.brand').eq(i).text();
+				const spec = $('span.product-size').eq(i).text().trim();
 				const snum = $('input.cart-snum').eq(i).val(); 
 				const cqty = $('input.cart-quantity').eq(i).val();
-				const spec = $('span.product-size').eq(i).text().trim();
+				const regprice = $('div.cart-product').eq(i).attr("data-regprice");
+				const saleprice = $('div.cart-product').eq(i).attr("data-saleprice");
 				
+				
+				prodList.push({
+					 //대표이미지, 제품명, 브랜드, 옵션, snum, 수량, 정가, 판매가 등...
+					"pimage" : pimage,
+					"pname" : pname,
+					"brand" : brand,
+					"spec" : spec,
+					"snum" : snum,
+					"cqty" : cqty,
+					"regprice" : regprice,
+					"saleprice" : saleprice
+				});
 				
 				//console.log(snum);
 				//console.log(cqty);
@@ -290,14 +313,23 @@
 			alert(alertMsg + "상품의 재고가 부족합니다. 선택 수량을 변경해주세요.");
 			return;
 		}
-		
+		/* 
 		if (flag) {
 			alert("재고가 모두 충분합니다~");
-		}  
+		}   */
 		
 		// 이제 결제 화면에 넘겨줘야 함...		
+		// 대표이미지, 브랜드, 옵션, 수량, 정가, 판매가
+		// snum, cqty 세트로 넘기기
+		const frm = document.getElementById('frm-purchase');
+		const input1 = document.querySelector('input[name="prodList"]');
+		//const input2 = document.querySelector('input[name="deliveryfee"]');
 		
-
+		frm.method = "POST";
+		frm.action = "<%= ctxPath %>/shop/purchaseProduct.go";
+		input1.value = JSON.stringify(prodList);	
+		
+		frm.submit();
 		
 	}
 	
@@ -527,10 +559,13 @@
             계속 쇼핑하기
         </button>
 
-        <button type="button" class="selected-order" onclick="gotoPurchase()">
-            선택상품 주문하기
-        </button>
-
+		<form id="frm-purchase">
+			<input name="prodList" type="hidden"/>
+			<input name="deliveryfee" type="hidden"/>
+	        <button type="button" class="selected-order" onclick="gotoPurchase()">
+	            선택상품 주문하기
+	        </button>
+		</form>
         
 
     </div>

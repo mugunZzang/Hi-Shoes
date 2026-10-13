@@ -72,7 +72,6 @@ button {
 
 
 /* 배송 종류 */
-
 .cart-section-title {
     height: 35px;
 
@@ -205,7 +204,6 @@ button {
 
 
 /* 수량 조절 */
-
 .quantity-control {
     display: flex;
     height: 22px;
@@ -239,7 +237,6 @@ button {
 
 
 /* 옵션 변경 */
-
 .option-change {
     width: 57px;
     height: 22px;
@@ -306,7 +303,6 @@ button {
 
 
 /* 바로구매 */
-
 .buy-button {
     background-color: #111 !important;
     color: white;
@@ -316,7 +312,6 @@ button {
 
 
 /* 삭제 */
-
 .delete-button {
     border: 1px solid #999;
 }
@@ -360,7 +355,6 @@ button {
 
 
 /* 금액 항목 */
-
 .summary-item {
     flex: 1;
 
@@ -383,7 +377,6 @@ button {
 
 
 /* - / = 기호 */
-
 .summary-symbol {
     width: 30px;
     height: 30px;
@@ -405,7 +398,6 @@ button {
 
 
 /* 최종 결제금액 */
-
 .summary-item .final-price {
     color: red;
 }
@@ -427,7 +419,6 @@ button {
 
 
 /* 금액 상세 한 칸 */
-
 .price-detail-item {
     flex: 1;
 
@@ -445,7 +436,6 @@ button {
 
 
 /* 상세 금액 텍스트 */
-
 .price-detail-item div {
     display: flex;
     flex-direction: column;
@@ -484,7 +474,6 @@ button {
 
 
 /* 계속 쇼핑하기 */
-
 .continue-shopping {
     background-color: white;
 
@@ -493,7 +482,6 @@ button {
 
 
 /* 선택상품 주문 */
-
 .selected-order {
     background-color: #666;
     color: white;
@@ -503,7 +491,6 @@ button {
 
 
 /* 전체상품 주문 */
-
 .all-order {
     background-color: #111;
     color: white;

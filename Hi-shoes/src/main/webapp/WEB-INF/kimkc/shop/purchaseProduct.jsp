@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String ctxPath = request.getContextPath();
 %>
@@ -10,11 +11,77 @@
 
 
 
+<script type="text/javascript">
+	
+	$(function() {
+		getTotalCost();
+	});
+	
+	
+	// 결제 금액 정리하기
+	function getTotalCost() {
+		let totalOrderPrice = 0;    // 정상가 기준 주문금액
+	    let totalDiscountPrice = 0; // 총 할인금액
+	    let totalDeliveryFee = 0;   // 배송비
+
+	    const allCnt = $(".order-product").length;
+
+	    for(let i=0; i<allCnt; i++) {
+	    	const regprice = Number($('del.regular-price').eq(i).attr("data-regprice"));
+	    	//$('del.regular-price').eq(i).text(regprice.toLocaleString('en'));
+	    	//console.log("정가" + regprice);
+	    	
+	    	const saleprice = Number($('strong.discount-price').eq(i).attr("data-saleprice"));
+	    	//$('del.discount-price').eq(i).text(saleprice.toLocaleString('en'));
+	    	//console.log("세일가" + saleprice);
+	    	
+	    	const cqty = Number($("input.product-cqty").eq(i).val());
+	        //console.log("수량" + cqty);
+	        
+	     	// 정상가 기준 주문금액
+	        totalOrderPrice += regprice * cqty;
+
+	        // 정상가보다 판매가가 낮은 상품만 할인 계산
+	        if (regprice > saleprice) {
+	            totalDiscountPrice += (regprice - saleprice) * cqty;
+	        }
+
+	        
+	    }
+	 	// 배송비는 한 번만 가져온다.
+        totalDeliveryFee = Number("${requestScope.deliveryfee}");
+	    
+	 	// 최종 결제금액
+	    const finalPrice =
+	        totalOrderPrice - totalDiscountPrice + totalDeliveryFee;
+
+	    // 천 단위 콤마 및 원 표시
+	    const formatPrice = price =>
+	        price.toLocaleString("en") + "원";
+
+	    //console.log("--------------------");
+	    //console.log("총액" + totalOrderPrice);
+	    //console.log("할인액" + totalDiscountPrice);
+	    //console.log("배송비" + totalDeliveryFee);
+	    //console.log("최종금액" + finalPrice);
+	    
+	    $('strong#total-regprice1').text(formatPrice(totalOrderPrice));
+	    $('strong#total-regprice2').text(formatPrice(totalOrderPrice));
+	    $('strong#total-discount1').text(formatPrice(totalDiscountPrice));
+	    $('strong#total-discount2').text("-" + formatPrice(totalDiscountPrice));
+	    $('input.deliveryfee').val(totalDeliveryFee);
+	    $('strong#total-price1').text(formatPrice(finalPrice));
+	    $('strong#total-price2').text(formatPrice(finalPrice));
+	    
+	    
+	    
+	}
+
+</script>
+
+
 <div class="order-container">
 
-    <!-- =====================================
-         페이지 제목
-    ====================================== -->
 
     <h1>주문서작성/결제</h1>
 
@@ -38,128 +105,62 @@
         <div class="order-product-list">
 
 
-            <!-- 상품 1 -->
-            <div class="order-product">
+			<c:forEach var="prod" items="${requestScope.prodList}">
+	            <!-- 상품 1개 -->
+	            <div class="order-product">
+	
+	                <div class="order-product-image">
+	                    <img src="${prod.pimage}"
+	                         alt="${prod.pname}">
+	                </div>
+	
+	                <div class="order-product-info">
+	
+	                    <strong class="brand">
+	                        ${prod.brand}
+	                    </strong>
+	
+	                    <span class="product-name">
+	                        ${prod.pname}
+	                    </span>
+	
+	                    <span class="product-option">
+	                        ${prod.spec} / ${prod.cqty}개
+	                    </span>
+	                    <input class="product-cqty" type="hidden" value="${prod.cqty}"/>
+	
+	                </div>
+	
+	
+	                <div class="order-product-price">
+						<c:if test="${prod.regprice > prod.saleprice}">
+		                    <del class="regular-price" data-regprice="${prod.regprice}">
+		                        <fmt:formatNumber value="${prod.regprice}" type="number"/>
+		                    </del>
+		
+		                    <strong class="discount-price" data-saleprice="${prod.saleprice}">
+		                        <fmt:formatNumber value="${prod.saleprice}" type="number"/>
+		                    </strong>
+	                    </c:if>
+	                    
+	                    <c:if test="${prod.regprice == prod.saleprice}">
+	                    	<del class="regular-price" style="display: none;" data-regprice="${prod.regprice}">
+		                        <fmt:formatNumber value="${prod.regprice}" type="number"/>
+		                    </del>
+		                    <strong class="discount-price" id="normal-price" data-saleprice="${prod.saleprice}">
+		                        <fmt:formatNumber value="${prod.saleprice}" type="number"/>
+		                    </strong>
+						</c:if>
+						
+						
+	                    <span>원</span>
+	
+	                </div>
+	
+	            </div>
+			</c:forEach>
 
-                <!-- 상품 이미지 -->
-                <div class="order-product-image">
-                    <img src="images/product1.jpg"
-                         alt="아디다스 OZGAIA W">
-                </div>
-
-
-                <!-- 상품 정보 -->
-                <div class="order-product-info">
-
-                    <strong class="brand">
-                        아디다스
-                    </strong>
-
-                    <span class="product-name">
-                        OZGAIA W
-                    </span>
-
-                    <span class="product-option">
-                        220 / 2개
-                    </span>
-
-                </div>
-
-
-                <!-- 상품 가격 -->
-                <div class="order-product-price">
-
-                    <strong>
-                        218,000
-                    </strong>
-
-                    <span>원</span>
-
-                </div>
-
-            </div>
-
-
-            <!-- 상품 2 -->
-            <div class="order-product">
-
-                <div class="order-product-image">
-                    <img src="images/product2.jpg"
-                         alt="나이키 NIKE COURT VISION LO NN">
-                </div>
-
-
-                <div class="order-product-info">
-
-                    <strong class="brand">
-                        나이키
-                    </strong>
-
-                    <span class="product-name">
-                        NIKE COURT VISION LO NN
-                    </span>
-
-                    <span class="product-option">
-                        245 / 1개
-                    </span>
-
-                </div>
-
-
-                <div class="order-product-price">
-
-                    <del>
-                        99,000 원
-                    </del>
-
-                    <strong class="discount-price">
-                        79,000
-                    </strong>
-
-                    <span>원</span>
-
-                </div>
-
-            </div>
-
-
-            <!-- 상품 3 -->
-            <div class="order-product">
-
-                <div class="order-product-image">
-                    <img src="images/product3.jpg"
-                         alt="나이키 NIKE COURT VISION LO SUEDE">
-                </div>
-
-
-                <div class="order-product-info">
-
-                    <strong class="brand">
-                        나이키
-                    </strong>
-
-                    <span class="product-name">
-                        NIKE COURT VISION LO SUEDE
-                    </span>
-
-                    <span class="product-option">
-                        240 / 1개
-                    </span>
-
-                </div>
-
-
-                <div class="order-product-price">
-
-                    <strong>
-                        99,000
-                    </strong>
-
-                    <span>원</span>
-
-                </div>
-
-            </div>
+       
 
         </div>
 
@@ -172,8 +173,8 @@
 
                 <span>주문금액</span>
 
-                <strong>
-                    416,000원
+                <strong id="total-regprice1">
+                    0원
                 </strong>
 
             </div>
@@ -190,8 +191,8 @@
 
                 <span>총 할인금액</span>
 
-                <strong>
-                    20,000원
+                <strong id="total-discount1">
+                    0원
                 </strong>
 
             </div>
@@ -208,8 +209,8 @@
 
                 <span>결제예정금액</span>
 
-                <strong class="final-price">
-                    396,000원
+                <strong class="final-price" id="total-price1">
+                    0원
                 </strong>
 
             </div>
@@ -254,14 +255,14 @@
                     <div class="form-row">
 
                         <label>
-                            이름
+                            업체명
                             <span>*</span>
                         </label>
 
                         <input
                             type="text"
                             name="orderName"
-                            value="김기찬"
+                            value="${requestScope.member.company}"
                             readonly
                         >
 
@@ -279,7 +280,7 @@
                         <input
                             type="text"
                             name="orderPhone"
-                            value="01044633370"
+                            value="${requestScope.member.mobile}"
                             readonly
                         >
 
@@ -297,7 +298,7 @@
                         <input
                             type="email"
                             name="orderEmail"
-                            value="asybal23@naver.com"
+                            value="${requestScope.member.email}"
                             readonly
                         >
 
@@ -332,14 +333,14 @@
                     <div class="form-row">
 
                         <label>
-                            이름
+                            업체명
                             <span>*</span>
                         </label>
 
                         <input
                             type="text"
                             name="receiverName"
-                            value="김기찬"
+                            value="${requestScope.member.company}"
                             readonly
                         >
 
@@ -357,7 +358,7 @@
                         <input
                             type="text"
                             name="receiverPhone"
-                            value="01044633370"
+                            value="${requestScope.member.mobile}"
                             readonly
                         >
 
@@ -365,7 +366,7 @@
 
 
                     <!-- 주소 -->
-                    <div class="form-row address-row">
+                    <div class="form-row address-row pt-3">
 
                         <label>
                             주소
@@ -380,11 +381,11 @@
                                     type="text"
                                     name="zipcode"
                                     placeholder="우편번호"
+                                    value="${requestScope.member.postcode}"
+                                    readonly
                                 >
 
-                                <button type="button">
-                                    우편번호 찾기
-                                </button>
+                                
 
                             </div>
 
@@ -393,6 +394,8 @@
                                 type="text"
                                 name="address"
                                 placeholder="주소"
+                                value="${requestScope.member.address}"
+                                readonly
                             >
 
 
@@ -400,6 +403,15 @@
                                 type="text"
                                 name="addressDetail"
                                 placeholder="상세주소"
+                                value="${requestScope.member.detailaddress}"
+                            >
+                            
+                            <input
+                                type="text"
+                                name="extraaddress"
+                                placeholder="추가정보"
+                                value="${requestScope.member.extraaddress}"
+                                readonly
                             >
 
                         </div>
@@ -438,8 +450,8 @@
                     총 정상가
                 </span>
 
-                <strong>
-                    416,000 원
+                <strong id="total-regprice1">
+                    0 원
                 </strong>
 
             </div>
@@ -453,9 +465,9 @@
                 </span>
 
                 <strong>
-                    0 원
+                    <fmt:formatNumber value="${requestScope.deliveryfee}" type="number"/> 원
                 </strong>
-
+				<input class="product-deliveryfee" type="hidden" value="${requestScope.deliveryfee}"/>
             </div>
 
 
@@ -467,8 +479,8 @@
                     
                 </span>
 
-                <strong>
-                    -20,000 원
+                <strong id="total-discount2">
+                    -0 원
                 </strong>
 
             </div>
@@ -481,8 +493,8 @@
                     총 결제예정금액
                 </span>
 
-                <strong>
-                    396,000
+                <strong id="total-price2">
+                    0
                     <small>원</small>
                 </strong>
 

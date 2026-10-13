@@ -209,6 +209,11 @@ button {
     font-size: 14px;
 }
 
+.order-product-price strong#normal-price {
+    font-size: 14px;
+    color: #222;
+}
+
 .order-product-price .discount-price {
     color: #e60000;
 }
@@ -474,7 +479,7 @@ button {
 
 .address-row {
     align-items: flex-start;
-
+	
     min-height: 130px;
 }
 
