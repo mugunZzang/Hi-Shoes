@@ -457,7 +457,27 @@
 	    
 	   //===========================================================================================================
 	    	
+		   
+		   
+		   
+	   //======================== 재고 조회 시작 ===============================
+		   
+		// 재고조회 버튼 클릭
+		$(document).on("click", ".btn-stockSelect", function(){
+		    const pname = $(this).closest("tr").find("td").eq(1).text().trim();
+		    $("#stockPname").text(pname);
+		    loadStockList(pname);
+		    $("#stockModal").modal("show");
+		});
+	   //======================== 재고 조회 끝 ===============================
 		
+		   
+		   
+		   
+		   
+		   
+		   
+		   
 	});  // end of $(function(){})----------------------------
 	
 
@@ -516,6 +536,9 @@
 							"<td class='text-center align-middle'>" + Number(item.regprice).toLocaleString('en') + "원</td>" +
 							"<td class='text-center align-middle'>" + Number(item.saleprice).toLocaleString('en') + "원</td>" +
 							"<td class='text-center align-middle'>" + item.brand + "</td>" +
+							"<td class='text-center align-middle'>" +
+						    "<button type='button' class='btn btn-outline-secondary me-2 btn-stockSelect'>재고조회</button>" +
+						    "</td>" +
 						"</tr>";
 					});
 				}
@@ -579,6 +602,102 @@
 			}
 		});
 	}
+	
+	
+	// =====================재고 조회 =============================
+		
+	const LOW_STOCK = 3;   // 재고 부족 기준
+
+	function loadStockList(pname){
+	    $.ajax({
+	        url: "<%= ctx_Path %>/admin/catalogue/stockList.go",
+	        data: { "pname": pname },
+	        method: "get",
+	        dataType: "json",
+	        success: function(json){
+/*
+	        	console.log(json);
+	        	0: {color: 'WHITE', sqty: '0', ssize: '200'}
+	        	1: {color: 'WHITE', sqty: '0', ssize: '205'}
+	        	2: {color: 'WHITE', sqty: '0', ssize: '210'}
+*/        	
+	            renderStockMatrix(json);
+	        },
+	        error: function(request, status, error){
+	            alert("code: " + request.status + "\nmessage: " + request.responseText + "\nerror: " + error);
+	        }
+	    });
+	}
+	
+	function renderStockMatrix(list){
+	
+	    if(list.length === 0){
+	        $("#stockSummary").empty();
+	        $("#stockTbl thead").empty();
+	        $("#stockTbl tbody").html(emptyRowHtml(1, "등록된 재고가 없습니다."));
+	        return;
+	    }
+	
+	    // 1. 사이즈 / 색상 목록 추출 + (색상|사이즈) → 수량 맵
+	    // 200 ~ 300, 5단위 (200, 205, ..., 300 → 21개)
+	    const sizes = [];
+	    for(let sz = 200; sz <= 300; sz += 5){
+	        sizes.push(sz);
+	    }
+	    const colors = [...new Set(list.map(s => s.color))];
+	    const map = {};
+	    list.forEach(s => { map[s.color + "|" + s.ssize] = Number(s.sqty); });
+	
+	    // 2. 셀 스타일 결정
+	    function cell(qty){
+	        if(qty === undefined) qty = 0;
+	        if(qty === 0)         return "<td class='text-danger fw-bold'>0</td>";
+	        if(qty <= LOW_STOCK)  return "<td class='text-warning fw-bold'>" + qty + "</td>";
+	        return "<td>" + qty + "</td>";
+	    }
+	
+	    // 3. 헤더
+	    let head = "<tr><th>색상＼사이즈</th>";
+	    sizes.forEach(sz => head += "<th>" + sz + "</th>");
+	    head += "<th>합계</th></tr>";
+	
+	    // 4. 본문 (색상별 행 + 합계)
+	    let body = "";
+	    const colSum = {};
+	    let grand = 0, soldOut = 0, low = 0;
+	
+	    colors.forEach(color => {
+	        let rowSum = 0;
+	        body += "<tr><th>" + color + "</th>";
+	        sizes.forEach(sz => {
+	            const qty = map[color + "|" + sz] ?? 0;   // 없으면 0
+	            body += cell(qty);
+	            rowSum += qty;
+	            colSum[sz] = (colSum[sz] || 0) + qty;
+	            if(qty === 0) soldOut++;
+	            else if(qty <= LOW_STOCK) low++;
+	        });
+	        body += "<td class='fw-bold'>" + rowSum + "</td></tr>";
+	        grand += rowSum;
+	    });
+	
+	    // 합계 행
+	    body += "<tr class='table-light'><th>합계</th>";
+	    sizes.forEach(sz => body += "<td class='fw-bold'>" + (colSum[sz] || 0) + "</td>");
+	    body += "<td class='fw-bold'>" + grand + "</td></tr>";
+	
+	    $("#stockTbl thead").html(head);
+	    $("#stockTbl tbody").html(body);
+	
+	    // 5. 요약
+	    $("#stockSummary").html(
+	        "<span>총 재고 <b>" + grand.toLocaleString() + "</b>족</span>" +
+	        "<span class='text-danger'>품절 <b>" + soldOut + "</b></span>" +
+	        "<span class='text-warning'>재고 부족 <b>" + low + "</b></span>"
+	    );
+	}
+
+//================================ 재고 조회 끝 ================================================
 </script>
 
 <style type="text/css">
@@ -602,7 +721,7 @@
          style="padding: 20px 0px;
                 margin-bottom: 15px;">
 
-        <p class="mb-0 fs-4 fw-semibold">  <span class="mx-title-icon"><i class="bi bi-box-seam"></i></span>
+        <p class="mb-0 fs-4 fw-semibold"> </span>
             카탈로그 목록
         </p>
 
@@ -736,11 +855,12 @@
 		    <colgroup>
 		        <col style="width: 15%;">
 		        <col style="width: 20%;">
-		        <col style="width: 15%;">
+		        <col style="width: 10%;">
 		        <col style="width: 12%;">
 		        <col style="width: 12%;">
 		        <col style="width: 12%;">
-		        <col style="width: 14%;">
+		        <col style="width: 12%;">
+		        <col style="width: 7%;">
 		    </colgroup>
 
 		    <thead>
@@ -772,6 +892,9 @@
 		            <th class="text-center align-middle">
 		                브랜드
 		            </th>
+        		    <th class="text-center align-middle">
+		                재고조회
+		            </th>
 		        </tr>
 		    </thead>
 		
@@ -779,7 +902,7 @@
 		
 		        <c:if test="${empty requestScope.catalogue_map_List}">
 		            <tr>
-		                <td colspan="7"
+		                <td colspan="8"
 		                    class="text-center align-middle">
 
 		                    <div class="mx-empty">
@@ -835,6 +958,12 @@
 		
 		                    <td class="text-center align-middle">
 		                        ${catalmap.brand}
+		                    </td>
+		                    <td class="text-center align-middle">
+		                        <button type="button"
+		                                class="btn btn-outline-secondary me-2 btn-stockSelect">
+		                             재고조회
+		                        </button>
 		                    </td>
 
 		                </tr>
@@ -949,6 +1078,39 @@
 			    </div>
 			
 			  </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	
+	<!-- 재고조회 모달 -->
+	<div class="modal fade" id="stockModal" tabindex="-1" aria-hidden="true">
+	  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title">
+	          <span class="mx-modal-head-icon"><i class="bi bi-box-seam"></i></span>
+	          재고조회 - <span id="stockPname"></span>
+	        </h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	      <div class="modal-body">
+	        <div id="stockSummary" class="d-flex gap-4 mb-3"></div>
+	        <div class="table-responsive">
+	          <table class="table table-bordered text-center align-middle" id="stockTbl">
+	            <thead></thead>
+	            <tbody></tbody>
+	          </table>
+	        </div>
+	        <div class="mx-hint">
+	          <span class="text-danger fw-bold">0</span> 품절 /
+	          <span class="text-warning fw-bold">3개 이하</span> &nbsp;재고 부족
+	        </div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>

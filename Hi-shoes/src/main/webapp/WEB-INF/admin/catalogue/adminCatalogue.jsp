@@ -131,7 +131,7 @@
          style="padding: 20px 0px;
                 margin-bottom: 15px;">
 
-        <p class="mb-0 fs-4 fw-semibold">  <span class="mx-title-icon"><i class="bi bi-box-seam"></i></span>
+        <p class="mb-0 fs-4 fw-semibold"></span>
             카탈로그 등록
         </p>
 

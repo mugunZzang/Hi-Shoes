@@ -23,7 +23,7 @@
     --mx-bad-text:    #B02A1D;
 }
 
-/* ---------- 1. 카드 안 소제목 (왼쪽 초록 막대) ---------- */
+/* ---------- 1. 카드 안 소제목 (왼쪽 초록 막대) ---------- 
 .mx-section-title {
     display: flex;
     align-items: center;
@@ -36,8 +36,8 @@
     color: var(--mx-text);
 }
 .mx-section-title i { color: var(--mx-green); }
-
-/* ---------- 2. 검색 영역 박스 ---------- */
+*/
+/* ---------- 2. 검색 영역 박스 ---------- 
 .mx-search-box {
     background: var(--mx-green-faint);
     border: 1px solid #DCE6D7;
@@ -51,7 +51,7 @@
     color: var(--mx-text);
     margin-bottom: 6px;
 }
-
+*/
 /* ---------- 3. 요약 카드 (전체 / 대기 / 완료 / 지연 건수 등) ---------- */
 .mx-stat-row {
     display: grid;
@@ -182,7 +182,7 @@ tr.mx-editing > td { background: #FFFDF2 !important; }
 /* ---------- 11. 모달 보조 ---------- */
 .mx-modal-head-icon { color: var(--mx-green); margin-right: 6px; }
 
-/* ---------- 12. 페이지 제목 옆 아이콘 ---------- */
+/* ---------- 12. 페이지 제목 옆 아이콘 ---------- 
 .mx-title-icon {
     display: inline-flex;
     align-items: center;
@@ -196,7 +196,7 @@ tr.mx-editing > td { background: #FFFDF2 !important; }
     font-size: 14pt;
     vertical-align: middle;
 }
-
+*/
 /* ---------- 13. 안내 문구 박스 (페이지 상단 팁 / 주의) ---------- */
 .mx-notice {
     display: flex;

@@ -322,6 +322,39 @@ public class CatalogueDAO_imple implements CatalogueDAO {
 		
 		return result;
 	} // end of public int catalogueDelete(String pname) throws SQLException--------------------------------
+
+	
+	// 제품명에 해당하는 색상, 사이즈, 재고량 조회(SELECT)
+	@Override
+	public List<Map<String, String>> stockSelect(String pname) throws SQLException {
+		List<Map<String, String>> stockList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT SSIZE, COLOR, SQTY FROM tbl_stock "
+					   + " WHERE fk_pname = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pname);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("ssize", String.valueOf(rs.getInt("SSIZE")));
+				map.put("color", rs.getString("COLOR"));
+				map.put("sqty", String.valueOf(rs.getInt("SQTY")));
+				
+				stockList.add(map);
+			}
+		} finally {
+			close();
+		}
+		
+		return stockList;
+	} // end of public List<Map<String, String>> stockSelect(String pname) throws SQLException---------------
 	
 	
     

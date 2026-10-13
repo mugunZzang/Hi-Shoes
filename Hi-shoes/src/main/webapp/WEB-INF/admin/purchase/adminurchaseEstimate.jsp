@@ -29,7 +29,7 @@
     <div class="d-flex justify-content-between align-items-center no-print"
          style="padding: 20px 0px; margin-bottom: 15px;">
 
-        <p class="mb-0 fs-4 fw-semibold">  <span class="mx-title-icon"><i class="bi bi-file-earmark-text"></i></span>
+        <p class="mb-0 fs-4 fw-semibold"></span>
         견적서
         </p>
 

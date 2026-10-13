@@ -24,4 +24,7 @@ public interface CatalogueDAO {
 	// 카탈로그 삭제(DELETE)
 	int catalogueDelete(String pname) throws SQLException;
 
+	// 제품명에 해당하는 색상, 사이즈, 재고량 조회(SELECT)
+	List<Map<String, String>> stockSelect(String pname) throws SQLException;
+
 }
