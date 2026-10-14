@@ -134,15 +134,14 @@ public class ProductDAO_imple implements ProductDAO {
 
 	        conn = ds.getConnection();
 
-	        String sql =
-	              " select count(*) as CNT "
-	            + " from tbl_product ";
+	        String sql = " select count(*) as CNT "
+	        		   + " from tbl_product ";
 
 	        String searchWord = paraMap.get("searchWord");
 
 	        if(searchWord != null && !searchWord.trim().isEmpty()) {
 
-	            sql += " and fk_pname like '%' || ? || '%' ";
+	            sql += " where fk_pname like '%' || ? || '%' ";
 	        }
 
 	        pstmt = conn.prepareStatement(sql);
