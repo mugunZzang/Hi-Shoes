@@ -416,6 +416,77 @@ public class MemberDAO_imple implements MemberDAO {
 		
 		return n;
 	}	// end of public int authentication(Map<String, String> paraMap) throws SQLException------
+
+
+	// 비밀번호 변경 시 현재 사용 중인 비밀번호인지 아닌지 알아오기(사용중인 비밀번호 이라면 true, 새로운 비밀번호라면 false)
+	@Override
+	public boolean duplicatePwdCheck(Map<String, String> paraMap) throws SQLException{
+		boolean isUsed = false;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select pwd "
+					   + " from tbl_member"
+					   + " where userid = ? and pwd = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setString(2, Sha256.encrypt(paraMap.get("new_pwd")));
+			
+			rs = pstmt.executeQuery(); 
+			
+			isUsed = rs.next(); // 행이 있으면(새암호가 현재 사용중인 비밀번호) true,
+			                      // 행이 없으면(새로운 비밀번호) false  
+			
+		} finally {
+			close();
+		}
+		
+		return isUsed;		
+	}	// end of public boolean duplicatePwdCheck(Map<String, String> paraMap) throws SQLException-------------
+
+
+	// 회원의 개인 정보 변경하기 
+	@Override
+	public int updateMember(MemberDTO member) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_member set pwd = ? "
+					   + "                      , email = ? "
+					   + "                      , mobile = ? "
+					   + "                      , postcode = ?"
+					   + "					    , address = ? "
+					   + "					    , detailaddress = ? "
+					   + "					    , extraaddress = ? "
+					   + "                      , lastpwdchangedate = sysdate "
+					   + " where userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, Sha256.encrypt(member.getPwd())); // 암호를 SHA256 알고리즘으로 단방향 암호화 시킨다. 
+			pstmt.setString(2, aes.encrypt(member.getEmail()));  // 이메일을 AES256 알고리즘으로 양방향 암호화 시킨다. 
+			pstmt.setString(3, aes.encrypt(member.getMobile())); // 휴대폰번호를 AES256 알고리즘으로 양방향 암호화 시킨다.		
+			pstmt.setString(4, member.getPostcode());
+			pstmt.setString(5, member.getAddress());
+			pstmt.setString(6, member.getDetailaddress());
+			pstmt.setString(7, member.getExtraaddress());			
+			
+			pstmt.setObject(8, member.getUserid()); 			
+			
+			n = pstmt.executeUpdate();
+			
+		} catch(UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return n;
+	}	// end of public int updateMember(MemberDTO member) throws SQLException----------
 	
 
 }
