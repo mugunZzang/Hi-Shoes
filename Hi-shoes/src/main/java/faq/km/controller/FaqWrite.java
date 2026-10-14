@@ -85,8 +85,8 @@ public class FaqWrite extends AbstractController {
 	
 	        if(n == 1) {
 	
-	            super.setRedirect(false);
-	            super.setViewPage("/admin/callcenter/callcenter.jsp?tab=faq");
+	            super.setRedirect(true);
+	            super.setViewPage(request.getContextPath()+"/admin/callcenter/callcenter.go?tab=faq");
 	
 	
 	        }

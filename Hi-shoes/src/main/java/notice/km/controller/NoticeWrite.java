@@ -157,9 +157,8 @@ public class NoticeWrite extends AbstractController {
 	
 	        if(n == 1) {
 	
-	            super.setRedirect(false);
-	
-	            super.setViewPage("/WEB-INF/admin/callcenter/callcenter.jsp?tab=notice");
+	            super.setRedirect(true);
+	            super.setViewPage(request.getContextPath()+ "/admin/callcenter/callcenter.go?tab=notice");
 	
 	        }
 	
