@@ -1179,7 +1179,7 @@ public class ProductDAO_imple implements ProductDAO {
 			rs = pstmt.executeQuery();
 			rs.next();
 			int onum = rs.getInt("onum");
-			System.out.println("채번한 onum :"+onum);
+			//System.out.println("채번한 onum :"+onum);
 					
 			
 			// =========== 1. tbl_order에 삽입 =========== //
@@ -1190,7 +1190,7 @@ public class ProductDAO_imple implements ProductDAO {
 			pstmt.setString(2, userid);
 			
 			n1 = pstmt.executeUpdate();
-			System.out.println("n1 결과 : " + n1);
+			//System.out.println("n1 결과 : " + n1);
 			
 			
 			if (n1 == 1) {
@@ -1210,7 +1210,7 @@ public class ProductDAO_imple implements ProductDAO {
 				
 			}
 			
-			System.out.println("n2 결과 : " + n2);
+			//System.out.println("n2 결과 : " + n2);
 			
 			
 			if (n2 == purchaseList.size()) {
@@ -1271,8 +1271,8 @@ public class ProductDAO_imple implements ProductDAO {
 				n3 = 1;
 			}
 			
-			System.out.println("n3 결과 : " + n3);
-			System.out.println("최종 n4 결과 : " + n4);
+			//System.out.println("n3 결과 : " + n3);
+			//System.out.println("최종 n4 결과 : " + n4);
 			
 			// 모두 정상 실행되었다면 
 			if(n1*n2*n3*n4 == 1) {
