@@ -1,6 +1,9 @@
 //$(document).ready(function(){});
 //$(function(){});
 
+let b_busiNumcheck_click = false;
+// "사업자등록번호 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
+
 let b_idcheck_click = false;
 // "아이디 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
 
@@ -50,8 +53,36 @@ $(() => {
 	});	// 아이디가 company 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
 	// 사업자등록번호 blur 되었을 때 유효성 검사
-	$('input#busiNum').on("blur", (e) => {			
-		whiteSpaceChk($('input#busiNum'));				
+	$('input#busiNum').on("blur", (e) => {		
+			
+		const regExp_busiNum = /^[0-9]{10}$/g;
+			// 숫자 10자리 정규표현식 객체 생성
+			
+			const bool = regExp_busiNum.test($(e.target).val());
+			
+			if(!bool) {
+				// 사업자등록번호가 정규표현식에 위배된 경우
+				/*   
+		            >>>> .prop() 와 .attr() 의 차이 <<<<            
+		                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
+		                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
+		         */
+				$('form[name="registerFrm"] :input').prop("disabled", true);
+				$(e.target).prop("disabled", false).val("").focus();
+				
+				//$(e.target).next().next().next().show();
+				// 또는 
+				$(e.target).parent().parent().find('p.error').show();			
+			}
+			else {
+				// 사업자등록번호가 정규표현식에 맞는 경우
+				$('form[name="registerFrm"] :input').prop("disabled", false);	
+				
+				//$(e.target).next().next().next().hide();
+				// 또는	
+				$(e.target).parent().parent().find('p.error').hide();	
+			}					
+			
 	});	// 아이디가 busiNum 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 	
 	$('input#userid').on("blur", (e) => {
@@ -320,50 +351,6 @@ $(() => {
 	});	//end of $('img#zipcodeSearch').on('click', function() ------------	
 	
 	
-	// === type 이 date인 input 태그에 기본값으로 오늘 날짜 입력해주기 === //
-	 /*   
-	    //  == 첫번째 방법 ==
-	      
-	   // 1. 현재날짜 객체 생성
-	   const today = new Date(); 
-	   
-	   // 2. yyyy-mm-dd 형식에 맞게 자리수 채우기
-	   const year = today.getFullYear();
-	   const month = String(today.getMonth() + 1).padStart(2, '0');
-	   const day = String(today.getDate()).padStart(2, '0');
-	   
-	   const formatedToday = `${year}-${month}-${day}`;
-	   
-	   $('input[name="birthday"]').val(formatedToday);
-	 */   
-
-	   // == 또는 두번째 방법 ==
-	/*
-	   new Date().toISOString()은 무조건 UTC(협정 세계시, +00:00) 기준의 ISO 8601 문자열(YYYY-MM-DDTHH:mm:ss.sssZ)을 반환한다.
-	   한국 시각(KST, UTC+9) 기준의 ISO format 문자열로 바꾸려면 시차(9시간)를 직접 더해 계산하도록 한다.
-	   
-	 //   console.log("new Date().toISOString() => ", new Date().toISOString());
-	   // new Date().toISOString() =>  2026-09-02T05:16:33.052Z
-	   
-	   const now = new Date();
-	   // 한국 시각은 UTC+9 이므로 9시간(9 * 60 * 60 * 1000 ms)을 더해준다.
-	   
-	   const kstDate = new Date(now.getTime() + (9 * 60 * 60 * 1000));
-
-	   // 뒤의 'Z'(UTC 표시)를 제거하고 한국 시각 포맷 생성
-	   const kstIsoString = kstDate.toISOString().replace('Z', '+09:00');
-
-	   console.log(kstIsoString); 
-	   // 출력 예시: 2026-09-02T14:16:33.052+09:00
-	*/   
-	   const now = new Date();
-	   const kstDate = new Date(now.getTime() + (9 * 60 * 60 * 1000));
-	   const kstIsoString = kstDate.toISOString().replace('Z', '+09:00');
-	   console.log(kstIsoString); 
-	    // 출력 예시: 2026-09-02T14:16:33.052+09:00
-	      
-	   $('input[name="birthday"]').val(kstIsoString.substring(0,10)); 
-	   // 2026-09-02 
 	
 	
 	
@@ -372,11 +359,16 @@ $(() => {
 	
 	// "사업자등록번호중복확인" 을 클릭했을 때 이벤트 처리하기 시작 //
 	$('#busiNumcheck').on('click', function(){	
-		
+			
 		
 		if ($('input#busiNum').val().trim() == "") {
 			
-			whiteSpaceChk($('input#busiNum'));
+			$('form[name="registerFrm"] :input').prop("disabled", true);
+			$('input#busiNum').prop("disabled", false).val("").focus();
+			
+			//$(e.target).next().next().next().show();
+			// 또는 
+			$('input#busiNum').parent().parent().find('p.error').show();	
 			
 		}else {
 			b_busiNumcheck_click = true;
@@ -435,118 +427,148 @@ $(() => {
 	
 	// "아이디중복확인" 을 클릭했을 때 이벤트 처리하기 시작 //
 	$('#idcheck').on('click', function(){
-		b_idcheck_click = true;
-		// "아이디 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
 		
-		//입력하고자 하는 아이디가 데이터베이스 테이블에 존재하는지, 존재하지 않는 지 알아와야한다.(JAVA가 하는일임.. 그런데 여기서 어떻게 처리하지? 바로 AJAX가 필요해지는 순간임.)
-		/*
-           Ajax (Asynchronous JavaScript and XML)란?                         
-          ==> 이름만 보면 알 수 있듯이 '비동기 방식의 자바스크립트와 XML' 로서     
-              Asynchronous JavaScript + XML 인 것이다.
-              한마디로 말하면, Ajax 란? Client 와 Server 간에 XML 데이터를 JavaScript 를 사용하여 비동기 통신으로 주고 받는 기술이다.
-              하지만 요즘에는 데이터 전송을 위한 데이터 포맷방법으로 XML 을 사용하기 보다는 JSON(Javascript Standard Object Notation) 을 더 많이 사용한다. 
-              참고로 HTML은 데이터 표현을 위한 포맷방법이다.
-              그리고, 비동기식이란 어떤 하나의 웹페이지에서 여러가지 서로 다른 다양한 일처리가 개별적으로 발생한다는 뜻으로서, 
-              어떤 하나의 웹페이지에서 서버와 통신하는 그 일처리가 발생하는 동안 일처리가 마무리 되기전에 또 다른 작업을 할 수 있다는 의미이다.
-        */
-	   
-		// === jQuery 를 사용한 Ajax 첫번째 방법 === //
-		$.ajax({
-			url: "idDuplicateCheck.go", 
-			data: {"userid" : $('input#userid').val()},	
-			// data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송 해야 할 데이터를 말한다.
-			type: "post", 	  //  type : "post",    // jQuery 4.x 이하 모든 버전에서 사용가능함. type 을 생략하면 type : "get" 이다.
-         	method : "post",  // jQuery 4.x 버전에서만 사용가능함. jQuery 3.x 이하 버전에서는 사용불가함. method 를 생략하면 method : "get" 이다.
+		if ($('input#userid').val().trim() == "") {
+					
+			$('form[name="registerFrm"] :input').prop("disabled", true);
+			$('input#userid').prop("disabled", false).val("").focus();
 			
-			async: true,	  // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
-			                  // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
-							  
-			success: function(text) {
-				//console.log("text => ", text);
-				//text 는 idDuplicateCheck.up 을 통해 웹브라우저에서 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다. 
-				//console.log("text의 데이터 타입 => ", typeof text);
-				//text의 데이터 타입 =>  string
+			//$(e.target).next().next().next().show();
+			// 또는 
+			$('input#userid').parent().parent().find('p.error').show();	
+			
+		}else {
+		
+			b_idcheck_click = true;
+			// "아이디 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
+			
+			//입력하고자 하는 아이디가 데이터베이스 테이블에 존재하는지, 존재하지 않는 지 알아와야한다.(JAVA가 하는일임.. 그런데 여기서 어떻게 처리하지? 바로 AJAX가 필요해지는 순간임.)
+			/*
+	           Ajax (Asynchronous JavaScript and XML)란?                         
+	          ==> 이름만 보면 알 수 있듯이 '비동기 방식의 자바스크립트와 XML' 로서     
+	              Asynchronous JavaScript + XML 인 것이다.
+	              한마디로 말하면, Ajax 란? Client 와 Server 간에 XML 데이터를 JavaScript 를 사용하여 비동기 통신으로 주고 받는 기술이다.
+	              하지만 요즘에는 데이터 전송을 위한 데이터 포맷방법으로 XML 을 사용하기 보다는 JSON(Javascript Standard Object Notation) 을 더 많이 사용한다. 
+	              참고로 HTML은 데이터 표현을 위한 포맷방법이다.
+	              그리고, 비동기식이란 어떤 하나의 웹페이지에서 여러가지 서로 다른 다양한 일처리가 개별적으로 발생한다는 뜻으로서, 
+	              어떤 하나의 웹페이지에서 서버와 통신하는 그 일처리가 발생하는 동안 일처리가 마무리 되기전에 또 다른 작업을 할 수 있다는 의미이다.
+	        */
+		   
+			// === jQuery 를 사용한 Ajax 첫번째 방법 === //
+			$.ajax({
+				url: "idDuplicateCheck.go", 
+				data: {"userid" : $('input#userid').val()},	
+				// data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송 해야 할 데이터를 말한다.
+				type: "post", 	  //  type : "post",    // jQuery 4.x 이하 모든 버전에서 사용가능함. type 을 생략하면 type : "get" 이다.
+	         	method : "post",  // jQuery 4.x 버전에서만 사용가능함. jQuery 3.x 이하 버전에서는 사용불가함. method 를 생략하면 method : "get" 이다.
 				
-				const json = JSON.parse(text);
-				// JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
-                // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다. 
-                // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
-				
-				//console.log("json => ", json);
-				//json => {isExists: true}
-				//json => {isExists: false}
-				
-				//console.log("json의 데이터 타입 => ", typeof json);
-				//json의 데이터 타입 =>  object
-				
-				if(json.isExists){
-					// 입력한 userid가 이미 사용 중이라면
-					$('#idcheckResult').html($('input#userid').val() + " 은 이미 사용중이므로 다른 아이디를 입력하세요.").css({"color":"red"});
-					$('input#userid').val("");
-				}
-				else {
-					// 입력한 userid가 존재하지 않는 경우라면
-					$('#idcheckResult').html($('input#userid').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
-				}
-			},
-			error: function(request, status, error){
-                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-		});		
+				async: true,	  // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
+				                  // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
+								  
+				success: function(text) {
+					//console.log("text => ", text);
+					//text 는 idDuplicateCheck.up 을 통해 웹브라우저에서 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다. 
+					//console.log("text의 데이터 타입 => ", typeof text);
+					//text의 데이터 타입 =>  string
+					
+					const json = JSON.parse(text);
+					// JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
+	                // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다. 
+	                // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
+					
+					//console.log("json => ", json);
+					//json => {isExists: true}
+					//json => {isExists: false}
+					
+					//console.log("json의 데이터 타입 => ", typeof json);
+					//json의 데이터 타입 =>  object
+					
+					if(json.isExists){
+						// 입력한 userid가 이미 사용 중이라면
+						$('#idcheckResult').html($('input#userid').val() + " 은 이미 사용중이므로 다른 아이디를 입력하세요.").css({"color":"red"});
+						$('input#userid').val("");
+					}
+					else {
+						// 입력한 userid가 존재하지 않는 경우라면
+						$('#idcheckResult').html($('input#userid').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
+					}
+				},
+				error: function(request, status, error){
+	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }
+			});	
+		}	
 		
 	});
 	// "아이디중복확인" 을 클릭했을 때 이벤트 처리하기 끝 //
 	
 	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기 시작 //
-	$('#emailcheck').on('click', function(){		
-		b_emailcheck_click = true;
-		// "이메일 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
+	$('#emailcheck').on('click', function(){	
 		
-		// === jQuery 를 사용한 Ajax 두번째 방법 === //		
-		$.ajax({
-			url: "emailDuplicateCheck.go", 
-			data: {"email" : $('input#email').val()},	
-			// data 속성은 http://localhost:9090/MyMVC/member/emailDuplicateCheck.up 로 전송 해야 할 데이터를 말한다.
-			type: "post", 	  //  type : "post",    // jQuery 4.x 이하 모든 버전에서 사용가능함. type 을 생략하면 type : "get" 이다.
-         	method : "post",  // jQuery 4.x 버전에서만 사용가능함. jQuery 3.x 이하 버전에서는 사용불가함. method 를 생략하면 method : "get" 이다.
+		if ($('input#email').val().trim() == "") {
+							
+			$('form[name="registerFrm"] :input').prop("disabled", true);
+			$('input#email').prop("disabled", false).val("").focus();
 			
-			async: true,	  // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
-			                  // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
+			//$(e.target).next().next().next().show();
+			// 또는 
+			$('input#email').parent().parent().find('p.error').show();	
+			
+		}else {	
+			b_emailcheck_click = true;
+			// "이메일 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
+			
+			// === jQuery 를 사용한 Ajax 두번째 방법 === //		
+			$.ajax({
+				url: "emailDuplicateCheck.go", 
+				data: {"email" : $('input#email').val()},	
+				// data 속성은 http://localhost:9090/MyMVC/member/emailDuplicateCheck.up 로 전송 해야 할 데이터를 말한다.
+				type: "post", 	  //  type : "post",    // jQuery 4.x 이하 모든 버전에서 사용가능함. type 을 생략하면 type : "get" 이다.
+	         	method : "post",  // jQuery 4.x 버전에서만 사용가능함. jQuery 3.x 이하 버전에서는 사용불가함. method 를 생략하면 method : "get" 이다.
+				
+				async: true,	  // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
+				                  // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
+						
+			    dataType: "json", // emailDuplicateCheck.up 에서 응답해주는 결과물의 타입은 json이다.
+								  		  
+				success: function(json) {
+					//console.log("json => ", json);
+					//json => {isExists: true}
+					//json => {isExists: false}
+					//json 는 idDuplicateCheck.up 을 통해 웹브라우저에서 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 object 타입의 결과물이다. 
 					
-		    dataType: "json", // emailDuplicateCheck.up 에서 응답해주는 결과물의 타입은 json이다.
-							  		  
-			success: function(json) {
-				//console.log("json => ", json);
-				//json => {isExists: true}
-				//json => {isExists: false}
-				//json 는 idDuplicateCheck.up 을 통해 웹브라우저에서 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 object 타입의 결과물이다. 
-				
-				//console.log("json의 데이터 타입 => ", typeof json);
-				//json의 데이터 타입 =>  object		
-				
-				console.log("json => ", json);
-				//json => {isExists: true}
-				//json => {isExists: false}
-				
-				console.log("json의 데이터 타입 => ", typeof json);
-				//json의 데이터 타입 =>  object
-				
-				if(json.isExists){
-					// 입력한 userid가 이미 사용 중이라면
-					$('#emailCheckResult').html($('input#email').val() + " 은 이미 사용중이므로 다른 이메일을 입력하세요.").css({"color":"red"});
-					$('input[name="email"]').val("");
-				}
-				else {
-					// 입력한 email가 존재하지 않는 경우라면
-					$('#emailCheckResult').html($('input#email').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
-				}
-			},
-			error: function(request, status, error){
-                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-		});
+					//console.log("json의 데이터 타입 => ", typeof json);
+					//json의 데이터 타입 =>  object		
+					
+					console.log("json => ", json);
+					//json => {isExists: true}
+					//json => {isExists: false}
+					
+					console.log("json의 데이터 타입 => ", typeof json);
+					//json의 데이터 타입 =>  object
+					
+					if(json.isExists){
+						// 입력한 userid가 이미 사용 중이라면
+						$('#emailCheckResult').html($('input#email').val() + " 은 이미 사용중이므로 다른 이메일을 입력하세요.").css({"color":"red"});
+						$('input[name="email"]').val("");
+					}
+					else {
+						// 입력한 email가 존재하지 않는 경우라면
+						$('#emailCheckResult').html($('input#email').val() + " 은 사용가능 합니다.").css({"color":"#87A922"});
+					}
+				},
+				error: function(request, status, error){
+	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }
+			});
+		}
 	});
 	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기 끝 //
+	
+	// 사업자등록번호 값이 변경되면 가입하기 버튼을 클릭 시 "사업자등록번호 중복확인" 을 클릭했는지 안했는지 알아보기 //	
+	$('input#busiNum').on('change', function(){
+		b_busiNumcheck_click = false;
+	});
 	
 	// 아이디 값이 변경되면 가입하기 버튼을 클릭 시 "아이디중복확인" 을 클릭했는지 안했는지 알아보기 //	
 	$('input#userid').on('change', function(){
@@ -570,11 +592,10 @@ function goRegister() {
 	let b_requiredInfo = true;
 	
 	const requiredInfo_list = document.querySelectorAll('input.requiredInfo');
-	
 	for(let elmt of requiredInfo_list) {		
 		const data = elmt.value.trim();
 		if(data == "") {
-			alert('*표시된 필수입력사항은 모두 입력하셔야 합니다.-1');
+			alert('* 표시된 필수입력사항은 모두 입력하셔야 합니다.');
 			b_requiredInfo = false;
 			
 			break;
@@ -598,6 +619,15 @@ function goRegister() {
 		return;		// goRegister() 함수를 종료한다.
 	}
 	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
+	
+	
+	// *** "사업자중복확인"를 클릭했는지 검사하기 시작 *** //
+	if(!b_busiNumcheck_click) {
+		//"아이디중복확인"를 클릭을 안 했을 경우
+		alert('사업자등록번호 중복확인을 클릭하셔야 합니다.');
+		return;	//goRegister() 함수를 종료한다.
+	}
+	// *** "사업자중복확인"를 클릭했는지 검사하기 끝 *** //
 	
 	// *** "아이디중복확인"를 클릭했는지 검사하기 시작 *** //
 	
@@ -656,39 +686,9 @@ function goRegister() {
 	// *** 약관에 동의해쓴ㄴ지 검사하기 끝 *** //
 	
 	const frm = document.registerFrm;
-	//frm.action = "memberRegister.up";
+	//frm.action = "memberRegister.go";
 	frm.method = "post";
 	frm.submit();	
 	
 	
 };	// end of function goRegister()----------
-
-function whiteSpaceChk(e) {
-	const regExp_busiNum = /^[0-9]{10}$/g;
-	// 숫자 10자리 정규표현식 객체 생성
-	
-	const bool = regExp_busiNum.test(e.val());
-	
-	if(!bool) {
-		// 사업자등록번호가 정규표현식에 위배된 경우
-		/*   
-            >>>> .prop() 와 .attr() 의 차이 <<<<            
-                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
-                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
-         */
-		$('form[name="registerFrm"] :input').prop("disabled", true);
-		e.prop("disabled", false).val("").focus();
-		
-		//$(e.target).next().next().next().show();
-		// 또는 
-		e.parent().parent().find('p.error').show();			
-	}
-	else {
-		// 사업자등록번호가 정규표현식에 맞는 경우
-		$('form[name="registerFrm"] :input').prop("disabled", false);	
-		
-		//$(e.target).next().next().next().hide();
-		// 또는	
-		e.parent().parent().find('p.error').hide();	
-	}	
-}
