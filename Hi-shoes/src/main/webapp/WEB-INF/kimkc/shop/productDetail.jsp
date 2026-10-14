@@ -870,6 +870,8 @@
 
 	<%-- 상품 상세정보 --%>
 	<div id="product-info" class="product-tab-content active">
+		
+		<div class="product-discribe">${requestScope.pdto.pcontent}</div>
 	
 		<div class="product-detail-images pt-5">
 			<img src="<%=ctxPath %>/images/${requestScope.pdto.pimage2}" />
@@ -895,16 +897,23 @@
         <div class="review-header">
 
             <div class="review-count">
-                총 <strong>${fn:length(requestScope.reviewList)}</strong>개의 후기가 있습니다.
+                총 <strong><fmt:formatNumber value="${requestScope.totalReviewCnt}" type="number" /></strong>개의 후기가 있습니다.
             </div>
 
+<%-- 
             <select class="review-sort">
                 <option value="helpful">도움돼요순</option>
                 <option value="latest">최신순</option>
                 <option value="rating">별점순</option>
             </select>
-
+--%>
         </div>
+		
+		<c:if test="${empty requestScope.reviewList}">
+		<div class="review-empty">
+			작성된 리뷰가 없습니다.
+		</div>
+		</c:if>
 
 		<div id="reivew-ajax-area">
 
@@ -1000,6 +1009,12 @@
 			
 			<button class="ms-2 write-qna-button" onclick="showQnAWriteModal()">Q&A 작성</button>
 			
+			
+			<c:if test="${empty requestScope.qnaList}">
+				<div class="qna-empty">
+				등록된 Q&A가 없습니다.
+				</div>
+			</c:if>
 			
 			<div id="qna-ajax-area">
 			

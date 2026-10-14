@@ -64,6 +64,11 @@ public class ProductDetail extends AbstractController {
 		// 선택 상품의 사이즈 목록 갖고오기
 		List<Integer> sizeList = pdao.getProductSizes(pnum);
 		request.setAttribute("sizeList", sizeList);
+		
+		
+		// 현재 상품의 총 리뷰개수 알아오기
+		int totalReviewCnt = pdao.getTotalReviewCnt(pnum);
+		request.setAttribute("totalReviewCnt", totalReviewCnt);
 
 		// ================================================================================================================================
 		
@@ -77,7 +82,7 @@ public class ProductDetail extends AbstractController {
 			currentShowPageNo_review = "1";
 		}
 		
-		// 상품의 QnA목록 총 페이지수 가져오기
+		// 상품의 리뷰목록 총 페이지수 가져오기
 		int totalProductPage_review = pdao.getTotalReviewPage(pnum);
 		
 		// === GET 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 totalPage 값 보다 더 큰값을 입력하여 장난친 경우
@@ -96,7 +101,7 @@ public class ProductDetail extends AbstractController {
 		paraMap = new HashMap<>();
 		paraMap.put("pnum", pnum);
 		paraMap.put("currentShowPageNo_review", currentShowPageNo_review);
-		// 특정 페이지번호에 해당하는 QnA 목록을 조회해온다.
+		// 특정 페이지번호에 해당하는 리뷰 목록을 조회해온다.
 		List<ReviewDTO> reviewList = pdao.getReviewList(paraMap);
 		
 		request.setAttribute("reviewList", reviewList);

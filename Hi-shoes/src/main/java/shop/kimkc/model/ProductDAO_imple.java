@@ -1383,5 +1383,44 @@ public class ProductDAO_imple implements ProductDAO {
 
 
 	
+	
+	
+	@Override
+	public int getTotalReviewCnt(String pnum) throws SQLException {
+		int totalReviewCnt = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select COUNT(*) AS cnt "
+					+ " from tbl_product A join tbl_catalogue B "
+					+ " on A.fk_pname = B.pname "
+					+ " join tbl_stock C "
+					+ " on B.pname = C.fk_pname "
+					+ " join tbl_orderdetail D "
+					+ " on C.snum = D.fk_snum "
+					+ " join tbl_review E "
+					+ " on D.odnum = E.fk_odnum "
+					+ " join tbl_order F "
+					+ " on D.fk_onum = F.onum "
+					+ " where A.pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+
+			rs = pstmt.executeQuery();
+			rs.next();
+			
+			totalReviewCnt = rs.getInt("cnt");
+			
+		} finally {
+			
+		}
+		
+		return totalReviewCnt;
+	}
+
+
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

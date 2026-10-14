@@ -118,4 +118,9 @@ public interface ProductDAO {
 	// snum 갖고오기
 	String getSnumBySpec(Map<String, String> paraMap) throws SQLException;
 
+
+	// 현재 상품의 총 리뷰개수 알아오기
+	int getTotalReviewCnt(String pnum) throws SQLException;
+	;
+
 }
