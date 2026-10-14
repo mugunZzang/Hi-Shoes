@@ -29,7 +29,7 @@
 			      <a class="list-group-item list-group-item-action" id="list-review-list" data-bs-toggle="list" href="#list-review" role="tab" aria-controls="list-review">리뷰보기</a>
 			      <a class="list-group-item list-group-item-action" id="list-editInfo-list" data-bs-toggle="list" href="#list-editInfo" role="tab" aria-controls="list-editInfo">정보수정</a>
 			      <a class="list-group-item list-group-item-action" id="list-qna-list" data-bs-toggle="list" href="#list-qna" role="tab" aria-controls="list-qna">문의내역</a>
-			      <a class="list-group-item list-group-item-action" id="list-withdraw-list" data-bs-toggle="list" href="#list-withdraw" role="tab" aria-controls="list-withdraw">회원탈퇴</a>
+			      
 			    </div>
 			  </div>
 			  <div class="col-12 col-lg-9">
@@ -45,15 +45,13 @@
 			      </div>
 			      <div class="tab-pane fade" id="list-editInfo" role="tabpanel" aria-labelledby="list-editInfo-list">
 			      
-					<%@ include file="/WEB-INF/member/authentication.jsp" %>
+					<%@ include file="/WEB-INF/member/editMyinfo.jsp" %>
 			      	
 			      </div>
 			      <div class="tab-pane fade" id="list-qna" role="tabpanel" aria-labelledby="list-qna-list">
 			      	문의내역
 			      </div>
-			      <div class="tab-pane fade" id="list-withdraw" role="tabpanel" aria-labelledby="list-withdraw-list">
-			      	회원탈퇴
-			      </div>
+			     
 			    </div>
 			  </div>
 			</div>
