@@ -7,8 +7,10 @@
     String ctx_Path = request.getContextPath();
 %>
 
-<script type="text/javascript" src="<%= ctx_Path%>/js/member/authentication.js"></script>
 <link rel="stylesheet" type="text/css" href="<%= ctx_Path%>/css/member/editMyinfo.css" />
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="<%= ctx_Path%>/js/member/authentication.js"></script>
+<script type="text/javascript" src="<%= ctx_Path%>/js/member/editMyinfo.js"></script>
 
 <%-- 처음 화면 --%>
 <section id="authenticationSection" class="bodycont d-flex center justify-content-center align-items-center col-12 col-lg-6 mx-auto my-5">
@@ -45,7 +47,7 @@
 			<p>* 표시는 필수 입력사항</p>
 		</div>
 		
-		<form name="registerFrm" class="p-4">
+		<form name="editFrm" class="p-4">
 			
 			<div class="mb-4 row">
 				<div class="col-12 col-lg-2 pt-2">
@@ -53,7 +55,7 @@
 				</div>			  
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-			  		<input type="text" class="form-control" name="company" id="company" maxlength="30" class="requiredInfo" placeholder="사명을 입력 해주세요.">
+			  		<input type="text" class="form-control" name="company" id="company" maxlength="30" class="requiredInfo" placeholder="사명을 입력 해주세요." value="${sessionScope.loginuser.company}" disabled>
 			  	</div>
 			  	
 			  	<p class="error">사명은 필수입력 사항입니다.</p>
@@ -66,12 +68,9 @@
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-				  	<input type="text" class="form-control" name="busiNum" id="busiNum" maxlength="40" class="requiredInfo" placeholder="사업자등록번호를 입력 해주세요.">					
+				  	<input type="text" class="form-control" name="busiNum" id="busiNum" maxlength="40" class="requiredInfo" placeholder="사업자등록번호를 입력 해주세요." value="${sessionScope.loginuser.busiNum}" disabled>					
 			  	</div>
-			  	<div  class="col-12 col-lg-6 mt-1">
-			  		<%-- 아이디중복체크 --%>
-			  		<button type="button" id="busiNumcheck" class="d-grid d-lg-block btn btn-sm btn-danger">사업자등록번호 중복 확인</button>
-			  	</div>		  		
+			  		  		
 				<p id="busiNumcheckResult"></p>
 		  		<p class="error">사업자등록번호는 하이픈(-) 없이 숫자 10자리로만 입력해주세요.</p>			  	
 			  </div>			  
@@ -83,12 +82,8 @@
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-				  	<input type="text" class="form-control" name="userid" id="userid" maxlength="40" class="requiredInfo" placeholder="아이디를 입력 해주세요.">					
+				  	<input type="text" class="form-control" name="userid" id="userid" maxlength="40" class="requiredInfo" placeholder="아이디를 입력 해주세요." value="${sessionScope.loginuser.userid}" disabled>					
 			  	</div>
-			  	<div  class="col-12 col-lg-6 mt-1">
-			  		<%-- 아이디중복체크 --%>
-			  		<button type="button" id="idcheck" class="d-grid d-lg-block btn btn-sm btn-danger">아이디 중복 확인</button>
-			  	</div>		  		
 				<p id="idcheckResult"></p>
 		  		<p class="error">아이디는 필수입력 사항입니다.</p>			  	
 			  </div>			  
@@ -104,6 +99,7 @@
 			  	</div>
 			  	
 			  	<p class="error">암호는 영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.</p>
+			  	<p id="duplicate_pwd" class="error"></p>
 			  </div>			  
 			</div>
 			
@@ -191,7 +187,7 @@
 			
 			<div class="row">
 				<div class="col-12 col-lg-6 mx-auto text-center">
-					<input type="button" class="btn btn-primary btn-lg container-fluid" value="수정하기" onclick="goRegister()" />
+					<input type="button" class="btn btn-primary btn-lg container-fluid" value="수정하기" onclick="goEdit()" />
 				</div>
 			</div>
 		</form>

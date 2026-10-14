@@ -45,7 +45,7 @@
 			      </div>
 			      <div class="tab-pane fade" id="list-editInfo" role="tabpanel" aria-labelledby="list-editInfo-list">
 			      
-					<%@ include file="/WEB-INF/member/editMyinfo.jsp" %>
+					<jsp:include page="/WEB-INF/member/editMyinfo.jsp" />
 			      	
 			      </div>
 			      <div class="tab-pane fade" id="list-qna" role="tabpanel" aria-labelledby="list-qna-list">

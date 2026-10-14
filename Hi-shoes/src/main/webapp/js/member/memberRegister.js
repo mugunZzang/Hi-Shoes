@@ -631,7 +631,7 @@ function goRegister() {
 	if(!b_idcheck_click) {
 		//"아이디중복확인"를 클릭을 안 했을 경우
 		alert('아이디중복확인을 클릭하셔야 합니다.');
-		retrun;	//goRegister() 함수를 종료한다.
+		return;	//goRegister() 함수를 종료한다.
 	}
 	
 	// *** "아이디중복확인"를 클릭했는지 검사하기 끝 *** //
@@ -640,7 +640,7 @@ function goRegister() {
 	if(!b_emailcheck_click) {
 		//"이메일중복확인"를 클릭을 안 했을 경우
 		alert('이메일중복확인을 클릭하셔야 합니다.');
-		retrun;	//goRegister() 함수를 종료한다.
+		return;	//goRegister() 함수를 종료한다.
 	}		
 	// *** "이메일중복확인"를 클릭했는지 검사하기 끝 *** //
 	
@@ -648,7 +648,7 @@ function goRegister() {
 	if(!b_zipcodeSearch_click) {
 		//"우편번호찾기"를 클릭을 안 했을 경우
 		alert('"우편번호찾기"를 클릭하셔서 우편번호를 입력하셔야 합니다.');
-		retrun;	//goRegister() 함수를 종료한다.
+		return;	//goRegister() 함수를 종료한다.
 	}	
 	// *** "우편번호찾기"를 클릭했는지 검사하기 끝 *** //	
 	
@@ -659,7 +659,7 @@ function goRegister() {
 	
 	if(postcode == "" || address == "" || detailAddress == "") {
 		alert('우편번호 및 주소를 입력하셔야 합니다.');
-		retrun;	//goRegister() 함수를 종료한다.
+		return;	//goRegister() 함수를 종료한다.
 	}
 	
 	// *** 우편번호 및 주소에 값을 입력햇는지 검사하기 끝 *** //
