@@ -14,7 +14,7 @@
 
 	<div class="purchase-result-container">
 	
-	    <!-- 주문 완료 안내 -->
+	    <%-- 주문 완료 안내 --%>
 	    <section class="purchase-complete">
 	        <div class="complete-icon">
 	            <span>✓</span>
@@ -26,7 +26,7 @@
 	        </p>
 	    </section>
 	
-	    <!-- 주문 정보 -->
+	    <%-- 주문 정보 --%>
 	    <section class="result-section">
 	        <h3 class="section-title">주문 정보</h3>
 	
@@ -54,7 +54,7 @@
 	        </div>
 	    </section>
 	
-	    <!-- 주문자 정보 -->
+	    <%-- 주문자 정보 --%>
 	    <section class="result-section">
 	        <h3 class="section-title">주문자 정보</h3>
 	
@@ -91,7 +91,7 @@
 	        </div>
 	    </section>
 	
-	    <!-- 하단 버튼 -->
+	    <%-- 하단 버튼 --%>
 	    <div class="result-button-group">
 	        <a href="<%= ctxPath %>/index.go" class="result-btn btn-home">
 	            홈으로
