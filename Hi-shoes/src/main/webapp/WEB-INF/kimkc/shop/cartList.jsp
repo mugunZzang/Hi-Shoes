@@ -411,7 +411,7 @@
 		
 		                    <%-- 상품 이미지 --%>
 		                    <div class="product-image">
-		                        <img src="<%=ctxPath %>/images/kimkc/product/${cart.pimage1}"
+		                        <img src="<%=ctxPath %>/images/${cart.pimage1}"
 		                             alt="${cart.pname}">
 		                    </div>
 		

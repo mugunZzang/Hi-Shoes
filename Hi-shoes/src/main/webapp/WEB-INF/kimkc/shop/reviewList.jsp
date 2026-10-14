@@ -59,7 +59,7 @@
 	    <%-- 리뷰 이미지 --%>
 	    <c:if test="${not empty review.rimage}">
 			<div class="review-image mt-3">
-				<img alt="리뷰이미지" src="<%=ctxPath%>/images/kimkc/product/${review.rimage}">
+				<img alt="리뷰이미지" src="<%=ctxPath%>/images/${review.rimage}">
 			</div>
 		</c:if>
 

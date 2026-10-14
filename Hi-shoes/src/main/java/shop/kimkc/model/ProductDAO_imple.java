@@ -1082,7 +1082,7 @@ public class ProductDAO_imple implements ProductDAO {
 					+ " join tbl_order F "
 					+ " on D.fk_onum = F.onum "
 					+ " where A.pnum = to_number(?)"
-					+ " order by E.rwritedate asc "
+					+ " order by E.rwritedate asc, E.fk_odnum asc "
 					+ "	OFFSET (to_number(?)-1)*5 ROW "
 					+ "	FETCH NEXT 5 ROW ONLY ";
 					

@@ -148,7 +148,7 @@ public class ProductDetail extends AbstractController {
 	    if(pageNo_review <= totalProductPage_review) {
 	    	pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+pageNo_review+")'>&gt;</a></li>"; 
 	    }
-	    pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+(totalProductPage_review-1)+")'>&gt;&gt;</a></li>"; 
+	    pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+totalProductPage_review+")'>&gt;&gt;</a></li>"; 
 	    
 	    
 		request.setAttribute("pageBar_review", pageBar_review);

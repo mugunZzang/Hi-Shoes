@@ -479,7 +479,7 @@
                                 <div class="product-image">
 
                                     <img
-                                        src="${pageContext.request.contextPath}/images/kimkc/product/${pdto.pimage1}"
+                                        src="${pageContext.request.contextPath}/images/${pdto.pimage1}"
                                         alt="${pdto.catalogueDTO.pname}">
 
                                 </div>

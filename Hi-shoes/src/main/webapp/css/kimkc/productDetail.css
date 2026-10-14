@@ -627,6 +627,7 @@ label.label-radio-ssize {
 
 #product-review {
     width: 100%;
+    min-height: 950px;
 }
 
 

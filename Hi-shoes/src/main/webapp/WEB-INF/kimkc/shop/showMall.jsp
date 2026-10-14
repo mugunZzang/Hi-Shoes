@@ -43,7 +43,7 @@
 		                <%-- 대표이미지 --%>
 		                <div class="product-image">
 		                    <img
-		                        src="${pageContext.request.contextPath}/images/kimkc/product/${pdto.pimage1}"
+		                        src="${pageContext.request.contextPath}/images/${pdto.pimage1}"
 		                        alt="아디다스 오즈가이아">
 		                </div>
 		

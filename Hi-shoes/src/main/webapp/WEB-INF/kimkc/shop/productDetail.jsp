@@ -641,7 +641,7 @@
 	
 	// =================================================================================================
 		
-	// QnA 페이지바 클릭 시
+	// 리뷰 페이지바 클릭 시
 	function getReviewList(pnum, currentPageNo_review) {
 		//console.log("현재페이지" + currentPageNo_review);
 		$.ajax({
@@ -681,7 +681,7 @@
 
         <%-- 대표 이미지 --%>
         <div class="main-image">
-            <img src="<%=ctxPath %>/images/kimkc/product/${requestScope.pdto.pimage1}" alt="상품 대표 이미지">
+            <img src="<%=ctxPath %>/images/${requestScope.pdto.pimage1}" alt="상품 대표 이미지">
         </div>
 
         <%-- 추가이미지들 --%>
@@ -695,13 +695,13 @@
 	        	<div class="thumbnail-track">
 	
 		            <button type="button" class="thumbnail">
-		                <img src="<%=ctxPath %>/images/kimkc/product/${requestScope.pdto.pimage2}" alt="상품 측면 이미지">
+		                <img src="<%=ctxPath %>/images/${requestScope.pdto.pimage2}" alt="상품 측면 이미지">
 		            </button>
 		
 		            <c:if test="${not empty requestScope.pdto.prodImageDTOList}">
 		            	<c:forEach var="pidto" items="${requestScope.pdto.prodImageDTOList}">
 		            		<button type="button" class="thumbnail">
-		                		<img src="<%=ctxPath %>/images/kimkc/product/${pidto.image_name}" alt="상품 측면 이미지">
+		                		<img src="<%=ctxPath %>/images/${pidto.image_name}" alt="상품 측면 이미지">
 		            		</button>
 		            	</c:forEach>
 		            </c:if>
@@ -872,11 +872,11 @@
 	<div id="product-info" class="product-tab-content active">
 	
 		<div class="product-detail-images pt-5">
-			<img src="<%=ctxPath %>/images/kimkc/product/${requestScope.pdto.pimage2}" />
+			<img src="<%=ctxPath %>/images/${requestScope.pdto.pimage2}" />
 			
 			<c:if test="${not empty requestScope.pdto.prodImageDTOList}">
 		    	<c:forEach var="pidto" items="${requestScope.pdto.prodImageDTOList}">
-		       		<img src="<%=ctxPath %>/images/kimkc/product/${pidto.image_name}" alt="상품 측면 이미지">
+		       		<img src="<%=ctxPath %>/images/${pidto.image_name}" alt="상품 측면 이미지">
 		    	</c:forEach>
 		    </c:if>
 			
@@ -961,7 +961,7 @@
 					    <%-- 리뷰 이미지 --%>
 					    <c:if test="${not empty review.rimage}">
 							<div class="review-image mt-3">
-								<img alt="리뷰이미지" src="<%=ctxPath%>/images/kimkc/product/${review.rimage}">
+								<img alt="리뷰이미지" src="<%=ctxPath%>/images/${review.rimage}">
 							</div>
 						</c:if>
 			
