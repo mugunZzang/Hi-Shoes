@@ -28,7 +28,9 @@
     <div class="product-list">
 
 		<c:if test="${empty requestScope.prodList}">
-			<span>상품이 없어요.</span>
+			<div class="product-empty">
+				<span>상품이 없어요.</span>
+			</div>
 		</c:if>
 
 		<c:if test="${not empty requestScope.prodList}"> 

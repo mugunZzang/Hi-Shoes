@@ -446,7 +446,8 @@
 					"snum" : snum,
 					"cqty" : cqty,
 					"regprice" : regprice,
-					"saleprice" : saleprice
+					"saleprice" : saleprice,
+					"purtype" : "바로구매"
 				});
 
 			});
@@ -608,6 +609,65 @@
 	//id="btnQnARegister"
 	
 	
+	// =================================================================================================
+	
+	// QnA 페이지바 클릭 시
+	function getQnaList(pnum, currentPageNo_QnA) {
+		//console.log("현재페이지" + currentPageNo_QnA);
+		$.ajax({
+	        url: "<%= ctxPath %>/shop/getQnAList.go",
+	        type: "GET",
+	        data: {
+	            pnum: pnum,
+	            currentShowPageNo_QnA: currentPageNo_QnA
+	        },
+	        dataType: "html",
+
+	        success: function(html) {
+	            // QnA 목록과 페이지바만 교체
+	            $("#qna-ajax-area").html(html);
+	        },
+
+	        error: function(request, status, error) {
+	            alert(
+	                "code: " + request.status +
+	                "\nmessage: " + request.responseText +
+	                "\nerror: " + error
+	            );
+	        }
+	    });
+	}
+	
+	
+	// =================================================================================================
+		
+	// QnA 페이지바 클릭 시
+	function getReviewList(pnum, currentPageNo_review) {
+		//console.log("현재페이지" + currentPageNo_review);
+		$.ajax({
+	        url: "<%= ctxPath %>/shop/getReviewList.go",
+	        type: "GET",
+	        data: {
+	            pnum: pnum,
+	            currentShowPageNo_review: currentPageNo_review
+	        },
+	        dataType: "html",
+
+	        success: function(html) {
+	            // 리뷰 목록과 페이지바만 교체
+	            $("#reivew-ajax-area").html(html);
+	        },
+
+	        error: function(request, status, error) {
+	            alert(
+	                "code: " + request.status +
+	                "\nmessage: " + request.responseText +
+	                "\nerror: " + error
+	            );
+	        }
+	    });
+	}	
+		
 
 </script>
 
@@ -760,12 +820,12 @@
 
         <%-- 장바구니/바로구매 버튼 --%>
         <div class="product-buttons">
-            <button type="button" id="button-cart">장바구니</button>
+            <button type="button" id="button-cart" class="cart-button">장바구니</button>
             
             <form id="frm-purchase">
             	<input name="deliveryfee" type="hidden" value="${requestScope.pdto.deliveryfee}"/>
             	<input name="prodList" type="hidden"/>
-            	<button type="button" id="button-purchase">바로구매</button>
+            	<button type="button" id="button-purchase" class="buy-button">바로구매</button>
             </form>
         </div>
 
@@ -794,13 +854,13 @@
         <button type="button"
                 class="product-tab"
                 data-tab="product-review">
-            상품후기 (<span>${fn:length(requestScope.reviewList)}</span>)
+            상품후기
         </button>
 
         <button type="button"
                 class="product-tab"
                 data-tab="product-qna">
-            상품 Q&A (<span>${fn:length(requestScope.qnaList)}</span>)
+            상품 Q&A
         </button>
 
     </div>
@@ -811,7 +871,7 @@
 	<%-- 상품 상세정보 --%>
 	<div id="product-info" class="product-tab-content active">
 	
-		<div class="product-detail-images">
+		<div class="product-detail-images pt-5">
 			<img src="<%=ctxPath %>/images/kimkc/product/${requestScope.pdto.pimage2}" />
 			
 			<c:if test="${not empty requestScope.pdto.prodImageDTOList}">
@@ -830,7 +890,7 @@
     <%-- ===================================================== >
          상품 후기
     < ===================================================== --%>
-    <div id="product-review" class="product-tab-content">
+    <div id="product-review" class="product-tab-content pt-5">
 
         <div class="review-header">
 
@@ -846,69 +906,72 @@
 
         </div>
 
+		<div id="reivew-ajax-area">
 
-		<c:if test="${not empty requestScope.reviewList}">
-		
-			<c:forEach var="review" items="${requestScope.reviewList}">
-        		<%-- 리뷰 1개 --%>
-		        <div class="review-item">
-		
-					<div class="review-big-rating">
-						
-				    	<c:forEach begin="1" end="${review.rating}" var="i">
-				            ★
-				        </c:forEach>
-				        <c:forEach begin="1" end="${5 - review.rating}" var="i">
-				            ☆
-				        </c:forEach>
-			        </div>
-				
-				    <%-- 리뷰 정보 --%>
-				    <div class="review-info">
-				    	
-						
-						
-				        <div class="review-option-area">
-				            <span class="review-option">옵션</span>
-				            <span class="review-option-value">${review.stockDTO.ssize}, ${review.stockDTO.color}</span>
+			<c:if test="${not empty requestScope.reviewList}">
+			
+				<c:forEach var="review" items="${requestScope.reviewList}">
+	        		<%-- 리뷰 1개 --%>
+			        <div class="review-item">
+			
+						<div class="review-big-rating">
+							
+					    	<c:forEach begin="1" end="${review.rating}" var="i">
+					            ★
+					        </c:forEach>
+					        <c:forEach begin="1" end="${5 - review.rating}" var="i">
+					            ☆
+					        </c:forEach>
 				        </div>
-				
-				        <div class="review-user-info">
-				
-				            <span class="review-user">
-				                작성자 : ${fn:substring(review.fk_userid, 0, 3)}<c:forEach
-				                    begin="3"
-				                    end="${fn:length(review.fk_userid) - 1}">*</c:forEach>
-				            </span>
-				
-				            <span class="review-date">
-				                ${review.rwritedate}
-				            </span>
-				
-				        </div>
-				
-				
-				    </div>
-				
-				    <%-- 리뷰 내용 --%>
-				    <div class="review-content">
-				
-				        ${review.rcontents}
-				
-				    </div>
-				    
-				    <%-- 리뷰 이미지 --%>
-				    <c:if test="${not empty review.rimage}">
-						<div class="review-image mt-3">
-							<img alt="리뷰이미지" src="<%=ctxPath%>/images/kimkc/product/${review.rimage}">
-						</div>
-					</c:if>
+					
+					    <%-- 리뷰 정보 --%>
+					    <div class="review-info">
+					    	
+							
+							
+					        <div class="review-option-area">
+					            <span class="review-option">옵션</span>
+					            <span class="review-option-value">${review.stockDTO.ssize}, ${review.stockDTO.color}</span>
+					        </div>
+					
+					        <div class="review-user-info">
+					
+					            <span class="review-user">
+					                작성자 : ${fn:substring(review.fk_userid, 0, 3)}<c:forEach
+					                    begin="3"
+					                    end="${fn:length(review.fk_userid) - 1}">*</c:forEach>
+					            </span>
+					
+					            <span class="review-date">
+					                ${review.rwritedate}
+					            </span>
+					
+					        </div>
+					
+					
+					    </div>
+					
+					    <%-- 리뷰 내용 --%>
+					    <div class="review-content">
+					
+					        ${review.rcontents}
+					
+					    </div>
+					    
+					    <%-- 리뷰 이미지 --%>
+					    <c:if test="${not empty review.rimage}">
+							<div class="review-image mt-3">
+								<img alt="리뷰이미지" src="<%=ctxPath%>/images/kimkc/product/${review.rimage}">
+							</div>
+						</c:if>
+			
+					</div>
+					
+				</c:forEach>
+	
+			</c:if>
 		
-				</div>
-				
-			</c:forEach>
-
-		</c:if>
+		</div>
 		
 		<c:if test="${not empty requestScope.reviewList}"> 
 	   		 <%-- 페이지바 --%>
@@ -930,97 +993,99 @@
     <%-- ===================================================== >
          상품 QnA
     < ===================================================== --%>
-    <div id="product-qna" class="product-tab-content">
+    <div id="product-qna" class="product-tab-content mb-5">
 
         <div class="qna-list pb-5 pt-5">
 			
 			
-			<button class="ms-2" onclick="showQnAWriteModal()">Q&A 작성</button>
+			<button class="ms-2 write-qna-button" onclick="showQnAWriteModal()">Q&A 작성</button>
 			
 			
-			<c:if test="${not empty requestScope.qnaList}">
-				
-				<c:forEach var="qna" items="${requestScope.qnaList}">
+			<div id="qna-ajax-area">
+			
+				<c:if test="${not empty requestScope.qnaList}">
+					
+					<c:forEach var="qna" items="${requestScope.qnaList}">
+	
+					    <%-- Q&A 항목 --%>
+					    <div class="qna-item"
+					         data-can-open="<c:choose>
+					             <c:when test="${qna.islock eq '공개'
+					                 or (not empty sessionScope.loginuser
+					                 and qna.fk_userid eq sessionScope.loginuser.userid)}">true</c:when>
+					             <c:otherwise>false</c:otherwise>
+					         </c:choose>">
+					
+					        <%-- 질문 제목 및 기본 정보 --%>
+					        <div class="qna-question">
+					
+					            <span class="qna-title">
+					                ${qna.qtitle}
+					            </span>
+					
+					            <%-- 공개 여부 --%>
+					            <c:if test="${qna.islock eq '비공개'}">
+					                <span class="qna-lock">🔒</span>
+					            </c:if>
+					
+					            <c:if test="${qna.islock eq '공개'}">
+					                <span class="qna-lock empty"></span>
+					            </c:if>
+					
+					            <%-- 작성자 id는 3글자만 보이기 --%>
+					            <span class="qna-user">
+					                ${fn:substring(qna.fk_userid, 0, 3)}<c:forEach
+					                    begin="3"
+					                    end="${fn:length(qna.fk_userid) - 1}">*</c:forEach>
+					            </span>
+					
+					            <%-- 작성일 --%>
+					            <span class="qna-date">
+					                ${qna.qwritedate}
+					            </span>
+					
+					            <%-- 답변 상태 --%>
+					            <span class="qna-status">
+					                <c:if test="${not empty qna.qanswer}">
+					                    답변완료
+					                </c:if>
+					                <c:if test="${empty qna.qanswer}">
+					                    등록상태
+					                </c:if>
+					            </span>
+					
+					        </div>
+					
+					        <%-- 질문 및 답변은 기본적으로 숨김 --%>
+					        <div class="qna-answer-area">
+					
+					            <%-- 질문 내용 --%>
+					            <div class="qna-question-content pb-5">
+					                ${qna.qcontents}
+					            </div>
+					
+					            <%-- 답변이 존재할 때만 표시 --%>
+					            <c:if test="${not empty qna.qanswer}">
+					                <div class="qna-answer">
+					
+					                    <div class="answer-icon">A</div>
+					
+					                    <div class="answer-content">
+					                        ${qna.qanswer}
+					                    </div>
+					
+					                </div>
+					            </c:if>
+					
+					        </div>
+					
+					    </div>
+					
+					</c:forEach>
+		            
+	            </c:if>
 
-				    <%-- Q&A 항목 --%>
-				    <div class="qna-item"
-				         data-can-open="<c:choose>
-				             <c:when test="${qna.islock eq '공개'
-				                 or (not empty sessionScope.loginuser
-				                 and qna.fk_userid eq sessionScope.loginuser.userid)}">true</c:when>
-				             <c:otherwise>false</c:otherwise>
-				         </c:choose>">
-				
-				        <%-- 질문 제목 및 기본 정보 --%>
-				        <div class="qna-question">
-				
-				            <span class="qna-title">
-				                ${qna.qtitle}
-				            </span>
-				
-				            <%-- 공개 여부 --%>
-				            <c:if test="${qna.islock eq '비공개'}">
-				                <span class="qna-lock">🔒</span>
-				            </c:if>
-				
-				            <c:if test="${qna.islock eq '공개'}">
-				                <span class="qna-lock empty"></span>
-				            </c:if>
-				
-				            <%-- 작성자 id는 3글자만 보이기 --%>
-				            <span class="qna-user">
-				                ${fn:substring(qna.fk_userid, 0, 3)}<c:forEach
-				                    begin="3"
-				                    end="${fn:length(qna.fk_userid) - 1}">*</c:forEach>
-				            </span>
-				
-				            <%-- 작성일 --%>
-				            <span class="qna-date">
-				                ${qna.qwritedate}
-				            </span>
-				
-				            <%-- 답변 상태 --%>
-				            <span class="qna-status">
-				                <c:if test="${not empty qna.qanswer}">
-				                    답변완료
-				                </c:if>
-				                <c:if test="${empty qna.qanswer}">
-				                    등록상태
-				                </c:if>
-				            </span>
-				
-				        </div>
-				
-				        <%-- 질문 및 답변은 기본적으로 숨김 --%>
-				        <div class="qna-answer-area">
-				
-				            <%-- 질문 내용 --%>
-				            <div class="qna-question-content pb-5">
-				                ${qna.qcontents}
-				            </div>
-				
-				            <%-- 답변이 존재할 때만 표시 --%>
-				            <c:if test="${not empty qna.qanswer}">
-				                <div class="qna-answer">
-				
-				                    <div class="answer-icon">A</div>
-				
-				                    <div class="answer-content">
-				                        ${qna.qanswer}
-				                    </div>
-				
-				                </div>
-				            </c:if>
-				
-				        </div>
-				
-				    </div>
-				
-				</c:forEach>
-	            
-            </c:if>
-
-
+			</div>
             
             
 

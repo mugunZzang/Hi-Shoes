@@ -312,15 +312,25 @@ label.label-radio-ssize:hover {
     margin-top: 25px;
 }
 
-.product-buttons button {
-    height: 50px;
+.product-buttons button,
+.product-buttons > form {
+	height: 50px;
     flex: 1;
+    min-width: 0;
+}
+
+.product-buttons button {
 
     border: none;
     cursor: pointer;
 
     font-size: 15px;
     font-weight: bold;
+}
+
+/* form 내부 버튼도 form 너비에 맞춤 */
+.product-buttons > form button {
+    width: 100%;
 }
 
 .cart-button {
@@ -779,12 +789,25 @@ gap: 5px;
 
 #product-qna {
     width: 100%;
+    min-height: 910px;
 }
 
 
 /* Q&A 전체 */
 .qna-list {
     width: 100%;
+}
+
+/* Q&A 작성 버튼 */
+.write-qna-button {
+    font-size: 15px;
+    font-weight: bold;
+	width: 120px;
+	height: 40px;
+	background-color: #111;
+    color: white;
+    border: none;
+    
 }
 
 

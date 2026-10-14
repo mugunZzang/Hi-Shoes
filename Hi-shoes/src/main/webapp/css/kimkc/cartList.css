@@ -30,6 +30,20 @@ button {
 }
 
 
+/* 장바구니 상품 없을 때 */
+.cart-empty {
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+	padding-top: 40px;
+	padding-bottom: 30px;
+}
+
+.cart-empty > p {
+	line-height: 30px;
+}
+
+
 /* =========================
    제목
 ========================= */

@@ -1179,6 +1179,7 @@ public class ProductDAO_imple implements ProductDAO {
 			rs = pstmt.executeQuery();
 			rs.next();
 			int onum = rs.getInt("onum");
+			System.out.println("채번한 onum :"+onum);
 					
 			
 			// =========== 1. tbl_order에 삽입 =========== //
@@ -1189,7 +1190,7 @@ public class ProductDAO_imple implements ProductDAO {
 			pstmt.setString(2, userid);
 			
 			n1 = pstmt.executeUpdate();
-			
+			System.out.println("n1 결과 : " + n1);
 			
 			
 			if (n1 == 1) {
@@ -1209,6 +1210,8 @@ public class ProductDAO_imple implements ProductDAO {
 				
 			}
 			
+			System.out.println("n2 결과 : " + n2);
+			
 			
 			if (n2 == purchaseList.size()) {
 				// =========== 3. tbl_stock에 각 cqty 만큼 수량 감소 =========== //
@@ -1227,57 +1230,49 @@ public class ProductDAO_imple implements ProductDAO {
 			}
 			
 			
+			
+			
 			if (n3 == purchaseList.size()) {
 				// =========== 4. tbl_cart 에서 해당목록 삭제 =========== //
 				
+				// 장바구니에서 선택해 구매한 경우에만 삭제한다.
+				// 바로구매는 삭제할거 없으니까 패스
 				// 삭제하기 전, 장바구니에 해당하는 목록이 있는지 검사한다.
 				// 검사해서 없으면 "바로구매" 로 간주한다.
-				sql = " SELECT * FROM tbl_cart "
+				sql = " DELETE FROM tbl_cart "
 						+ " WHERE fk_userid = ? "
-						+ " AND fk_snum = ? "; 
+						+ " AND fk_snum = ? ";
 				
 				for (Map<String, String> map : purchaseList) {
-					pstmt = conn.prepareStatement(sql);
-					pstmt.setString(1, userid);
-					pstmt.setInt(2, Integer.parseInt(map.get("snum")));
 					
-					rs = pstmt.executeQuery();
-					if(!rs.next()) {
+					if(map.get("purtype").equals("바로구매")) {
 						n4++;
 					}
-				}		
-				
-				// 검사해서 있다면 장바구니 삭제
-				if (n4 != 0) {
-					n4 = 0;
-					
-					sql = " DELETE FROM tbl_cart "
-							+ " WHERE fk_userid = ? "
-							+ " AND fk_snum = ? ";
-					
-					for (Map<String, String> map : purchaseList) {
+					else {
 						pstmt = conn.prepareStatement(sql);
 						pstmt.setString(1, userid);
 						pstmt.setInt(2, Integer.parseInt(map.get("snum")));
 						
 						n4 += pstmt.executeUpdate();
 					}
-					
-				}
-				else {
+
+				}	
+				
+				if(n4 == purchaseList.size()) {
 					n4 = 1;
 				}
+				else {
+					n4 = 0;
+				}
+				
+				
 				
 				
 				n3 = 1;
 			}
 			
-			if (n4 == purchaseList.size()) {
-				n4 = 1;
-			}
-			
-			
-			
+			System.out.println("n3 결과 : " + n3);
+			System.out.println("최종 n4 결과 : " + n4);
 			
 			// 모두 정상 실행되었다면 
 			if(n1*n2*n3*n4 == 1) {

@@ -71,6 +71,7 @@ public class PurchaseProduct extends AbstractController {
 				}
 				
 				map.put("cqty", jsonObject.getString("cqty"));
+				map.put("purtype", jsonObject.getString("purtype"));
 				/*
 				System.out.println("-------------------------");
 				System.out.println(jsonObject.getString("pimage")); 

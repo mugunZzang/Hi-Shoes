@@ -60,7 +60,16 @@ public class ShowMallByCate extends AbstractController {
 		String pre_str_color = request.getParameter("str_color");
 		String min_price = request.getParameter("min_price");
 		String max_price = request.getParameter("max_price");
-		
+		/*
+		System.out.println("들어온category:" + category);
+		System.out.println("들어온str_ssize:" + str_ssize);
+		System.out.println("들어온brand:" + brand);
+		System.out.println("들어온keyword:" + keyword);
+		System.out.println("들어온min_price:" + min_price);
+		System.out.println("들어온max_price:" + max_price);
+		System.out.println("들어온str_color:" + pre_str_color);
+		System.out.println("----------------------------");
+		*/
 		String str_color = "";	// 색상 문자열 재조정한거 담을거임
 		
 		//String category = "";	// 임의로 하나
@@ -86,8 +95,13 @@ public class ShowMallByCate extends AbstractController {
 		if(pre_str_color == null || pre_str_color.isBlank()) {
 			str_color = "";
 		} else {
-			String[] arr_color = str_color.split("\\,");
-			str_color = "'" + String.join("','", arr_color) + "'";
+			String[] arr_color = pre_str_color.split("\\,");
+			if (arr_color.length != 1) {
+				str_color = "'" + String.join("','", arr_color) + "'";
+			} 
+			else {
+				str_color = "'" + arr_color[0] + "'";
+			}
 		}
 		
 		
@@ -111,6 +125,16 @@ public class ShowMallByCate extends AbstractController {
 		
 
 		Map<String, String> paraMap = new HashMap<>();
+		/*
+		System.out.println("category:" + category);
+		System.out.println("str_ssize:" + str_ssize);
+		System.out.println("brand:" + brand);
+		System.out.println("keyword:" + keyword);
+		System.out.println("min_price:" + min_price);
+		System.out.println("max_price:" + max_price);
+		System.out.println("str_color:" + str_color);
+		System.out.println("----------------------------");
+		*/
 		paraMap.put("category", category);
 		paraMap.put("str_ssize", str_ssize);
 		paraMap.put("brand",brand);

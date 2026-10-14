@@ -36,6 +36,7 @@ public class UpdateOrderListJSON extends AbstractController {
 				map.put("snum", String.valueOf(jsonObject.getInt("snum")));
 				map.put("saleprice",String.valueOf(jsonObject.getInt("saleprice")));
 				map.put("cqty",String.valueOf(jsonObject.getInt("cqty")));
+				map.put("purtype", jsonObject.getString("purtype"));
 				
 				//System.out.println(jsonObject.getString("snum")); 
 				//System.out.println(jsonObject.getString("saleprice")); 
@@ -53,7 +54,7 @@ public class UpdateOrderListJSON extends AbstractController {
 			
 			// 각종 DB에 구매정보 반영하기
 			int n = pdao.updateOrderList(paraMap);
-			
+			System.out.println("리턴받은 n값 : " + n);
 			
 			JSONObject jsonObj = new JSONObject();
 		    jsonObj.put("n", n);

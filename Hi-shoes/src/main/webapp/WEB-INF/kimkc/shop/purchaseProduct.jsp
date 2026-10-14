@@ -133,10 +133,12 @@
 	    	const saleprice = Number($('strong.discount-price').eq(i).attr("data-saleprice"));
 	    	const cqty = Number($("input.product-cqty").eq(i).val());
 	    	const snum = Number($('input.product-snum').eq(i).val());
+	    	const purtype = $('input.product-purtype').eq(i).val();
 	    	purchaseList.push({
 	    		"snum" : snum,
 	    		"saleprice" : saleprice,
-	    		"cqty" : cqty
+	    		"cqty" : cqty,
+	    		"purtype" : purtype
 	    	});
 	    }
 	    
@@ -227,7 +229,7 @@
 	                    </span>
 	                    <input class="product-cqty" type="hidden" value="${prod.cqty}"/>
 	                    <input class="product-snum" type="hidden" value="${prod.snum}"/>
-	
+						<input class="product-purtype" type="hidden" value="${prod.purtype}"/>
 	                </div>
 	
 	

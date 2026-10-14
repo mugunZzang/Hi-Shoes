@@ -117,19 +117,19 @@ public class ProductDetail extends AbstractController {
 		
 		
 		// *** [맨처음][이전] 만들기 *** //
-		pageBar_review += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_review=1'>&lt;&lt;</a></li>";
+		pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+",1)'>&lt;&lt;</a></li>";
 		
 		if(pageNo_review != 1) {
-	    	pageBar_review += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_review="+(pageNo_review-1)+"'>&lt;</a></li>"; 
+	    	pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+"," +(pageNo_review-1)+ ")'>&lt;</a></li>"; 
 	    }
 		
 	    while( !(loop_review > blockSize_review || pageNo_review > totalProductPage_review) ) {
 	    	
 	    	if(pageNo_review == Integer.parseInt(currentShowPageNo_review)){
-	    		pageBar_review += "<li class='page-item active'><a class='page-link' href='#'>"+pageNo_review+"</a></li>"; 
+	    		pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+pageNo_review+")'>"+pageNo_review+"</a></li>"; 
 	    	}
 	    	else {
-	    		pageBar_review += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_review="+pageNo_review+"'>"+pageNo_review+"</a></li>"; 
+	    		pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+pageNo_review+")'>"+pageNo_review+"</a></li>"; 
 	    	}
 	    	
 	    	loop_review++;   // 1 2 3 4 5 6 7 8 9 10 
@@ -146,9 +146,9 @@ public class ProductDetail extends AbstractController {
 	    // pageNo ==> 11
 	    
 	    if(pageNo_review <= totalProductPage_review) {
-	    	pageBar_review += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_review="+pageNo_review+"'>&gt;</a></li>"; 
+	    	pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+pageNo_review+")'>&gt;</a></li>"; 
 	    }
-	    pageBar_review += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_review="+totalProductPage_review+"'>&gt;&gt;</a></li>"; 
+	    pageBar_review += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getReviewList("+pnum+","+(totalProductPage_review-1)+")'>&gt;&gt;</a></li>"; 
 	    
 	    
 		request.setAttribute("pageBar_review", pageBar_review);
@@ -215,20 +215,24 @@ public class ProductDetail extends AbstractController {
 		// pageNo 는 페이지바에서 보여지는 첫번째 번호이다.
 		
 		
+		// a 태그는 href 가 onclick 보다 우선실행되기 때문에 href="javascript:void(0);" 이걸로 href 를 막아줘야 onclick 이 제대로 먹는다.
 		// *** [맨처음][이전] 만들기 *** //
-		pageBar_QnA += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_QnA=1'>&lt;&lt;</a></li>";
+		
+		
+	    
+		pageBar_QnA += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getQnaList("+pnum+",1)'>&lt;&lt;</a></li>";
 		
 		if(pageNo_QnA != 1) {
-	    	pageBar_QnA += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_QnA="+(pageNo_QnA-1)+"'>&lt;</a></li>"; 
+	    	pageBar_QnA += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getQnaList("+pnum+","+(pageNo_QnA-1)+")'>&lt;</a></li>"; 
 	    }
 		
 	    while( !(loop_QnA > blockSize_QnA || pageNo_QnA > totalProductPage_QnA) ) {
 	    	
 	    	if(pageNo_QnA == Integer.parseInt(currentShowPageNo_QnA)){
-	    		pageBar_QnA += "<li class='page-item active'><a class='page-link' href='#'>"+pageNo_QnA+"</a></li>"; 
+	    		pageBar_QnA += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getQnaList("+pnum+","+pageNo_QnA+")'>"+pageNo_QnA+"</a></li>"; 
 	    	}
 	    	else {
-	    		pageBar_QnA += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_QnA="+pageNo_QnA+"'>"+pageNo_QnA+"</a></li>"; 
+	    		pageBar_QnA += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getQnaList("+pnum+","+pageNo_QnA+")'>"+pageNo_QnA+"</a></li>"; 
 	    	}
 	    	
 	    	loop_QnA++;   // 1 2 3 4 5 6 7 8 9 10 
@@ -245,12 +249,18 @@ public class ProductDetail extends AbstractController {
 	    // pageNo ==> 11
 	    
 	    if(pageNo_QnA <= totalProductPage_QnA) {
-	    	pageBar_QnA += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_QnA="+pageNo_QnA+"'>&gt;</a></li>"; 
+	    	pageBar_QnA += "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='getQnaList("+pnum+","+pageNo_QnA+")'>&gt;</a></li>"; 
 	    }
-	    pageBar_QnA += "<li class='page-item'><a class='page-link' href='productDetail.go?pnum="+pnum+"&currentShowPageNo_QnA="+totalProductPage_QnA+"'>&gt;&gt;</a></li>"; 
+	    pageBar_QnA += "<li class='page-item'><a class='page-link' href='javascript:void(0);'  onclick='getQnaList("+pnum+","+totalProductPage_QnA+")'>&gt;&gt;</a></li>"; 
 	    
-	    
+
+		
+		
 		request.setAttribute("pageBar_QnA", pageBar_QnA);
+		
+		
+		
+		
 		
 		// ******* 페이지바 만들기 끝 ******** //
 		

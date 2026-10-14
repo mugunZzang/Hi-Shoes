@@ -273,7 +273,8 @@
 					"snum" : snum,
 					"cqty" : cqty,
 					"regprice" : regprice,
-					"saleprice" : saleprice
+					"saleprice" : saleprice,
+					"purtype" : "장바구니"
 				});
 				
 				//console.log(snum);
