@@ -380,6 +380,42 @@ public class MemberDAO_imple implements MemberDAO {
 		return n;
 		
 	}	// end of public int pwdUpdate(Map<String, String> paraMap) throws SQLException---------
+
+
+	
+
+	// 패스워드 일치여부 검사
+	@Override
+	public int authentication(Map<String, String> paraMap) throws SQLException {		
+	    
+	    int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT COUNT(*) AS CNT "
+					   + " FROM tbl_member "
+					   + " WHERE userid = ? AND pwd = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setString(2, Sha256.encrypt(paraMap.get("pwd")));
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			if(rs.getInt("CNT") == 1){
+				n = 1;				
+			}			
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}	// end of public int authentication(Map<String, String> paraMap) throws SQLException------
 	
 
 }

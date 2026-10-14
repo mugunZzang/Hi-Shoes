@@ -56,9 +56,9 @@
 			
 			<c:if test="${not empty sessionScope.loginuser}">
 				<div class="join-wrap nav nav-pills">
-					<a href="#">
+					<a href="<%=ctxPath%>/member/mypage.go">
 						<img alt="login" src="<%= ctxPath %>/images/mypage.svg">
-						<span>MY<br/>PAGE</span>
+						<span>MY</span>
 					</a>
 					
 					<a href="#">
@@ -68,7 +68,7 @@
 					
 					<a href="#">
 						<img alt="join" src="<%= ctxPath %>/images/cscenter.svg">
-						<span>CS<br/>CENTER</span>
+						<span>CS</span>
 					</a>
 					
 					<a href="#" onclick='javascript:location.href="<%= ctxPath%>/login/logout.go"'>
