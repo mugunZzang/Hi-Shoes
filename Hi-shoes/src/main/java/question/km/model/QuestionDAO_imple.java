@@ -66,95 +66,243 @@ public class QuestionDAO_imple implements QuestionDAO {
 		
 		try {
 			conn = ds.getConnection();
-			
-			String sql = " select qnanum, fk_pname, fk_userid, qcontents, qwritedate, qanswer "
-					   + " from tbl_qna q join tbl_product p "
-					   + " on q.fk_pnum = pnum ";
-			
-			String colname = paraMap.get("searchType");
-			String searchWord = paraMap.get("searchWord");
-			
-			if(!"".equals(colname) && !"".equals(searchWord)) {
-				// 검색대상 및 검색어가 있는 경우
-				
-				if("pname".equals(colname)) {
-					sql += " where fk_pname like '%'|| ? ||'%' ";
-					// 컬럼명과 테이블명은 위치홀더(?)로 사용하면 안된다.!!!!
-				}
-				else if("userid".equals(colname)) {
-					sql += " where fk_userid like '%'|| ? ||'%' ";
-				}
-				
-			}// end of if(!"".equals(colname) && !"".equals(searchWord))
-			
-			sql += " order by qnanum desc "
-				+  " offset(?-1)*10 row "
-				+  " fetch next 10 row only ";
-			
-			pstmt = conn.prepareStatement(sql);
-			
-			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
-			
-			if(!"".equals(colname) && !"".equals(searchWord)) {
-				// 검색대상 및 검색어가 있는 경우
-				pstmt.setString(1, searchWord);	
-				pstmt.setInt(2, currentShowPageNo);
-			}
-			
-			pstmt.setInt(1, currentShowPageNo);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				
-				Map<String, String> qnaMap = new HashMap<>();
-				qnaMap.put("qnanum",String.valueOf(rs.getInt("qnanum")));
-				qnaMap.put("fk_pname",rs.getString("fk_pname"));
-				qnaMap.put("fk_userid",rs.getString("fk_userid"));
-				qnaMap.put("qcontents",rs.getString("qcontents"));
-				qnaMap.put("qwritedate",rs.getString("qwritedate"));
-				qnaMap.put("qanswer",rs.getString("qanswer"));
-				
-				questionList.add(qnaMap);
-				
-			}// end of while(rs.next())
-					
-			
-		}finally {
-			
-			close();
+	
+		    String sql = " select qnanum, fk_pname, fk_userid, qtitle, "
+		               + " qcontents, qwritedate, qanswer "
+		               + " from tbl_qna q join tbl_product p "
+		               + " on q.fk_pnum = p.pnum ";
+	
+		    String colname = paraMap.get("searchType");
+		    String searchWord = paraMap.get("searchWord");
+	
+		    boolean hasSearch = colname != null
+		                     && searchWord != null
+		                     && !"".equals(searchWord.trim())
+		                     && ("pname".equals(colname)
+		                         || "userid".equals(colname));
+	
+		    if(hasSearch) {
+		        // 검색대상 및 검색어가 있는 경우
+	
+		        if("pname".equals(colname)) {
+		            sql += " where fk_pname like '%'|| ? ||'%' ";
+		        }
+		        else if("userid".equals(colname)) {
+		            sql += " where fk_userid like '%'|| ? ||'%' ";
+		        }
+		    }
+	
+		    sql += " order by qnanum desc "
+		         + " offset (?-1)*10 row "
+		         + " fetch next 10 row only ";
+	
+		    pstmt = conn.prepareStatement(sql);
+	
+		    int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+	
+		    int idx = 1;
+	
+		    if(hasSearch) {
+		        pstmt.setString(idx++, searchWord.trim());
+		    }
+	
+		    pstmt.setInt(idx++, currentShowPageNo);
+	
+		    rs = pstmt.executeQuery();
+	
+		    while(rs.next()) {
+	
+		        Map<String, String> qnaMap = new HashMap<>();
+	
+		        qnaMap.put("qnanum",String.valueOf(rs.getInt("qnanum")));
+		        qnaMap.put("fk_pname",rs.getString("fk_pname"));
+		        qnaMap.put("qtitle",rs.getString("qtitle"));
+		        qnaMap.put("fk_userid",rs.getString("fk_userid"));
+		        qnaMap.put("qcontents",rs.getString("qcontents"));
+		        qnaMap.put("qwritedate",rs.getString("qwritedate"));
+		        qnaMap.put("qanswer",rs.getString("qanswer"));
+	
+		        questionList.add(qnaMap);
+
+	    }// end of while(rs.next())
+
+		} finally {
+		    close();
 		}
-		
-		
-		return questionList;
-	}
+
+	return questionList;
+}
+	
+	// 유저 문의사항 게시글 불러오기
+		@Override
+		public List<Map<String,String>> select_user_question_list(Map<String, String> paraMap) throws Exception {
+			List<Map<String, String>> questionList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " select q.qnanum, p.fk_pname, q.qtitle, "
+		                   + "        q.qcontents, q.qwritedate, q.qanswer "
+		                   + " from tbl_qna q "
+		                   + " join tbl_product p "
+		                   + " on q.fk_pnum = p.pnum "
+		                   + " where q.fk_userid = ? ";
+
+		        String colname = paraMap.get("searchType");
+		        String searchWord = paraMap.get("searchWord");
+
+		        boolean hasSearch = "pname".equals(colname)
+		                         && searchWord != null
+		                         && !searchWord.isBlank();
+
+		        if (hasSearch) {
+		            sql += " and p.fk_pname like '%' || ? || '%' ";
+		        }
+
+		        sql += " order by q.qnanum desc "
+		             + " offset ? rows "
+		             + " fetch next 10 rows only ";
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        int idx = 1;
+
+		        // 로그인한 회원의 문의만 조회
+		        pstmt.setString(idx++, paraMap.get("userid"));
+
+		        // 상품명 검색어
+		        if (hasSearch) {
+		            pstmt.setString(idx++, searchWord);
+		        }
+
+		        // 페이지 번호를 실제 건너뛸 행 개수로 변환
+		        int currentShowPageNo =
+		                Integer.parseInt(paraMap.get("currentShowPageNo"));
+
+		        pstmt.setInt(idx++, (currentShowPageNo - 1) * 10);
+
+		        rs = pstmt.executeQuery();
+
+		        while (rs.next()) {
+		            Map<String, String> qnaMap = new HashMap<>();
+
+		            qnaMap.put("qnanum",
+		                    String.valueOf(rs.getInt("qnanum")));
+		            qnaMap.put("fk_pname", rs.getString("fk_pname"));
+		            qnaMap.put("qtitle", rs.getString("qtitle"));
+		            qnaMap.put("qcontents", rs.getString("qcontents"));
+		            qnaMap.put("qwritedate", rs.getString("qwritedate"));
+		            qnaMap.put("qanswer", rs.getString("qanswer"));
+
+		            questionList.add(qnaMap);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return questionList;
+		}
 
 	// === 전체 페이지 개수 ===
 	@Override
 	public int getTotalCountOrder(Map<String, String> paraMap) throws Exception {
 		
-		int totalCountOrder = 0;
-		   
-		   try {
-			   conn = ds.getConnection();
-			   
-			   String sql = " select count(*) as CNT "
-			   			  + " From tbl_qna ";
-				   
-			   pstmt = conn.prepareStatement(sql);
-		   
-			   rs = pstmt.executeQuery();
-			   
-			   rs.next();
-			   
-			   totalCountOrder = rs.getInt("CNT");
-			
-		   } finally {
-			   close();
-		   }
-		   
-		   return totalCountOrder;
+		 int totalCountOrder = 0;
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " select count(*) as CNT "
+		                   + " from tbl_qna q "
+		                   + " join tbl_product p "
+		                   + " on q.fk_pnum = p.pnum ";
+
+		        String colname = paraMap.get("searchType");
+		        String searchWord = paraMap.get("searchWord");
+
+		        boolean hasSearch = colname != null
+		                         && searchWord != null
+		                         && !searchWord.trim().isEmpty()
+		                         && ("pname".equals(colname)
+		                             || "userid".equals(colname));
+
+		        if (hasSearch) {
+		            if ("pname".equals(colname)) {
+		                sql += " where p.fk_pname like '%' || ? || '%' ";
+		            }
+		            else if ("userid".equals(colname)) {
+		                sql += " where q.fk_userid like '%' || ? || '%' ";
+		            }
+		        }
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        if (hasSearch) {
+		            pstmt.setString(1, searchWord.trim());
+		        }
+
+		        rs = pstmt.executeQuery();
+
+		        if (rs.next()) {
+		            totalCountOrder = rs.getInt("CNT");
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return totalCountOrder;
 	}
+	
+	// === 유저 전체 페이지 개수 ===
+		@Override
+		public int getTotalUserCountOrder(Map<String, String> paraMap) throws Exception {
+			
+			int totalCountOrder = 0;
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " select count(*) as CNT "
+		                   + " from tbl_qna q "
+		                   + " join tbl_product p "
+		                   + " on q.fk_pnum = p.pnum "
+		                   + " where q.fk_userid = ? ";
+
+		        String colname = paraMap.get("searchType");
+		        String searchWord = paraMap.get("searchWord");
+
+		        boolean hasSearch = "pname".equals(colname)
+		                         && searchWord != null
+		                         && !searchWord.isBlank();
+
+		        if (hasSearch) {
+		            sql += " and p.fk_pname like '%' || ? || '%' ";
+		        }
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        int idx = 1;
+
+		        pstmt.setString(idx++, paraMap.get("userid"));
+
+		        if (hasSearch) {
+		            pstmt.setString(idx++, searchWord);
+		        }
+
+		        rs = pstmt.executeQuery();
+
+		        if (rs.next()) {
+		            totalCountOrder = rs.getInt("CNT");
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return totalCountOrder;
+		}
 	
 	// 하나 불러오기
 	@Override

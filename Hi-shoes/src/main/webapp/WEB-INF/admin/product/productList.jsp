@@ -45,6 +45,15 @@
 
 </script>
 
+<style>
+    td {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
 <div class="container-fluid"
      id="container"
      style="position: relative;

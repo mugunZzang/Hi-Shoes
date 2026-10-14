@@ -19,5 +19,11 @@ public interface QuestionDAO {
 
 	// 문의사항 답글 작성하기
 	int wirteAnswer(Map<String, String> paraMap) throws Exception;
+	
+	// 유저 문의사항 게시글 불러오기
+	List<Map<String,String>> select_user_question_list(Map<String, String> paraMap) throws Exception;
+	
+	// 유저 전체 페이지 개수
+	int getTotalUserCountOrder(Map<String, String> paraMap) throws Exception;
 
 }
