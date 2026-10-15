@@ -31,6 +31,14 @@ public interface MemberDAO {
 
 	// 비밀번호 변경하기 
 	int pwdUpdate(Map<String, String> paraMap) throws SQLException;
-	
+
+	// 패스워드 일치여부 검사
+	int authentication(Map<String, String> paraMap) throws SQLException;
+
+	// 비밀번호 변경 시 현재 사용 중인 비밀번호인지 아닌지 알아오기(사용중인 비밀번호 이라면 true, 새로운 비밀번호라면 false)
+	boolean duplicatePwdCheck(Map<String, String> paraMap) throws SQLException;
+
+	// 회원의 개인 정보 변경하기 
+	int updateMember(MemberDTO member) throws SQLException;	
 	
 }
