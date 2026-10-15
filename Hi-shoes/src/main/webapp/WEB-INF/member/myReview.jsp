@@ -45,60 +45,38 @@
 				</tr>				
 			</thead>
 			<tbody>
-				<tr>
-					<th scope="row">
-						<label>
-							<input name="reviewEditChk" class="form-check-input" type="checkbox" onclick="onlyOneCheck(this)">&nbsp;&nbsp;1
-						</label>
-					</th>
-					<td class="thumbnail">						
-						<img src="https://placehold.co/1024x1024" alt="샘플"/>
-					</td>
-					<td>
-						<p class="contents">
-							<a href="#">너무 좋은 상품~</a>
-						</p>					
-					</td>
-					<td class="star">★★★★★</td>
-					<td>2026.10.15 13:55</td>
-					<td>${(sessionScope.loginuser).userid}</td>
-				</tr>	
-				<tr>
-					<th scope="row">
-						<label>
-							<input name="reviewEditChk" class="form-check-input" type="checkbox" onclick="onlyOneCheck(this)">&nbsp;&nbsp;2
-						</label>
-					</th>
-					<td class="thumbnail">						
-					</td>
-					<td>
-						<p class="contents">
-							<a href="#">너무 구린 상품~</a>
-						</p>
-					</td>
-					<td class="star">★</td>
-					<td>2026.10.15 13:55</td>
-					<td>${(sessionScope.loginuser).userid}</td>
-				</tr>	
+			
+				<c:if test="${empty requestScope.review_map_List}" > 
+				  <tr>
+					  <td colspan="8" align="center">
+					  <span style="color: red; font-weight: bold;">주문내역이 없습니다.</span>
+				  </tr>
+				</c:if>
 				
-				<tr>
-					<th scope="row">
-						<label>
-							<input name="reviewEditChk" class="form-check-input" type="checkbox" onclick="onlyOneCheck(this)">&nbsp;&nbsp;2
-						</label>
-					</th>
-					<td class="thumbnail">		
-						<img src="https://placehold.co/50x50" alt="샘플"/>				
-					</td>
-					<td>
-						<p class="contents">
-							<a href="#">이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.이 상품은 잘모르겠어요.</a>							
-						</p>
-					</td>
-					<td class="star">★★★</td>
-					<td>2026.10.15 13:55</td>
-					<td>${(sessionScope.loginuser).userid}</td>
-				</tr>
+				<c:if test="${not empty requestScope.review_map_List}">				
+					<c:forEach var="reviewmap" items="${requestScope.review_map_List}" varStatus="status">
+					
+						<tr>
+							<th scope="row">
+								<label>
+									<input name="reviewEditChk" class="form-check-input" type="checkbox" onclick="onlyOneCheck(this)">&nbsp;&nbsp;1
+								</label>
+							</th>
+							<td class="thumbnail">						
+								<img src="https://placehold.co/1024x1024" alt="샘플"/>
+							</td>
+							<td>
+								<p class="contents">
+									<a href="#">너무 좋은 상품~</a>
+								</p>					
+							</td>
+							<td class="star">★★★★★</td>
+							<td>2026.10.15 13:55</td>
+							<td>${(sessionScope.loginuser).userid}</td>
+						</tr>
+						
+					</c:forEach>
+				</c:if>				
 					
 			</tbody>
 		</table>
