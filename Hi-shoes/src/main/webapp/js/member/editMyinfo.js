@@ -444,10 +444,36 @@ function goEdit() {
 	if(isNewPwd){
 		//alert("새로운 비밀번호 이므로 DB에 사용자 정보를 수정하러 간다.");
 		
-		const frm = document.editFrm;
-		frm.action = "memberEditEnd.go";
-		frm.method = "post";
-		frm.submit();
+		if($('input#pwd').val() != $('input#pwdcheck').val()) {
+			// 비밀번호가 비밀번호 확인값과 값이 다른 경우
+			/*   
+	            >>>> .prop() 와 .attr() 의 차이 <<<<            
+	                  .prop() ==> form 태그내에 사용되어지는 엘리먼트의 disabled, selected, checked 의 속성값 확인 또는 변경하는 경우에 사용함. 
+	                  .attr() ==> 그 나머지 엘리먼트의 속성값 확인 또는 변경하는 경우에 사용함.
+	         */
+			$('form[name="editFrm"] :input').prop("disabled", true);
+			
+			$('input#pwd').prop("disabled", false).val("").focus();
+			$('input#pwdcheck').prop("disabled", false).val("").focus();
+			
+			//$(e.target).next().next().next().show();
+			// 또는 
+			$('input#pwdcheck').parent().parent().find('p.error').show();			
+		}
+		else {
+
+			// 비밀번호와 비밀번호 확인 값이 같은 경우
+			$('form[name="editFrm"] :input').prop("disabled", false);	
+			
+			//$(e.target).next().next().next().hide();
+			// 또는	
+			$('input#pwdcheck').parent().parent().find('p.error').hide();
+			
+			const frm = document.editFrm;
+			frm.action = "memberEditEnd.go";
+			frm.method = "post";
+			frm.submit();
+		}
 	}
 	
 	
