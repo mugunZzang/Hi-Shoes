@@ -121,6 +121,18 @@ public interface ProductDAO {
 
 	// 현재 상품의 총 리뷰개수 알아오기
 	int getTotalReviewCnt(String pnum) throws SQLException;
-	;
+
+
+	// 클릭한 QnA 항목의 내용을 들고온다.
+	QnADTO getQnaDetail(String qnanum) throws SQLException;
+
+
+	// 해당 QnA 를 삭제한다.
+	int deleteQna(String qnanum) throws SQLException;
+
+
+	// 해당 QnA 를 수정한다.
+	int updateQna(Map<String, String> paraMap) throws SQLException;
+	
 
 }

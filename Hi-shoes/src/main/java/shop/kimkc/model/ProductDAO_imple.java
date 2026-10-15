@@ -957,10 +957,10 @@ public class ProductDAO_imple implements ProductDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select qnanum, fk_pnum, fk_userid, to_char(qwritedate, 'yyyy.mm.dd') as qwritedate, qtitle, qcontents, islock, qanswer "
+			String sql = " select qnanum, fk_pnum, fk_userid, to_char(qwritedate, 'yyyy.mm.dd') as qwritedate, qwritedate as realdate, qtitle, qcontents, islock, qanswer "
 					+ " from tbl_qna "
 					+ " where fk_pnum = to_number(?) "
-					+ " ORDER BY qnanum desc "
+					+ " ORDER BY realdate desc, qnanum desc  "
 					+ "	OFFSET (to_number(?)-1)*10 ROW "
 					+ "	FETCH NEXT 10 ROW ONLY ";
 			
@@ -1418,6 +1418,92 @@ public class ProductDAO_imple implements ProductDAO {
 		}
 		
 		return totalReviewCnt;
+	}
+
+
+	
+	// 클릭한 QnA 항목의 내용을 들고온다.
+	@Override
+	public QnADTO getQnaDetail(String qnanum) throws SQLException {
+		QnADTO qnaDetail = new QnADTO();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT fk_userid, islock, qcontents, qanswer "
+					+ " FROM tbl_qna "
+					+ " WHERE qnanum = TO_NUMBER(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, qnanum);
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			qnaDetail.setFk_userid(rs.getString("fk_userid"));
+			qnaDetail.setIslock(rs.getString("islock"));
+			qnaDetail.setQcontents(rs.getString("qcontents"));
+			qnaDetail.setQanswer(rs.getString("qanswer"));
+					
+			
+			
+		} finally {
+			close();
+		}
+		
+		return qnaDetail;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 해당 QnA 를 삭제한다.
+	@Override
+	public int deleteQna(String qnanum) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " DELETE FROM TBL_QNA "
+					+ " WHERE QNANUM = TO_NUMBER(?) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, qnanum);
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 해당 QnA 를 수정한다.
+	@Override
+	public int updateQna(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			String sql = " UPDATE tbl_qna SET "
+					+ " qtitle = ?, qcontents = ?, islock = ?, qwritedate = sysdate "
+					+ " WHERE qnanum = TO_NUMBER(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("qtitle"));
+			pstmt.setString(2, paraMap.get("qcontents"));
+			pstmt.setString(3, paraMap.get("islock"));
+			pstmt.setString(4, paraMap.get("qnanum"));
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
 	}
 
 

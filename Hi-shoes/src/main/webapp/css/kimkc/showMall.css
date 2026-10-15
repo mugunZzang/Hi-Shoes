@@ -219,45 +219,11 @@ a {
 }
 
 
-/* =========================
-   상품명 앞 뱃지
-========================= */
-
-.product-badge {
-    flex-shrink: 0;
-
-    padding: 2px 4px;
-
-    border-radius: 2px;
-
-    background-color: #d5d5d5;
-
-    color: #fff;
-
-    font-size: 8px;
-
-    line-height: 1;
-}
 
 
 /* =========================
    가격
 ========================= */
-
-.product-price {
-    min-height: 22px;
-
-    margin-top: 12px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 3px;
-
-    white-space: nowrap;
-}
-
 
 /* 기존 가격 */
 
@@ -269,22 +235,6 @@ a {
     font-size: 10px;
 
     text-decoration: line-through;
-}
-
-
-/* 현재 가격 */
-
-.product-price strong {
-    font-size: 14px;
-
-    font-weight: 700;
-}
-
-
-/* 할인 가격 */
-
-.product-price .sale-price {
-    color: #f00000;
 }
 
 
@@ -306,70 +256,6 @@ a {
 
     font-style: normal;
 }
-
-
-/* =========================
-   상품 태그
-========================= */
-
-.product-tags {
-    min-height: 20px;
-
-    margin-top: 7px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 3px;
-}
-
-
-/* 일반 태그 */
-
-.product-tags span {
-    height: 16px;
-
-    padding: 0 5px;
-
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid #999;
-
-    background-color: #fff;
-
-    color: #555;
-
-    font-size: 8px;
-
-    line-height: 1;
-}
-
-
-/* 주문 태그 */
-
-.product-tags .tag-black {
-    border-color: #111;
-
-    background-color: #111;
-
-    color: #fff;
-}
-
-
-/* ONLY 태그 */
-
-.product-tags .tag-only {
-    border-color: #111;
-
-    color: #111;
-
-    font-weight: 700;
-}
-
 
 
 

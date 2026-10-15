@@ -497,18 +497,119 @@
 		
 		// QnA 항목 클릭 시 질문 및 답변 펼치기/접기
 		$(document).on("click", ".qna-item > .qna-question", function() {
-			
-		    const qnaItem = $(this).closest(".qna-item");
-		    const canOpen = qnaItem.attr("data-can-open")?.trim();
 
-		    // 열람 권한이 없으면 아무 동작도 하지 않음
-		    if (canOpen !== "true") {
-		    	
+		    const qnaItem = $(this).closest(".qna-item");
+		    const answerArea = qnaItem.find(".qna-answer-area");
+		    const qtitle = qnaItem.find(".qna-title").text();
+
+		    // 이미 열려 있으면 접기
+		    if (qnaItem.hasClass("open")) {
+		        qnaItem.removeClass("open");
 		        return;
 		    }
-		   
-		    // 클릭한 항목만 펼치거나 접기
-		    qnaItem.toggleClass("open");
+
+		    // 이미 상세 내용을 가져온 항목이면 다시 요청하지 않음
+		    if (qnaItem.data("loaded") === true) {
+		        qnaItem.addClass("open");
+		        return;
+		    }
+
+		    const qnanum = qnaItem.find(".qna-qnanum").val();
+
+		    $.ajax({
+		        url: "<%= ctxPath %>/shop/getQnaDetailJSON.go",
+		        type: "POST",
+		        data: {
+		            qnanum: qnanum
+		        },
+		        dataType: "json",
+
+		        success: function(json) {
+
+		            if (json.n != 1) {
+		                alert(json.message || "열람 권한이 없습니다.");
+		                return;
+		            }
+
+		            // 허용한 경우에만 내용 삽입
+		            answerArea.empty();
+		            
+		         	// 작성자인 경우 질문 내용 위에 수정,삭제 버튼 표시
+		            if (json.isWriter == 1) {
+		            	
+	            	 	const updateDeleteArea = $("<div>")
+		                    .addClass("qna-update-delete-area");
+		            	
+	            	 	const deleteBtn = $("<button>")
+		                    .addClass("btn-deleteQnA")
+		                    .attr("type", "button")
+		                    .on("click", function() {
+         						goDeleteQna(qnanum);
+     						})
+		                    .text("삭제");
+		            	 
+		            	// 단, 이미 답변받은 질문은 수정 못하게 할거임.
+		            	if (!json.qanswer) {
+		            		const updateBtn = $("<button>")
+		                    .addClass("btn-updateQnA")
+		                    .attr("type", "button")
+		                    .on("click", function() {
+	        					showUpdateQnaModal(qnanum, qtitle, json.qcontents);
+	    					})
+		                    .text("수정");
+		            		
+		            		updateDeleteArea.append(updateBtn);
+		            	}
+
+		                
+		                updateDeleteArea.append(deleteBtn);
+		                answerArea.append(updateDeleteArea);
+		            }
+
+		            // 질문 내용
+		            const questionContent = $("<div>")
+		                .addClass("qna-question-content pb-5")
+		                .text(json.qcontents);
+
+		            answerArea.append(questionContent);
+
+		            if (json.qanswer) {
+		                const answer = $("<div>").addClass("qna-answer");
+
+		                $("<div>").addClass("answer-icon").text("A").appendTo(answer);
+
+		                $("<div>").addClass("answer-content").text(json.qanswer).appendTo(answer);
+
+		                answerArea.append(answer);
+		            }
+
+		            qnaItem.data("loaded", true);
+		            qnaItem.addClass("open");
+		        },
+
+		        error: function(request, status, error){
+			    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }
+		    });
+			
+
+		});
+		
+		
+		
+		
+		
+		// QnA 작성 모달이 완전히 닫혔을 때 입력값 초기화
+		$('div#qnaWriteModal').on('hidden.bs.modal', function() {
+
+		    // 비공개 체크박스: 기본값인 체크 상태로 복원
+		    $('input#checkPublic').prop('checked', true);
+
+		    // 제목 초기화
+		    $('input#qnaTitle').val('');
+
+		    // 내용 초기화
+		    $('textarea#qnaContents').val('');
 
 		});
 		
@@ -554,8 +655,9 @@
 	// QnA 모달 - 등록 버튼
 	function goWriteQnA() {
 		//alert("등록 눌림");
-		const title = $('input#qnaTitle').val();
-		const content = $('textarea#qnaContents').val();
+		const title = $('div#qnaWriteModal').find('input#qnaTitle').val();
+		//const title = $('input#qnaTitle').val();
+		const content =$('div#qnaWriteModal').find('textarea#qnaContents').val();
 		let checked = '공개';
 		
 		if ($('input#checkPublic').prop("checked")) {
@@ -564,12 +666,12 @@
 		
 		// 유효성 검사 살짝
 		if (!title || title.trim() == "") {
-			console.log(title);
+			//console.log(title);
 			alert("제목을 입력하세요.");
 			return;
 		}
 		if (!content || content.trim() == "") {
-			console.log(content);
+			//console.log(content);
 			alert("질문 내용을 입력하세요.");
 			return;
 		}
@@ -590,7 +692,19 @@
 				success: function(json) {
 					if (json.n == 1) {
 						alert("문의사항이 등록되었습니다.");	
-						location.reload();
+						//location.reload();
+						
+						// 모달 닫기
+				        const modalElement = document.getElementById('qnaWriteModal');
+				        const qnaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+				        qnaModal.hide();
+				
+				        // 입력값 초기화
+				        //$('input#qnaTitle').val('');
+				        //$('textarea#qnaContents').val('');
+				        //$('input#checkPublic').prop('checked', false);
+						
+						getQnaList('${requestScope.pnum}', 1);
 					}
 					else {
 						alert("문의사항 등록에 실패하였습니다.");
@@ -607,6 +721,113 @@
 	}
 	
 	//id="btnQnARegister"
+	
+	// =================================================================================================
+	
+	// qna 삭제하기
+	function goDeleteQna(qnanum) {
+		if(confirm("해당 Q&A를 삭제하시겠습니까?")) {
+			
+			$.ajax({
+				url: "<%= ctxPath%>/shop/goDeleteQnaJSON.go",
+				type: "POST",
+				data: {
+					qnanum: qnanum 
+				},
+				dataType: "json",
+
+				success: function(json) {
+					if (json.n == 1) {
+						alert("삭제되었습니다.");
+						getQnaList('${requestScope.pnum}', 1);
+					}
+					else {
+						alert("삭제에 실패하였습니다.");
+					}
+				},
+
+				error: function(request, status, error){
+			    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }
+			}); 
+			
+		}
+		else {
+			return;
+		}
+	}
+	
+	
+	// =================================================================================================
+	
+	// qna 수정 모달 띄우기
+	function showUpdateQnaModal(qnanum, qtitle, qcontents) {
+		// 모달 띄워주기
+		const modalElement = $('div#qnaUpdateModal');
+		modalElement.find('#qnaTitle').val(qtitle.trim());
+		modalElement.find('#qnaContents').val(qcontents);
+		modalElement.find('.qnd-update-modal-qnanum').val(qnanum);
+
+	    const qnaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+	    qnaModal.show();
+		
+	}
+		
+		
+	// qna 수정하기
+	function goUpdateQna() {
+		const modalElement = $('div#qnaUpdateModal');
+		const qnanum = modalElement.find('.qnd-update-modal-qnanum').val();
+		const qtitle = modalElement.find('#qnaTitle').val();
+		const qcontents = modalElement.find('#qnaContents').val();
+		let checked = '공개';
+		
+		if (modalElement.find('input#checkPublic').prop("checked")) {
+			checked = '비공개';
+		}
+		
+		// 유효성 검사 살짝
+		if (!qtitle || qtitle.trim() == "") {
+			//console.log(title);
+			alert("제목을 입력하세요.");
+			return;
+		}
+		if (!qcontents || qcontents.trim() == "") {
+			//console.log(content);
+			alert("질문 내용을 입력하세요.");
+			return;
+		}
+			
+		$.ajax({
+			url: "<%= ctxPath%>/shop/goUpdateQnaJSON.go",
+			type: "POST",
+			data: {
+				qnanum: qnanum,
+				qtitle: qtitle,
+				qcontents: qcontents,
+				islock: checked
+			},
+			dataType: "json",
+
+			success: function(json) {
+				if (json.n == 1) {
+					alert("수정되었습니다.");
+					const qnaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+			        qnaModal.hide();
+					getQnaList('${requestScope.pnum}', 1);
+				}
+				else {
+					alert("수정에 실패하였습니다.");
+				}
+			},
+
+			error: function(request, status, error){
+		    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		    }
+		}); 
+
+	}
 	
 	
 	// =================================================================================================
@@ -900,13 +1121,7 @@
                 총 <strong><fmt:formatNumber value="${requestScope.totalReviewCnt}" type="number" /></strong>개의 후기가 있습니다.
             </div>
 
-<%-- 
-            <select class="review-sort">
-                <option value="helpful">도움돼요순</option>
-                <option value="latest">최신순</option>
-                <option value="rating">별점순</option>
-            </select>
---%>
+
         </div>
 		
 		<c:if test="${empty requestScope.reviewList}">
@@ -1023,17 +1238,14 @@
 					<c:forEach var="qna" items="${requestScope.qnaList}">
 	
 					    <%-- Q&A 항목 --%>
-					    <div class="qna-item"
-					         data-can-open="<c:choose>
-					             <c:when test="${qna.islock eq '공개'
-					                 or (not empty sessionScope.loginuser
-					                 and qna.fk_userid eq sessionScope.loginuser.userid)}">true</c:when>
-					             <c:otherwise>false</c:otherwise>
-					         </c:choose>">
+					    <div class="qna-item">
 					
 					        <%-- 질문 제목 및 기본 정보 --%>
 					        <div class="qna-question">
-					
+								
+								
+								<input class="qna-qnanum" type="hidden" value="${qna.qnanum}" />
+								
 					            <span class="qna-title">
 					                ${qna.qtitle}
 					            </span>
@@ -1060,39 +1272,26 @@
 					            </span>
 					
 					            <%-- 답변 상태 --%>
-					            <span class="qna-status">
+					            <div class="qna-status">
 					                <c:if test="${not empty qna.qanswer}">
+					                <span id="qna-has-answer">
 					                    답변완료
+				                    </span>
 					                </c:if>
 					                <c:if test="${empty qna.qanswer}">
+					                <span id="qna-has-noanswer">
 					                    등록상태
+					                </span>
 					                </c:if>
-					            </span>
+					            </div>
 					
 					        </div>
 					
 					        <%-- 질문 및 답변은 기본적으로 숨김 --%>
 					        <div class="qna-answer-area">
-					
-					            <%-- 질문 내용 --%>
-					            <div class="qna-question-content pb-5">
-					                ${qna.qcontents}
-					            </div>
-					
-					            <%-- 답변이 존재할 때만 표시 --%>
-					            <c:if test="${not empty qna.qanswer}">
-					                <div class="qna-answer">
-					
-					                    <div class="answer-icon">A</div>
-					
-					                    <div class="answer-content">
-					                        ${qna.qanswer}
-					                    </div>
-					
-					                </div>
-					            </c:if>
-					
 					        </div>
+					        
+					        
 					
 					    </div>
 					
@@ -1203,5 +1402,82 @@
     </div>
 </div>
 
+
+<%--  QnA 수정 모달 --%>
+<div class="modal fade" id="qnaUpdateModal"
+     tabindex="-1"
+     aria-labelledby="qnaUpdateModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <%-- 모달 제목 --%>
+            <div class="modal-header">
+                <h5 class="modal-title" id="qnaWriteModalLabel">
+                    상품 Q&A 수정
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="닫기"></button>
+            </div>
+
+            <%-- 모달 본문 --%>
+            
+            
+            
+            <div class="modal-body">
+            
+	            <div class="mb-3">
+		            <label for="checkPublic">
+		            	비공개
+		            	<input type="checkbox" id="checkPublic" checked/>
+		            </label>
+	            </div>
+            
+                <div class="mb-3">
+                    <label for="qnaTitle" class="form-label">
+                        제목
+                    </label>
+                    <input type="text"
+                           id="qnaTitle"
+                           class="form-control"
+                           placeholder="제목">
+                </div>
+
+                <div class="mb-3">
+                    <label for="qnaContents" class="form-label">
+                        내용
+                    </label>
+                    <textarea id="qnaContents"
+                              class="form-control"
+                              rows="6"
+                              placeholder="질문 내용"></textarea>
+                </div>
+            </div>
+
+			<input class="qnd-update-modal-qnanum" type="hidden"/>
+
+            <%-- 하단 버튼들 --%>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    취소
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        id="btnQnARegister"
+                        onclick="goUpdateQna()">
+                    수정
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <jsp:include page="../../footer.jsp" />
