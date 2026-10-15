@@ -438,6 +438,7 @@ public class ProductDAO_imple implements ProductDAO {
 					
 			sql += " and B.saleprice between ? and ? "
 					+ " and A.fk_pname like ? " ;
+			sql += " and D.sqty > 0 ";
 			
 			
 			
@@ -525,6 +526,7 @@ public class ProductDAO_imple implements ProductDAO {
 	
 			sql 	+= " and B.saleprice between ? and ? "
 					+ " and A.fk_pname like ? " 
+					+ " and D.sqty > 0 "
 					+ " ORDER BY A.pnum ASC "
 					+ " OFFSET (to_number(?)-1)*12 ROW "
 					+ " FETCH NEXT 12 ROW ONLY ";
