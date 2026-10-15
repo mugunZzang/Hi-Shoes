@@ -315,15 +315,12 @@ public class ProductDAO_imple implements ProductDAO {
 		        conn = ds.getConnection();
 
 		        String sql =
-		              " select to_char(trunc(p.purtime), 'yyyy-mm-dd') as purdate "
-		            + "      , p.fk_supname as supname "
+		              " select p.fk_supname as supname "
 		            + "      , sum(pd.purqty * pd.purdprice) as totalamount "
 		            + " from tbl_purchase p "
 		            + " join tbl_purdetail pd "
 		            + "   on p.purnum = pd.fk_purnum "
 		            + " where p.instock = '입고' "
-		            + "   and p.purtime >= trunc(sysdate) - 6 "
-		            + "   and p.purtime < trunc(sysdate) + 1 "
 		            + " group by trunc(p.purtime), p.fk_supname "
 		            + " order by trunc(p.purtime), p.fk_supname ";
 
@@ -335,7 +332,6 @@ public class ProductDAO_imple implements ProductDAO {
 
 		            Map<String, String> map = new HashMap<>();
 
-		            map.put("purdate", rs.getString("purdate"));
 		            map.put("supname", rs.getString("supname"));
 		            map.put("totalamount", rs.getString("totalamount"));
 
