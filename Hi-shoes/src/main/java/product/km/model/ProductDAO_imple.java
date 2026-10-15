@@ -26,8 +26,6 @@ public class ProductDAO_imple implements ProductDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
-	private AES256 aes;
-	
 	// 생성자
 	public ProductDAO_imple() {
 		
@@ -37,14 +35,10 @@ public class ProductDAO_imple implements ProductDAO {
 		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
 		    // lookup()속에 /MyMVC/src/main/webapp/META-INF/context.xml에 지정한 이름을 적어준다. 
 		    
-		    aes = new AES256(SecretMyKey.KEY);
-		    // SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
 		    
 		} catch (NamingException e) {
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		} 
 		
 	}
 	
