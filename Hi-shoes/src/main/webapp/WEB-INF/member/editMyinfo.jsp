@@ -55,7 +55,7 @@
 				</div>			  
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-			  		<input type="text" class="form-control" name="company" id="company" maxlength="30" class="requiredInfo" placeholder="사명을 입력 해주세요." value="${sessionScope.loginuser.company}" disabled>
+			  		<input type="text" class="requiredInfo form-control" name="company" id="company" maxlength="30" placeholder="사명을 입력 해주세요." value="${sessionScope.loginuser.company}" disabled>
 			  	</div>
 			  	
 			  	<p class="error">사명은 필수입력 사항입니다.</p>
@@ -68,7 +68,7 @@
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-				  	<input type="text" class="form-control" name="busiNum" id="busiNum" maxlength="40" class="requiredInfo" placeholder="사업자등록번호를 입력 해주세요." value="${sessionScope.loginuser.busiNum}" disabled>					
+				  	<input type="text" class="requiredInfo form-control" name="busiNum" id="busiNum" maxlength="40" placeholder="사업자등록번호를 입력 해주세요." value="${sessionScope.loginuser.busiNum}" disabled>					
 			  	</div>
 			  		  		
 				<p id="busiNumcheckResult"></p>
@@ -81,8 +81,8 @@
 			  		<label for="userid" class="form-label">아이디&nbsp;<span class="star">*</span></label>
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
-			  	<div class="col-12 col-lg-6">
-				  	<input type="text" class="form-control" name="userid" id="userid" maxlength="40" class="requiredInfo" placeholder="아이디를 입력 해주세요." value="${sessionScope.loginuser.userid}" disabled>					
+			  	<div class="duplChk col-12 col-lg-6">
+				  	<input type="text" class="requiredInfo form-control" name="userid" id="userid" maxlength="40" placeholder="아이디를 입력 해주세요." value="${sessionScope.loginuser.userid}" disabled>					
 			  	</div>
 				<p id="idcheckResult"></p>
 		  		<p class="error">아이디는 필수입력 사항입니다.</p>			  	
@@ -94,12 +94,12 @@
 					<label for="pwd" class="form-label">비밀번호&nbsp;<span class="star">*</span></label>
 				</div>			  
 			  <div class="col-12 col-lg-10 row">
-			  	<div class="col-12 col-lg-6">
-			  		<input type="password" class="form-control" name="pwd" id="pwd" maxlength="15" class="requiredInfo" placeholder="비밀번호를 입력 해주세요.">
+			  	<div class="duplChk col-12 col-lg-6">
+			  		<input type="password" class="requiredInfo form-control" name="pwd" id="pwd" maxlength="15" placeholder="비밀번호를 입력 해주세요.">
 			  	</div>
 			  	
 			  	<p class="error">암호는 영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.</p>
-			  	<p id="duplicate_pwd" class="error"></p>
+			  	<p id="duplicate_pwd" style="color:red; font-size:12px; font-weight:400;"></p>
 			  </div>			  
 			</div>
 			
@@ -109,7 +109,7 @@
 				</div>			  
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-			  		<input type="password" class="form-control" name="pwdcheck" id="pwdcheck" maxlength="15" class="requiredInfo" placeholder="비밀번호를 다시 입력 해주세요.">
+			  		<input type="password" class="requiredInfo form-control" name="pwdcheck" id="pwdcheck" maxlength="15" placeholder="비밀번호를 다시 입력 해주세요.">
 			  	</div>
 			  	
 			  	<p class="error">암호가 일치하지 않습니다.</p>
@@ -122,7 +122,7 @@
 			  	</div>
 			  <div class="col-12 col-lg-10 row">
 			  	<div class="col-12 col-lg-6">
-				  	<input type="text" class="form-control" name="email" id="email" maxlength="60" class="requiredInfo" placeholder="이메일을 입력 해주세요.">					
+				  	<input type="text" class="requiredInfo form-control" name="email" id="email" maxlength="60" placeholder="이메일을 입력 해주세요.">					
 			  	</div>
 			  	<div  class="col-12 col-lg-6 mt-1">
 			  		<%-- 이메일중복체크 --%>
