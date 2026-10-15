@@ -25,8 +25,6 @@ public class QuestionDAO_imple implements QuestionDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
-	private AES256 aes;
-	
 	// 생성자
 	public QuestionDAO_imple() {
 		
@@ -36,12 +34,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
 		    // lookup()속에 /MyMVC/src/main/webapp/META-INF/context.xml에 지정한 이름을 적어준다. 
 		    
-		    aes = new AES256(SecretMyKey.KEY);
-		    // SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
-		    
 		} catch (NamingException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		

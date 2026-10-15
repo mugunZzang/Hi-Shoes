@@ -24,27 +24,15 @@ public class FaqDAO_imple implements FaqDAO {
 
 
     private DataSource ds;
-
     private Connection conn;
-
     private PreparedStatement pstmt;
-
     private ResultSet rs;
-
-
-    private AES256 aes;
-
-
-    // =====================================================
-    // 생성자
-    // =====================================================
 
     public FaqDAO_imple() {
 
         try {
 
-            Context initContext =
-                    new InitialContext();
+            Context initContext =new InitialContext();
 
 
             Context envContext =
@@ -59,22 +47,10 @@ public class FaqDAO_imple implements FaqDAO {
                     );
 
 
-            aes =
-                    new AES256(
-                            SecretMyKey.KEY
-                    );
-
-
         }
         catch(NamingException e) {
 
             e.printStackTrace();
-
-        }
-        catch(UnsupportedEncodingException e) {
-
-            e.printStackTrace();
-
         }
 
     }
