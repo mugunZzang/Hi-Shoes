@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import member.domain.MemberDTO;
 import notice.km.model.NoticeDAO;
 import notice.km.model.NoticeDAO_imple;
+import question.km.model.QuestionDAO_imple;
+import question.km.model.QuestionDAO;
+
 
 public class Delete extends AbstractController {
 

@@ -26,4 +26,7 @@ public interface QuestionDAO {
 	// 유저 전체 페이지 개수
 	int getTotalUserCountOrder(Map<String, String> paraMap) throws Exception;
 
+	// 문의사항 삭제
+	int questionDelete(String num) throws Exception;
+
 }

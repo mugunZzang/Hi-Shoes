@@ -325,7 +325,7 @@ function goDelete(num, type) {
 			                <td>${faq.fcategory}</td>
 			                <td class="text-center"><button type="button"
 		            						class="btn btn-outline-danger"
-		           						onclick="goDelete(${faq.fnum}, 'faq'); event.stopPropagation();">
+		           						onclick="event.stopPropagation(); goDelete(${faq.fnum}, 'faq');">
 		        					삭제
 		    						</button></td>
 			            </tr>

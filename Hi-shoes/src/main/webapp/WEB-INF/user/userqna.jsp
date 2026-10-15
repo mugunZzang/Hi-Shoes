@@ -106,17 +106,32 @@
 
 $(function(){
 
-        $(".question-row").on('click',function() {
-        	
-            let $row = $(this);
-            let $answer = $row.next(".answer-row");
+	 $(".question-row").on("click", function() {
 
-            // 현재 답변 열기 / 닫기
-            $row.toggleClass("active");
-            $answer.stop(true, true).slideToggle(200);
+	        let $row = $(this);
+	        let $answer = $row.next(".answer-row");
+	        let $content = $answer.find(".answer-content");
 
-        });
+	        if ($answer.is(":visible")) {
 
+	            $row.removeClass("active");
+
+	            $content.stop(true, true).slideUp(200, function() {
+	                $answer.hide();
+	            });
+
+	        } else {
+
+	            $row.addClass("active");
+
+	            // 답변 행을 테이블 행으로 표시
+	            $answer.css("display", "table-row");
+
+	            // 답변 카드만 애니메이션 적용
+	            $content.stop(true, true).slideDown(200);
+	        }
+
+	    });
 
 	
 	
@@ -137,18 +152,50 @@ function goSearch(frm) {
     frm.submit();
 }// end of function goSearch(frm, type)
 
+function goDelete(num) {
+    if (confirm("삭제하시겠습니까?")) {
+        // 실제 삭제 처리할 코드
+        $.ajax({
+        		 url:"<%= ctxPath%>/user/delete2.go", 
+            	 method:"post",
+            	 data: {
+                     "num": num
+                    },
+                 dataType:"json",
+                 success:function(json){
+                	 if (json.result == 1) {
+                         alert("삭제되었습니다.");
+
+                         
+                         location.reload();
+                     }
+                     else {
+                         alert("삭제에 실패했습니다.");
+                     }
+                 },
+                 error: function(request, status, error){
+  				    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+  		         }
+             });
+    } else {
+        // 취소를 눌렀을 때
+        return;
+    }
+}
+
 </script>
 
 <div class="question-container">
         <table class="table" style="width: 100%;">
           <thead class="table-primary">
             <tr>
-                <th style="width: 10%;">글번호</th>
+                <th style="width: 10%;">번호</th>
                 <th style="width: 20%;">판매상품명</th>
-				<th style="width: 20%;">제목</th>
+				<th style="width: 10%;">제목</th>
                 <th style="width: 20%;">내용</th>
                 <th style="width: 10%;">작성일자</th>
-                <th style="width: 20%;">답변여부</th>
+                <th style="width: 15%;">답변여부</th>
+                <th style="width: 10%; text-align:center;"></th>
             </tr>
           </thead>
             <tbody>
@@ -164,6 +211,12 @@ function goSearch(frm) {
 				                <td>${question.qcontents}</td>
 				                <td>${question.qwritedate}</td>
 				                <td>답글X</td>
+				                <td class="text-center"><button type="button"
+		            						class="btn btn-outline-danger"
+		           						onclick="event.stopPropagation(); goDelete(${question.qnanum});">
+		        					삭제
+		    						</button></td>
+				                
 				            </tr>
 			            </c:if>
 			            <c:if test="${not empty question.qanswer}">
@@ -180,6 +233,11 @@ function goSearch(frm) {
 						                답글 <i class="fas fa-chevron-down"></i>
 						            </span>
 						        </td>
+						        <td class="text-center"><button type="button"
+		            						class="btn btn-outline-danger"
+		           						onclick="event.stopPropagation(); goDelete(${question.qnanum});">
+		        					삭제
+		    						</button></td>
 				            </tr>
 				            <tr class="answer-row">
 						        <td colspan="6">
@@ -199,7 +257,7 @@ function goSearch(frm) {
             
 	            <c:if test="${empty requestScope.questionList}">
 			        <tr>
-			            <td class="text-center" colspan="6">문의사항이 없습니다.</td>
+			            <td class="text-center" colspan="7">문의사항이 없습니다.</td>
 			        </tr>
 			    </c:if>
 			    </tbody>

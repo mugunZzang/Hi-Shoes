@@ -209,7 +209,7 @@ public class Mypage extends AbstractController {
 		
 		pageBar.append("<li class='page-item'>");
 		pageBar.append("<a class='page-link' ");
-		pageBar.append("href='userqna.go?");
+		pageBar.append("href='mypage.go?");
 		pageBar.append("currentShowPageNo=1");
 		pageBar.append(searchParam);
 		pageBar.append("'>처음</a>");
@@ -221,7 +221,7 @@ public class Mypage extends AbstractController {
 		
 		pageBar.append("<li class='page-item'>");
 		pageBar.append("<a class='page-link' ");
-		pageBar.append("href='userqna.go?");
+		pageBar.append("href='mypage.go?");
 		pageBar.append("currentShowPageNo=");
 		pageBar.append(startPage - 1);
 		pageBar.append(searchParam);
@@ -247,7 +247,7 @@ public class Mypage extends AbstractController {
 		
 		pageBar.append("<li class='page-item'>");
 		pageBar.append("<a class='page-link' ");
-		pageBar.append("href='userqna.go?");
+		pageBar.append("href='mypage.go?");
 		pageBar.append("currentShowPageNo=");
 		pageBar.append(i);
 		pageBar.append(searchParam);
@@ -266,7 +266,7 @@ public class Mypage extends AbstractController {
 		
 		pageBar.append("<li class='page-item'>");
 		pageBar.append("<a class='page-link' ");
-		pageBar.append("href='userqna.go?");
+		pageBar.append("href='mypage.go?");
 		pageBar.append("currentShowPageNo=");
 		pageBar.append(endPage + 1);
 		pageBar.append(searchParam);
@@ -278,7 +278,7 @@ public class Mypage extends AbstractController {
 		// 마지막
 		pageBar.append("<li class='page-item'>");
 		pageBar.append("<a class='page-link' ");
-		pageBar.append("href='userqna.go?");
+		pageBar.append("href='mypage.go?");
 		pageBar.append("currentShowPageNo=");
 		pageBar.append(totalPage);
 		pageBar.append(searchParam);

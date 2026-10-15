@@ -135,7 +135,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 		        conn = ds.getConnection();
 
 		        String sql = " select q.qnanum, p.fk_pname, q.qtitle, "
-		                   + "        q.qcontents, q.qwritedate, q.qanswer "
+		                   + "        q.qcontents, to_char(q.qwritedate, 'yyyy-mm-dd') as qwritedate, q.qanswer "
 		                   + " from tbl_qna q "
 		                   + " join tbl_product p "
 		                   + " on q.fk_pnum = p.pnum "
@@ -369,6 +369,29 @@ public class QuestionDAO_imple implements QuestionDAO {
 
 	        n = pstmt.executeUpdate();
 	        
+		} finally {
+			close();
+		}
+		
+		return n;
+	}
+
+	// 문의사항 삭제
+	@Override
+	public int questionDelete(String num) throws Exception {
+		int n = 0;
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_qna"
+					   + " where qnanum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, num);
+			
+			n = pstmt.executeUpdate();
+			
 		} finally {
 			close();
 		}

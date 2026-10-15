@@ -402,7 +402,7 @@ public class FaqDAO_imple implements FaqDAO {
 			System.out.println(num);
 			
 			String sql = " delete from tbl_faq"
-					   + " where fnum = ? ";
+					   + " where fnum = to_number(?) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, num);
