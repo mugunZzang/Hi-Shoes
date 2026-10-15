@@ -415,7 +415,7 @@
 				return;
 			}
 			
-			const pimage = "<%=ctxPath%>/images/kimkc/product/${requestScope.pdto.pimage1}";
+			const pimage = "<%=ctxPath%>/images/product/${requestScope.pdto.pimage1}";
 			//console.log("대표이미지" + pimage);
 			const pname = "${requestScope.pdto.fk_pname}";
 			const brand = "${requestScope.pdto.catalogueDTO.brand}";
