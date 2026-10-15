@@ -96,3 +96,4 @@ replay_pid*
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse
 .classpath
 /Hi-shoes/src/main/webapp/WEB-INF/Command.properties
+/Hi-shoes/src/main/webapp/WEB-INF/header1.jsp
