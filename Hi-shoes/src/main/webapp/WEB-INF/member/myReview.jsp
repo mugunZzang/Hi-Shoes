@@ -2,26 +2,11 @@
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
   
 <%
     String ctx_Path = request.getContextPath();
 %>
-
-<script type="text/javascript">
-
-	function onlyOneCheck(obj) {
-
-    const checkboxList = document.querySelectorAll('input[name="reviewEditChk"]');
-
-    checkboxList.forEach(elmt => {
-        if(elmt != obj){    // elmt != obj 은 체크박스에 체크를 하지 않은 나머지 모든 체크박스를 말한다.
-            elmt.checked = false;   // 체크박스에 체크를 못하도록 한다.
-        }
-    });
-
-} // end of function onlyOneCheck(obj)------------
-
-</script>
 
 <section class="myReview">
 	<div class="tit-wrap container-fluid">
@@ -49,7 +34,7 @@
 				<c:if test="${empty requestScope.review_map_List}" > 
 				  <tr>
 					  <td colspan="8" align="center">
-					  <span style="color: red; font-weight: bold;">주문내역이 없습니다.</span>
+					  <span style="color: red; font-weight: bold;">작성한 리뷰가 없습니다.</span>
 				  </tr>
 				</c:if>
 				
@@ -57,22 +42,23 @@
 					<c:forEach var="reviewmap" items="${requestScope.review_map_List}" varStatus="status">
 					
 						<tr>
+							<fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" />
 							<th scope="row">
 								<label>
-									<input name="reviewEditChk" class="form-check-input" type="checkbox" onclick="onlyOneCheck(this)">&nbsp;&nbsp;1
+									<input name="reviewEditChk" class="form-check-input" type="checkbox" onclick="onlyOneCheck(this)">&nbsp;&nbsp;${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }
 								</label>
 							</th>
 							<td class="thumbnail">						
-								<img src="https://placehold.co/1024x1024" alt="샘플"/>
+								<img src="<%= ctx_Path%>/images/${reviewmap.review_image}" alt="${reviewmap.review_image}"/>
 							</td>
 							<td>
 								<p class="contents">
-									<a href="#">너무 좋은 상품~</a>
+									<a href="#">${reviewmap.review_content}</a>
 								</p>					
 							</td>
-							<td class="star">★★★★★</td>
-							<td>2026.10.15 13:55</td>
-							<td>${(sessionScope.loginuser).userid}</td>
+							<td class="star">${reviewmap.review_rating}</td>
+							<td>${reviewmap.review_date}</td>
+							<td>${reviewmap.writer}</td>
 						</tr>
 						
 					</c:forEach>
@@ -80,5 +66,14 @@
 					
 			</tbody>
 		</table>
+		
+		
+		
+		<%-- === 페이지바 === --%>
+		<nav class="my-5">
+	       <div style='display:flex; width:80%; margin: 0 auto;'>
+	   	     <ul class="pagination" style='margin:auto;'>${requestScope.pageBar}</ul>
+	   	   </div>
+		</nav> 
 	</div>
 </section>

@@ -546,11 +546,9 @@ public class MemberDAO_imple implements MemberDAO {
 						+ " JOIN tbl_order O "
 						+ "    ON OD.fk_onum = O.onum "
 						+ " WHERE O.fk_userid = ? "
-						+ " ORDER BY R.rwritedate DESC ";		
-				
-			sql += " ORDER BY A.odrcode DESC, B.odrseqnum ASC "
-				    +  " OFFSET (?-1)*? ROW "
-					+  " FETCH NEXT ? ROW ONLY ";
+						+ " ORDER BY R.rwritedate DESC "
+						+  " OFFSET (?-1)*? ROWS "
+						+  " FETCH NEXT ? ROWS ONLY ";
 			
 			pstmt = conn.prepareStatement(sql);
 			

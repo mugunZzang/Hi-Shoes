@@ -130,6 +130,10 @@ form[name="editFrm"] .phonenumber span {
   	text-align:left;
 }
 
+.myReview .reviewTbl table tbody td p.contents a {
+	color: #1d1d1d;
+}
+
 .myReview .reviewTbl table tbody td.star {
 	text-align:left;
 }

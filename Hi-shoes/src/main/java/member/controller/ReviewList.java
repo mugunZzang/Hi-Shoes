@@ -104,19 +104,19 @@ public class ReviewList extends AbstractController {
 			
 			// **** [맨처음][이전] 만들기 **** //
 			// 
-			pageBar += "<li class='page-item'><a class='page-link' href='reviewList.go?currentShowPageNo=1'>[맨처음]</a></li>"; 
+			pageBar += "<li class='page-item'><a class='page-link' href='#' data-link='1'>[맨처음]</a></li>"; 
 			
 			if( pageNo != 1 ) {
-				pageBar += "<li class='page-item'><a class='page-link' href='reviewList.go?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+				pageBar += "<li class='page-item'><a class='page-link' href='#' data-link='"+ (pageNo-1) +"'>[이전]</a></li>";
 			}
 			
 			while( !(loop > blockSize || pageNo > totalPage) ) {
 				
 				if(pageNo == Integer.parseInt(currentShowPageNo)) {
-					pageBar += "<li class='page-item active'><a class='page-link' href='#'>"+pageNo+"</a></li>"; 
+					pageBar += "<li class='page-item active'><a class='page-link' href='#' data-link='"+ pageNo +"'>"+pageNo+"</a></li>"; 
 				}
 				else {
-					pageBar += "<li class='page-item'><a class='page-link' href='reviewList.go?currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+					pageBar += "<li class='page-item'><a class='page-link' href='#' data-link='"+ pageNo +"'>"+pageNo+"</a></li>"; 
 				}
 				
 				loop++;    //  1 2 3 4 5 6 7 8 9 10
@@ -131,9 +131,9 @@ public class ReviewList extends AbstractController {
 			// **** [다음][마지막] 만들기 **** //
 			// pageNo ==> 11
 			if( pageNo <= totalPage ) {
-				pageBar += "<li class='page-item'><a class='page-link' href='reviewList.go?currentShowPageNo="+pageNo+"'>[다음]</a></li>"; 
+				pageBar += "<li class='page-item'><a class='page-link' href='#' data-link='"+ pageNo +"'>[다음]</a></li>"; 
 			}
-			pageBar += "<li class='page-item'><a class='page-link' href='reviewList.go?currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='#' data-link='"+ totalPage +"'>[마지막]</a></li>";
 
 			// *** ====== 페이지바 만들기 끝 ====== *** //
 			
