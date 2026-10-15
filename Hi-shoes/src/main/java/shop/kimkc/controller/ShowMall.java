@@ -45,6 +45,9 @@ public class ShowMall extends AbstractController {
 		
 		// 헤더의 검색바의 검색키워드
 		String searchKeyword = request.getParameter("searchKeyword");
+		if (searchKeyword == null) {
+			searchKeyword = "";
+		}
 		//String searchKeyword = "";
 		
 		
