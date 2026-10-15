@@ -39,6 +39,13 @@ public interface MemberDAO {
 	boolean duplicatePwdCheck(Map<String, String> paraMap) throws SQLException;
 
 	// 회원의 개인 정보 변경하기 
-	int updateMember(MemberDTO member) throws SQLException;	
+	int updateMember(MemberDTO member) throws SQLException;
+	
+	// *** 페이징 처리를 위해서 먼저 주문개수를 알아오기 ***
+	// 1. 일반 사용자로 로그인 한 경우는 자신이 리뷰 쓴 개수만 알아온다.
+	int getTotalCountReview(String userid) throws SQLException;
+
+	// *** 관리자가 아닌 일반사용자로 로그인 했을 경우에는 자신이 리뷰 쓴 내역만 페이징 처리하여 조회를 해온다, 
+	List<Map<String, String>> getReviewList(Map<String, String> paraMap) throws SQLException;	
 	
 }

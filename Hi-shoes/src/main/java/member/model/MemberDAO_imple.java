@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -487,6 +488,111 @@ public class MemberDAO_imple implements MemberDAO {
 		
 		return n;
 	}	// end of public int updateMember(MemberDTO member) throws SQLException----------
-	
+
+
+	// *** 페이징 처리를 위해서 먼저 주문개수를 알아오기 ***
+	// 1. 일반 사용자로 로그인 한 경우는 자신이 리뷰 쓴 개수만 알아온다.
+	@Override
+	public int getTotalCountReview(String userid) throws SQLException {
+		int totalCountReview = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT COUNT(*) AS total_review_count "
+						+ " FROM tbl_review R "
+						+ " JOIN tbl_orderdetail OD "
+						+ "    ON R.fk_odnum = OD.odnum "
+						+ " JOIN tbl_order O "
+						+ "    ON OD.fk_onum = O.onum ";			
+			
+			sql += " WHERE O.fk_userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			
+			rs = pstmt.executeQuery(); 
+			rs.next();
+			
+			totalCountReview = rs.getInt("total_review_count");
+			
+		} finally {
+			close();
+		}
+		
+		return totalCountReview;
+	}	// end of public int getTotalCountReview(String userid) throws SQLException--------------
+
+	// *** 관리자가 아닌 일반사용자로 로그인 했을 경우에는 자신이 리뷰 쓴 내역만 페이징 처리하여 조회를 해온다,
+	@Override
+	public List<Map<String, String>> getReviewList(Map<String, String> paraMap) throws SQLException {
+		
+		List<Map<String, String>> review_map_List = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT "
+						+ "    R.fk_odnum AS review_no, "
+						+ "    R.rimage AS review_image, "
+						+ "    R.rcontents AS review_content, "
+						+ "    R.rating AS review_rating, "
+						+ "    R.rwritedate AS review_date, "
+						+ "    O.fk_userid AS writer "
+						+ " FROM tbl_review R "
+						+ " JOIN tbl_orderdetail OD "
+						+ "    ON R.fk_odnum = OD.odnum "
+						+ " JOIN tbl_order O "
+						+ "    ON OD.fk_onum = O.onum "
+						+ " WHERE O.fk_userid = ? "
+						+ " ORDER BY R.rwritedate DESC ";		
+				
+			sql += " ORDER BY A.odrcode DESC, B.odrseqnum ASC "
+				    +  " OFFSET (?-1)*? ROW "
+					+  " FETCH NEXT ? ROW ONLY ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			int currenetShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+			int sizePerPage = 10; // 한 페이지당 화면상에 보여줄 주문내역의 개수는 10 으로 한다.
+		
+			
+			pstmt.setString(1, paraMap.get("userid"));
+			pstmt.setInt(2, currenetShowPageNo);
+			pstmt.setInt(3, sizePerPage);
+			pstmt.setInt(4, sizePerPage);
+					
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				String review_no = rs.getString("review_no");
+				String review_image = rs.getString("review_image");
+				String review_content = rs.getString("review_content");
+				String review_rating = rs.getString("review_rating");
+				String review_date = rs.getString("review_date");
+				String writer = rs.getString("writer");
+				
+				Map<String, String> reviewmap = new HashMap<>();
+				reviewmap.put("review_no", review_no);
+				reviewmap.put("review_image", review_image);
+				reviewmap.put("review_content", review_content);
+				reviewmap.put("review_rating", review_rating);
+				reviewmap.put("review_date", review_date);
+				reviewmap.put("writer", writer);
+				
+				review_map_List.add(reviewmap);
+				
+			}// end of while(rs.next())------------------------
+			
+		} finally {
+			close();
+		}
+		
+		return review_map_List;
+		
+	}	// end of public List<Map<String, String>> getReviewList(Map<String, String> paraMap) throws SQLException-------------
 
 }

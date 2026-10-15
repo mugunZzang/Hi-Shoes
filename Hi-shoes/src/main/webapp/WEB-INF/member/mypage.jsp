@@ -20,7 +20,7 @@
 		<div class="tit-wrap">
 			<h2 class="section-tit">마이페이지</h2>
 		</div>
-		<div class="body-wrap row p-3 col-12 m-auto">
+		<div class="body-wrap p-3">
 			<div class="row">
 			  <div class="col-12 col-lg-3">
 			    <div class="list-group list-group-flush" id="list-tab" role="tablist">
@@ -41,7 +41,9 @@
 			      	위시리스트
 			      </div>
 			      <div class="tab-pane fade" id="list-review" role="tabpanel" aria-labelledby="list-review-list">
-			      	리뷰보기
+			      	
+			      	<jsp:include page="/WEB-INF/member/myReview.jsp" />
+			      	
 			      </div>
 			      <div class="tab-pane fade" id="list-editInfo" role="tabpanel" aria-labelledby="list-editInfo-list">
 			      

@@ -145,6 +145,7 @@ CREATE TABLE TBL_CATALOGUE (
     CONSTRAINT PK_TBL_CATALOGUE_PNAME PRIMARY KEY(PNAME),
     CONSTRAINT FK_TBL_CATALOGUE_FK_CATENUM FOREIGN KEY(FK_CATENUM) REFERENCES TBL_CATEGORY(CATENUM) ON DELETE SET NULL
 );
+SELECT * FROM tbl_catalogue;
 
 -- 판매중 상품
 CREATE TABLE TBL_PRODUCT (
@@ -251,9 +252,100 @@ create table tbl_faq
 CREATE SEQUENCE SEQ_FNUM;
 
 
+SELECT * FROM tbl_catalogue
+WHERE pname='핸드볼 스페지알 로우 프로';
 
--------------------TEST-------------------
+
+SELECT * FROM tbl_supplier;
+
+SELECT P.purnum, to_char(P.purtime,'yyyy-mm-dd') AS purtime, 
+       S.supname, S.sbusinum, S.ceo, S.smobile, S.semail 
+FROM tbl_purchase P JOIN tbl_supplier S ON P.fk_supname = S.supname 
+WHERE P.purnum = 1 ;
+
+select P.purdetailnum, P.purqty, P.purqty, P.purdprice, 
+		                   P.purqty * P.purdprice AS amount,
+       S.color, S.ssize, S.fk_pname
+from tbl_purdetail P INNER JOIN tbl_stock S
+ON P.fk_snum = S.snum
+where fk_purnum = 1 
+order by purdetailnum ;
+
+SELECT * FROM tbl_purdetail;
+
+
+SELECT
+    p.purnum,
+    p.fk_supname,
+    to_char(p.purtime, 'yyyy-mm-dd') AS purtime,
+    to_char(p.purdeadline, 'yyyy-mm-dd') AS purdeadline,
+    p.instock,
+
+    COUNT(pd.purdetailnum) AS product_count,
+    SUM(pd.purqty) AS total_quantity
+
+FROM tbl_purchase p
+JOIN tbl_purdetail pd
+    ON p.purnum = pd.fk_purnum
+
+GROUP BY
+    p.purnum,
+    p.fk_supname,
+    p.purtime,
+    p.purdeadline,
+    p.instock
+ORDER BY p.purtime DESC;
+
+
+SELECT CEIL(COUNT(*)/10) AS TOTALPAGE 
+FROM tbl_purchase
+
+SELECT COUNT(*) AS TOTALPURCHASECOUNT
+FROM tbl_purchase
+
+SELECT * FROM tbl_purchase
+
+
+-------- **** 상품구매 후기 테이블 생성하기 **** ----------
+create table tbl_purchase_reviews
+(review_seq          number 
+,fk_userid           varchar2(20)   not null   -- 사용자ID       
+,fk_pnum             number(8)      not null   -- 제품번호(foreign key)
+,contents            varchar2(4000) not null
+,writeDate           date default sysdate
+,constraint PK_purchase_reviews primary key(review_seq)
+,constraint UQ_purchase_reviews unique(fk_userid, fk_pnum)
+,constraint FK_purchase_reviews_userid foreign key(fk_userid) references tbl_member(userid) on delete cascade 
+,constraint FK_purchase_reviews_pnum foreign key(fk_pnum) references tbl_product(pnum) on delete cascade
+);
+-- 로그인하여 실제 해당 제품을 구매했을 때만 딱 1번만 작성할 수 있는 것. 제품후기를 삭제했을 경우에는 다시 작성할 수 있는 것임. 
+
+
+create sequence seq_purchase_reviews
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_PURCHASE_REVIEWS이(가) 생성되었습니다.
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
 select *
-from tbl_member;
+from tbl_member
+order by userseq asc;
 
-SHOW USER;
+-- 리뷰 보기 페이지 작성법: 3개 테이블을 조인한다.
+select * from tbl_review;
+
+select * from tbl_orderdetail;
+
+select * from tbl_order
+order by onum asc;
