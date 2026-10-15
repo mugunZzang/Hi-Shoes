@@ -421,7 +421,18 @@ public class ProductDAO_imple implements ProductDAO {
 				sql += " and D.ssize in (" + str_ssize + ") ";
 			}
 			if (!str_color.isBlank()) {
-				sql += " and D.color in (" + str_color + ") ";
+				if(str_color.contains("OTHER")) {
+					// 색상이 SILVER, BLACK, WHITE, BROWN, RED, BLUE, YELLOW, IVORY 인 걸 제외하고 갖고온다.
+					// str_color 가 만약 'BLACK','WHITE','OTHER' 이런식이면, 검정 흰색인 상품 + 위조건 만족하는 상품들  을 갖고오는 거임.
+					sql += " and ( "
+							+ " D.color in (" + str_color + ") "
+							+ " or D.color not in ('SILVER','BLACK','WHITE','BROWN','RED','BLUE','YELLOW','IVORY') "
+							+ ") ";
+				}
+				else {
+					sql += " and D.color in (" + str_color + ") ";
+				}
+				
 			}
 			
 					
@@ -499,7 +510,17 @@ public class ProductDAO_imple implements ProductDAO {
 				sql += " and D.ssize in (" + str_ssize + ") ";
 			}
 			if (!str_color.isBlank()) {
-				sql += " and D.color in (" + str_color + ") ";
+				if(str_color.contains("OTHER")) {
+					// 색상이 SILVER, BLACK, WHITE, BROWN, RED, BLUE, YELLOW, IVORY 인 걸 제외하고 갖고온다.
+					// str_color 가 만약 'BLACK','WHITE','OTHER' 이런식이면, 검정 흰색인 상품 + 위조건 만족하는 상품들  을 갖고오는 거임.
+					sql += " and ( "
+							+ " D.color in (" + str_color + ") "
+							+ " or D.color not in ('SILVER','BLACK','WHITE','BROWN','RED','BLUE','YELLOW','IVORY') "
+							+ ") ";
+				}
+				else {
+					sql += " and D.color in (" + str_color + ") ";
+				}
 			}
 	
 			sql 	+= " and B.saleprice between ? and ? "

@@ -70,6 +70,7 @@ public class ShowMallByCate extends AbstractController {
 		System.out.println("들어온str_color:" + pre_str_color);
 		System.out.println("----------------------------");
 		*/
+		System.out.println("들어온pre_str_color:" + pre_str_color);
 		String str_color = "";	// 색상 문자열 재조정한거 담을거임
 		
 		//String category = "";	// 임의로 하나
@@ -103,7 +104,7 @@ public class ShowMallByCate extends AbstractController {
 				str_color = "'" + arr_color[0] + "'";
 			}
 		}
-		
+		System.out.println("가공한str_color:" + str_color);
 		
 		if (str_ssize == null || str_ssize.isBlank()) {
 			str_ssize = "";
