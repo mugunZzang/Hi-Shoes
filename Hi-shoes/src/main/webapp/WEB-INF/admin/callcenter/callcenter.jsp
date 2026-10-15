@@ -431,6 +431,7 @@ function goDelete(num, type) {
 			            <td class="text-center" colspan="5">문의사항이 없습니다.</td>
 			        </tr>
 			    </c:if>
+			    </tbody>
         </table>
         
         <nav class="my-5" id="pageBar">
