@@ -6,151 +6,112 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Bootstrap CSS --%>
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/bootstrap-5.3.8-dist/css/bootstrap.min.css" >
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
-
-<%-- Font Awesome 6 Icons --%>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<%-- Optional JavaScript --%>
-<script type="text/javascript" src="<%= ctxPath%>/js/jquery-4.0.0.js"></script>
-<script type="text/javascript" src="<%= ctxPath%>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js" ></script>
-
 <style type="text/css">
-	* {
-		font-family: "Noto Sans KR", sans-serif;
-		  font-optical-sizing: auto;
-		  font-weight: 400;
-		  font-style: normal;
-	}
-	
-/*==============버튼 색상==================*/
 
-.btn-secondary {
-    --bs-btn-bg: #336600;
-    --bs-btn-border-color: #336600;
-    --bs-btn-hover-bg: #254d00;
-    --bs-btn-hover-border-color: #254d00;
-}
+    /* 문의사항 영역에만 폰트 적용 */
+    .question-container {
+        font-family: "Noto Sans KR", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+    }
 
-/*=============테이블 헤더=================*/
-#container table thead th{
- background-color:#E3EDE0 !important;
- font-size: 12pt;
-}
+    .question-container * {
+        font-family: inherit;
+    }
 
-/*=============테이블 데이터=================*/
-#container table tbody td{
- font-size:10pt;
-}
-
-/*=============페이지바 디자인=================*/
-
-
-/* 1. 페이지바 전체 컨테이너 */
-#pageBar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 20px 0;
-  border-top: 1px solid #e5e5e5;
-  margin-top: 30px;
-}
-
-#pageBar ul.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-td {
+    /* 문의사항 테이블의 일반 셀 */
+    .question-container table.table td {
         max-width: 200px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    
-	    /* 문의 행 */
-	.question-row {
-	    cursor: pointer;
-	    transition: background-color 0.2s;
-	}
-	
-	.question-row:hover {
-	    background-color: #f5f8f4;
-	}
-	
-	/* 답글 표시 + 화살표 */
-	.answer-toggle {
-	    display: inline-flex;
-	    align-items: center;
-	    justify-content: center;
-	    gap: 7px;
-	    color: #315f32;
-	    font-weight: 600;
-	    white-space: nowrap;
-	}
-	
-	.answer-toggle i {
-	    font-size: 12px;
-	    transition: transform 0.25s ease;
-	}
-	
-	/* 펼쳐진 상태 */
-	.question-row.active .answer-toggle i {
-	    transform: rotate(180deg);
-	}
-	
-	.question-row.active {
-	    background-color: #f5f8f4;
-	}
-	
-	/* 답변 행 */
-	.answer-row {
-	    display: none;
-	}
-	
-	.answer-row > td {
-	    padding: 10px 15px !important;
-	    background-color: #f8faf7;
-	}
-	
-	/* 답변 카드 */
-	.answer-content {
-	    padding: 16px 20px;
-	    background-color: #ffffff;
-	    border: 1px solid #e1e8df;
-	    border-left: 4px solid #315f32;
-	    border-radius: 6px;
-	    text-align: left;
-	}
-	
-	/* 답변 제목 */
-	.answer-header {
-	    display: flex;
-	    align-items: center;
-	    gap: 8px;
-	    margin-bottom: 10px;
-	    color: #315f32;
-	    font-size: 14px;
-	    font-weight: bold;
-	}
-	
-	/* 답변 본문 */
-	.answer-text {
-	    color: #444;
-	    font-size: 13px;
-	    line-height: 1.7;
-	    white-space: pre-wrap;
-	    word-break: break-word;
-	}
+
+    /* 문의 행 */
+    .question-container .question-row {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .question-container .question-row:hover {
+        background-color: #f5f8f4;
+    }
+
+    /* 답글 표시 + 화살표 */
+    .question-container .answer-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        color: #315f32;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .question-container .answer-toggle i {
+        font-size: 12px;
+        transition: transform 0.25s ease;
+    }
+
+    /* 펼쳐진 상태 */
+    .question-container .question-row.active .answer-toggle i {
+        transform: rotate(180deg);
+    }
+
+    .question-container .question-row.active {
+        background-color: #f5f8f4;
+    }
+
+    /* 답변 행: 처음에는 숨김 */
+    .question-container .answer-row {
+        display: none;
+    }
+
+    /* 답변 셀: 전체 너비 사용 */
+    .question-container table.table > tbody > tr.answer-row > td {
+        max-width: none !important;
+        width: auto;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        padding: 10px 15px !important;
+        background-color: #f8faf7;
+    }
+
+    /* 답변 카드 */
+    .question-container .answer-content {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 16px 20px;
+        background-color: #ffffff;
+        border: 1px solid #e1e8df;
+        border-left: 4px solid #315f32;
+        border-radius: 6px;
+        text-align: left;
+    }
+
+    /* 답변 제목 */
+    .question-container .answer-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        color: #315f32;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    /* 답변 본문 */
+    .question-container .answer-text {
+        color: #444;
+        font-size: 13px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
 </style>
 
 <script type="text/javascript">
@@ -191,7 +152,7 @@ function goSearch(frm) {
 
 </script>
 
-<div>
+<div class="question-container">
     	<form name="question_search_frm">
 			<select name="searchType">
 				<option value="">검색대상</option>
@@ -207,7 +168,7 @@ function goSearch(frm) {
           <thead class="table-primary">
             <tr>
                 <th style="width: 10%;">글번호</th>
-                <th style="width: 10%;">판매상품명</th>
+                <th style="width: 10%;">판매품명</th>
 				<th style="width: 20%;">제목</th>
                 <th style="width: 20%;">내용</th>
                 <th style="width: 20%;">작성일자</th>

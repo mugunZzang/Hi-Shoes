@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import member.domain.MemberDTO;
 
 public class Mypage extends AbstractController {
-
+	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +61,8 @@ public class Mypage extends AbstractController {
 			 * sumMap);
 			 */
 			
+			
+
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/member/mypage.jsp");	  		
 		
