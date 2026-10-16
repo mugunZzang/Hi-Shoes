@@ -6,7 +6,7 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
+import member.domain.MemberDTO;
 import member.kth.domain.AdminMemberDTO;
 import myshop.kth.model.AdminProductDAO;
 import myshop.kth.model.AdminProductDAO_imple;
@@ -38,26 +38,26 @@ private AdminProductDAO pdao = null;
 		 
 		  HttpSession session = request.getSession();
           
-          AdminMemberDTO loginuser = (AdminMemberDTO)session.getAttribute("loginuser");
+          MemberDTO loginuser = (MemberDTO)session.getAttribute("loginuser");
           
           // === 로그인 유무 검사하기 === //
-	   /*   if(loginuser == null || !"admin".equals(loginuser.getUserid())) {
+	      if(loginuser == null || !"admin".equals(loginuser.getUserid())) {
 	            request.setAttribute("message", "로그인 후 이용해 주세요.");
 	            request.setAttribute("loc", "javascript:history.back();");
 
 	            super.setRedirect(false);
 	            super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
 	            return;
-	        }  */
+	        }  
 				
 				
 				
 				
 				
-			/*  else {
+			 else {
 					//HttpSession session = request.getSession();
 					
-					//AdminMemberDTO loginuser = (AdminMemberDTO)session.getAttribute("loginuser");
+					//MemberDTO loginuser = (MemberDTO)session.getAttribute("loginuser");
 					String userid = loginuser.getUserid();
 					
 					//관리자가 아닐경우
@@ -72,9 +72,9 @@ private AdminProductDAO pdao = null;
 						super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
 						
 						return;
-					} */
+					} 
 					
-					//else {
+					else {
 						// "admin" 으로 로그인 한 경우(관리자)이라면
 						
 						String onum = request.getParameter("onum");
@@ -103,8 +103,8 @@ private AdminProductDAO pdao = null;
 					    super.setRedirect(false);
 						super.setViewPage("/WEB-INF/admin/adminJsonview.jsp");	
 								
-				//	}
-			//	}		
+				}
+				}		
 		
 	}
 

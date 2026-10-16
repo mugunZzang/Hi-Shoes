@@ -8,8 +8,7 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import member.kth.domain.AdminMemberDTO;
+import member.domain.MemberDTO;
 import myshop.kth.model.AdminProductDAO;
 import myshop.kth.model.AdminProductDAO_imple;
 
@@ -33,9 +32,9 @@ public class AdminOrderList extends AbstractController {
 		if(referer == null) {
 		// referer == null 은 웹브라우저 주소창에 URL 을 직접 입력하고 들어온 경우이다. 
 		super.setRedirect(true);
-		super.setViewPage(request.getContextPath()+"/index.up");
+		super.setViewPage(request.getContextPath()+"/index.go");
 		return;
-		} 
+		}  
 		
 		// === 로그인 유무 검사하기 === //
 		// (common.controller에 메서드 생성 아직 안함.)
@@ -50,27 +49,27 @@ public class AdminOrderList extends AbstractController {
 		} */
 		
 		HttpSession session = request.getSession();
-		AdminMemberDTO loginuser = (AdminMemberDTO) session.getAttribute("loginuser");
+		MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
 		//(로그인안한 상태로 페이지 보려고 만듬)
-		if(loginuser == null) {
-		    loginuser = new AdminMemberDTO();
-		    loginuser.setUserid("admin");
-		}
+			/* if(loginuser == null) {
+			    loginuser = new MemberDTO();
+			    loginuser.setUserid("admin");
+			} */
 				
 	        
 		// === 로그인 유무 검사하기 === //(개발할땐 로그인 여부 나중에 추가함)
-//        if(loginuser == null ||!"admin".equals(loginuser.getUserid())) {
-//               
-//            request.setAttribute("message", "로그인 후 이용해 주세요.");
-//            request.setAttribute("loc", "javascript:history.back();");
-//
-//            super.setRedirect(false);
-//            super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
-//            return;
-//        }
+        if(loginuser == null || !"admin".equals(loginuser.getUserid())) {
+               
+            request.setAttribute("message", "로그인 후 이용해 주세요.");
+            request.setAttribute("loc", "javascript:history.back();");
+
+            super.setRedirect(false);
+            super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
+            return;
+          }
         
         
-	   // else {
+	    else {
 		// 로그인을 했을 경우 
 		
 		// *** 페이징 처리한 주문 목록 보여주기 *** //
@@ -249,7 +248,7 @@ public class AdminOrderList extends AbstractController {
 		
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/admin/adminOrderList.jsp");	
-	    //} 
+	    } 
 	  
       
 		
