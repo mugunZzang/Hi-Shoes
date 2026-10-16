@@ -10,6 +10,130 @@
 
 <script type="text/javascript">		
 	
+	// 테흔님 작업 영역 start
+
+	$(document).ready(function() {
+		loadOrderList(1);
+	});
+
+	// 주문 목록 불러오기
+	function loadOrderList(currentShowPageNo) {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/admin/adminOrderList2.go",
+			type: "GET",
+			data: {
+				currentShowPageNo: currentShowPageNo
+			},
+			dataType: "html",
+			success: function(html) {
+				$("#orderListArea").html(html);
+			},
+			error: function(request, status, error) {
+				console.error("주문 목록 HTTP 상태:", request.status);
+				console.error("주문 목록 응답:", request.responseText);
+				console.error("주문 목록 오류:", error);
+
+				$("#orderListArea").html(
+					"주문내역을 불러오지 못했습니다. Console을 확인해주세요."
+				);
+			}
+		});
+	}
+
+	// 별점 초기값
+	window.selectedReviewRating = 0;
+
+	// 별점 선택
+	$(document).on("click", "#reviewStarGroup .review-star", function() {
+		window.selectedReviewRating = Number($(this).data("rating"));
+
+		$("#reviewStarGroup .review-star").each(function() {
+			const rating = Number($(this).data("rating"));
+
+			$(this).toggleClass(
+				"active",
+				rating <= window.selectedReviewRating
+			);
+		});
+
+		$("#reviewRatingText").text(
+			window.selectedReviewRating + "점 선택"
+		);
+	});
+
+	// 리뷰 작성 모달 열기
+	function openReviewWrite_Modal(odnum) {
+		window.selectedReviewRating = 0;
+
+		$("#reviewOdnum").val(odnum);
+		$("#reviewContents").val("");
+		$("#reviewStarGroup .review-star").removeClass("active");
+		$("#reviewRatingText").text("별점을 선택해주세요.");
+
+		$("#reviewWriteModal").modal("show");
+	}
+
+	// 리뷰 등록
+	$(document).on("click", "#reviewRegisterBtn", function() {
+		const odnum = $("#reviewOdnum").val();
+		const rcontents = $("#reviewContents").val().trim();
+
+		if (!odnum) {
+			alert("주문상세번호를 확인할 수 없습니다.");
+			return;
+		}
+
+		if (window.selectedReviewRating === 0) {
+			alert("별점을 선택해주세요.");
+			return;
+		}
+
+		if (rcontents === "") {
+			alert("리뷰 내용을 입력해주세요.");
+			$("#reviewContents").focus();
+			return;
+		}
+
+		$.ajax({
+			url: "${pageContext.request.contextPath}/admin/reviewWriteJson.go",
+			type: "POST",
+			data: {
+				odnum: odnum,
+				rating: window.selectedReviewRating,
+				rcontents: rcontents
+			},
+			dataType: "json",
+			success: function(json) {
+				console.log("리뷰 등록 응답:", json);
+
+				if (Number(json.result) === 1) {
+					alert("리뷰가 등록되었습니다.");
+					$("#reviewWriteModal").modal("hide");
+					loadOrderList(1);
+				}
+				else if (Number(json.result) === -1) {
+					alert("이미 작성한 리뷰가 있습니다.");
+				}
+				else {
+					alert("리뷰 등록에 실패했습니다.");
+				}
+			},
+			error: function(request, status, error) {
+				console.error("리뷰 등록 HTTP 상태:", request.status);
+				console.error("리뷰 등록 응답:", request.responseText);
+				console.error("리뷰 등록 오류:", error);
+
+				alert("리뷰 등록 요청에 실패했습니다. Console을 확인해주세요.");
+			}
+		});
+	});
+
+
+	// 테흔님 작업 영역 end
+
+
+
+
 	//리뷰보기 호출
 	function showReview() {
 	    fetch("<%= ctxPath%>/member/reviewList.go")
@@ -272,6 +396,10 @@
 			    <div class="tab-content" id="nav-tabContent">
 			      <div class="tab-pane fade show active" id="list-order" role="tabpanel" aria-labelledby="list-order-list">
 			      	주문내역
+
+					<div id="orderListArea">
+                          주문내역을 불러오는 중입니다.
+                      </div>
 			      </div>
 			      <div class="tab-pane fade" id="list-wish" role="tabpanel" aria-labelledby="list-wish-list">
 			      
