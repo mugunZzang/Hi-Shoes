@@ -54,4 +54,13 @@ public interface MemberDAO {
 	// 리뷰 수정 함수
 	int editFinish(Map<String, String> paraMap) throws SQLException;	
 	
+    // 위시리스트 삭제(DELETE)
+    int wishListDelete(Map<String, String> paraMap) throws SQLException;
+
+    // 페이징바를 위한 총 개수
+    int getTotalCountWishList(String userid) throws SQLException;
+
+    // 페이징 처리
+    List<Map<String, String>> wishListPaging(Map<String, String> paraMap) throws SQLException;
+	
 }

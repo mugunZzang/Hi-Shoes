@@ -186,10 +186,15 @@ public class Login extends AbstractController {
 			
 			else {
 				// 비밀번호를 변경한지 6개월 미만인 경우 
-				
-				// 페이지 이동을 시킨다.
-				super.setRedirect(true);
-				super.setViewPage(request.getContextPath()+"/index.go"); 	
+	            if(loginuser.getUserid().equals("admin")) {
+	                super.setRedirect(true);
+	                super.setViewPage(request.getContextPath()+"/admin/adminMain.go");
+	                
+	             } else {
+	                // 페이지 이동을 시킨다.
+	                super.setRedirect(true);
+	                super.setViewPage(request.getContextPath()+"/index.go");    
+	             }
 			}
 			
 		}

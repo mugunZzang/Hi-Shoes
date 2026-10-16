@@ -646,5 +646,100 @@ public class MemberDAO_imple implements MemberDAO {
 		
 		return n;
 	}	// end of public int editFinish(Map<String, String> paraMap) throws SQLException-------
+	
+	   // 위시리스트 삭제(DELETE)
+	   @Override
+	   public int wishListDelete(Map<String, String>paraMap) throws SQLException {
+	      int n = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " DELETE FROM tbl_wishlist "
+	                  + " WHERE fk_userid = ? AND fk_pnum IN(" + paraMap.get("pnum") + ")";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, paraMap.get("userid"));
+	         
+	         n = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return n;
+	   } // end of public int updateDeliverStart(String pnum) throws SQLException-----------------
+	   
+	   // 페이징바를 위한 총 개수
+	   @Override
+	   public int getTotalCountWishList(String userid) throws SQLException {
+	       int totalCount = 0;
+	       
+	       try {
+	           conn = ds.getConnection();
+
+	           String sql = " SELECT COUNT(*) "
+	                      + " FROM tbl_wishlist W INNER JOIN tbl_product P "
+	                      + "      ON W.fk_pnum = P.pnum "
+	                      + "      INNER JOIN tbl_catalogue C "
+	                      + "      ON P.fk_pname = C.pname "
+	                      + " WHERE W.fk_userid = ? ";
+
+	           pstmt = conn.prepareStatement(sql);
+	           pstmt.setString(1, userid);
+	           rs = pstmt.executeQuery();
+	           rs.next();
+	           totalCount = rs.getInt(1);
+	       } finally {
+	           close();
+	       }
+	       
+	       return totalCount;
+	   } // end of public int getTotalCountWishList(String userid) throws SQLException------------------
+
+	   // 페이징 처리
+	   @Override
+	   public List<Map<String, String>> wishListPaging(Map<String, String> paraMap) throws SQLException {
+	       List<Map<String, String>> wishList = new ArrayList<>();
+	       try {
+	           conn = ds.getConnection();
+
+	           int currentPage = Integer.parseInt(paraMap.get("currentShowPageNo"));
+	           int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage"));
+
+	           String sql = " SELECT C.pname, P.pimage1, P.pnum, C.regprice, C.saleprice, C.brand "
+	                      + " FROM tbl_wishlist W INNER JOIN tbl_product P "
+	                      + "      ON W.fk_pnum = P.pnum "
+	                      + "      INNER JOIN tbl_catalogue C "
+	                      + "      ON P.fk_pname = C.pname "
+	                      + " WHERE W.fk_userid = ? "
+	                      + " ORDER BY W.fk_pnum DESC "
+	                      + " OFFSET ? ROWS "
+	                      + " FETCH NEXT ? ROWS ONLY ";
+
+	           pstmt = conn.prepareStatement(sql);
+	           pstmt.setString(1, paraMap.get("userid"));
+	           pstmt.setInt(2, (currentPage - 1) * sizePerPage);   
+	           pstmt.setInt(3, sizePerPage);                       
+
+	           rs = pstmt.executeQuery();
+	           while (rs.next()) {
+	               Map<String, String> map = new HashMap<>();
+	               map.put("pname",     rs.getString("pname"));
+	               map.put("pimage1",   rs.getString("pimage1"));
+	               map.put("pnum",      rs.getString("pnum"));
+	               map.put("regprice",  rs.getString("regprice"));
+	               map.put("saleprice", rs.getString("saleprice"));
+	               map.put("brand",     rs.getString("brand"));
+	               wishList.add(map);
+	           }
+	       } finally {
+	           close();
+	       }
+	       return wishList;
+	   
+	   } // public List<Map<String, String>> wishListPaging(Map<String, String> paraMap) throws SQLException------
+	   
+
 
 }

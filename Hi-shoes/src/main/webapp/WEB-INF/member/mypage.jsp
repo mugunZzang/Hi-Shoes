@@ -274,7 +274,9 @@
 			      	주문내역
 			      </div>
 			      <div class="tab-pane fade" id="list-wish" role="tabpanel" aria-labelledby="list-wish-list">
-			      	위시리스트
+			      
+              			<jsp:include page="/WEB-INF/member/wishList.jsp" />
+               
 			      </div>
 			      <div class="tab-pane fade" id="list-review" role="tabpanel" aria-labelledby="list-review-list">
 			      	<div id="reviewArea">
@@ -286,7 +288,7 @@
 			      	
 			      </div>
 			      <div class="tab-pane fade" id="list-qna" role="tabpanel" aria-labelledby="list-qna-list">
-			      	문의내역
+			      	<jsp:include page="/WEB-INF/user/userqna.jsp" />
 			      </div>
 			     
 			    </div>
