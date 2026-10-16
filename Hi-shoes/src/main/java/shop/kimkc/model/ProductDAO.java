@@ -133,6 +133,14 @@ public interface ProductDAO {
 
 	// 해당 QnA 를 수정한다.
 	int updateQna(Map<String, String> paraMap) throws SQLException;
+
+
+	// index 에 갖고갈 신발 리스트들
+	List<ProductDTO> getSneakersForIndex() throws SQLException;
+	List<ProductDTO> getAthleticShoesForIndex() throws SQLException;
+	List<ProductDTO> getDressShoesForIndex() throws SQLException;
+	List<ProductDTO> getBootsForIndex() throws SQLException;
+	List<ProductDTO> getSandlesForIndex() throws SQLException;
 	
 
 }
