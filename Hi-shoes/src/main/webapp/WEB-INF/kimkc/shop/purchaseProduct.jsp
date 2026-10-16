@@ -44,12 +44,19 @@
 	    	const cqty = Number($("input.product-cqty").eq(i).val());
 	        //console.log("수량" + cqty);
 	        
-	     	// 정상가 기준 주문금액
-	        totalOrderPrice += saleprice * cqty;
+	     	// 판매가 기준 주문금액
+	     	if(saleprice >= regprice) {
+	        	totalOrderPrice += saleprice * cqty;
+	        }
+	        else {
+	        	totalOrderPrice += regprice * cqty;
+	        }
+	       // console.log("판매가기준주문금액" + totalOrderPrice);
 
 	        // 정상가보다 판매가가 낮은 상품만 할인 계산
 	        if (regprice > saleprice) {
 	            totalDiscountPrice += (regprice - saleprice) * cqty;
+		        //console.log("할인가" + totalDiscountPrice);
 	        }
 
 	        
@@ -58,8 +65,8 @@
         totalDeliveryFee = Number("${requestScope.deliveryfee}");
 	    
 	 	// 최종 결제금액
-	    const finalPrice =
-	        totalOrderPrice - totalDiscountPrice + totalDeliveryFee;
+	    const finalPrice = totalOrderPrice - totalDiscountPrice;
+	        /* totalOrderPrice - totalDiscountPrice + totalDeliveryFee; */
 
 	    // 천 단위 콤마 및 원 표시
 	    const formatPrice = price =>
@@ -234,7 +241,7 @@
 	
 	
 	                <div class="order-product-price">
-						<c:if test="${prod.regprice > prod.saleprice}">
+						<c:if test="${Integer.parseInt(prod.regprice) > Integer.parseInt(prod.saleprice)}">
 		                    <del class="regular-price" data-regprice="${prod.regprice}">
 		                        <fmt:formatNumber value="${prod.regprice}" type="number"/>
 		                    </del>
@@ -244,7 +251,7 @@
 		                    </strong>
 	                    </c:if>
 	                    
-	                    <c:if test="${prod.regprice <= prod.saleprice}">
+	                    <c:if test="${Integer.parseInt(prod.regprice) <= Integer.parseInt(prod.saleprice)}">
 	                    	<del class="regular-price" style="display: none;" data-regprice="${prod.regprice}">
 		                        <fmt:formatNumber value="${prod.regprice}" type="number"/>
 		                    </del>
