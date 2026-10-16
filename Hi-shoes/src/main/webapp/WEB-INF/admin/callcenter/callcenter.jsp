@@ -10,9 +10,21 @@
 
 <script type="text/javascript">
 
+
 $(function(){
-	
-	
+
+        $(".question-row").on('click',function() {
+        	
+            let $row = $(this);
+            let $answer = $row.next(".answer-row");
+
+            // 현재 답변 열기 / 닫기
+            $row.toggleClass("active");
+            $answer.stop(true, true).slideToggle(200);
+
+        });
+
+
 	
 	
 	
@@ -68,6 +80,90 @@ function goDelete(num, type) {
 }
 
 </script>
+
+<style>
+    td {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+	    /* 문의 행 */
+	.question-row {
+	    cursor: pointer;
+	    transition: background-color 0.2s;
+	}
+	
+	.question-row:hover {
+	    background-color: #f5f8f4;
+	}
+	
+	/* 답글 표시 + 화살표 */
+	.answer-toggle {
+	    display: inline-flex;
+	    align-items: center;
+	    justify-content: center;
+	    gap: 7px;
+	    color: #315f32;
+	    font-weight: 600;
+	    white-space: nowrap;
+	}
+	
+	.answer-toggle i {
+	    font-size: 12px;
+	    transition: transform 0.25s ease;
+	}
+	
+	/* 펼쳐진 상태 */
+	.question-row.active .answer-toggle i {
+	    transform: rotate(180deg);
+	}
+	
+	.question-row.active {
+	    background-color: #f5f8f4;
+	}
+	
+	/* 답변 행 */
+	.answer-row {
+	    display: none;
+	}
+	
+	.answer-row > td {
+	    padding: 10px 15px !important;
+	    background-color: #f8faf7;
+	}
+	
+	/* 답변 카드 */
+	.answer-content {
+	    padding: 16px 20px;
+	    background-color: #ffffff;
+	    border: 1px solid #e1e8df;
+	    border-left: 4px solid #315f32;
+	    border-radius: 6px;
+	    text-align: left;
+	}
+	
+	/* 답변 제목 */
+	.answer-header {
+	    display: flex;
+	    align-items: center;
+	    gap: 8px;
+	    margin-bottom: 10px;
+	    color: #315f32;
+	    font-size: 14px;
+	    font-weight: bold;
+	}
+	
+	/* 답변 본문 */
+	.answer-text {
+	    color: #444;
+	    font-size: 13px;
+	    line-height: 1.7;
+	    white-space: pre-wrap;
+	    word-break: break-word;
+	}
+</style>
 
 <div class="container-fluid"
      id="container"
@@ -229,7 +325,7 @@ function goDelete(num, type) {
 			                <td>${faq.fcategory}</td>
 			                <td class="text-center"><button type="button"
 		            						class="btn btn-outline-danger"
-		           						onclick="goDelete(${faq.fnum}, 'faq'); event.stopPropagation();">
+		           						onclick="event.stopPropagation(); goDelete(${faq.fnum}, 'faq');">
 		        					삭제
 		    						</button></td>
 			            </tr>
@@ -274,8 +370,9 @@ function goDelete(num, type) {
             <tr>
                 <th style="width: 10%;">글번호</th>
                 <th style="width: 10%;">판매상품명</th>
+				<th style="width: 20%;">제목</th>
                 <th style="width: 10%;">아이디</th>
-                <th style="width: 40%;">내용</th>
+                <th style="width: 20%;">내용</th>
                 <th style="width: 20%;">작성일자</th>
                 <th style="width: 10%;">답변여부</th>
             </tr>
@@ -290,6 +387,7 @@ function goDelete(num, type) {
 							    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 							    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
 				                <td>${question.fk_pname}</td>
+				                <td>${question.qtitle}</td>
 				                <td>${question.fk_userid}</td>
 				                <td>${question.qcontents}</td>
 				                <td>${question.qwritedate}</td>
@@ -297,16 +395,33 @@ function goDelete(num, type) {
 				            </tr>
 			            </c:if>
 			            <c:if test="${not empty question.qanswer}">
-				            <tr>
+				            <tr class="question-row">
 				                <fmt:parseNumber var="currentShowPageNo" value="${requestScope.currentShowPageNo}" /> 
 							    <%-- fmt:parseNumber 은 문자열을 숫자형식으로 형변환 시키는 것이다. --%> 
 							    <td align="center">${ (requestScope.totalCountOrder) - (currentShowPageNo -1) * (requestScope.sizePerPage) - (status.index) }</td>
 				                <td>${question.fk_pname}</td>
+				                <td>${question.qtitle}</td>
 				                <td>${question.fk_userid}</td>
 				                <td>${question.qcontents}</td>
 				                <td>${question.qwritedate}</td>
-				                <td>답글O</td>
+				                <td>
+						            <span class="answer-toggle">
+						                답글 <i class="fas fa-chevron-down"></i>
+						            </span>
+						        </td>
 				            </tr>
+				            <tr class="answer-row">
+						        <td colspan="7">
+						            <div class="answer-content">
+						                <div class="answer-header">
+						                    <i class="fas fa-comment-dots"></i>
+						                    관리자 답변
+						                </div>
+						
+						                <div class="answer-text">${question.qanswer}</div>
+						            </div>
+						        </td>
+						    </tr>
 			            </c:if>
 			        </c:forEach>
 			    </c:if>
@@ -316,6 +431,7 @@ function goDelete(num, type) {
 			            <td class="text-center" colspan="5">문의사항이 없습니다.</td>
 			        </tr>
 			    </c:if>
+			    </tbody>
         </table>
         
         <nav class="my-5" id="pageBar">

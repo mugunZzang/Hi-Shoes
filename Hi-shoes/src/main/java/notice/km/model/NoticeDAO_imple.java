@@ -394,7 +394,7 @@ public class NoticeDAO_imple implements NoticeDAO {
 			System.out.println(num);
 			
 			String sql = " delete from tbl_notice"
-					   + " where nnum = ? ";
+					   + " where nnum = to_number(?) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, num);
