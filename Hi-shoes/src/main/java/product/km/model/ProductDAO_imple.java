@@ -15,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import member.km.domain.MemberDTO;
 import product.km.domain.ProductDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
@@ -454,7 +455,7 @@ public class ProductDAO_imple implements ProductDAO {
 
 		// 제품 테이블 업데이트
 		@Override
-		public int productUpdate(Map<String, String> paraMap) throws Exception {
+		public int productUpdate(ProductDTO pdto) throws Exception {
 			
 			int n = 0;
 			
@@ -462,13 +463,18 @@ public class ProductDAO_imple implements ProductDAO {
 				
 				conn = ds.getConnection();
 				
-				String sql = " UPDATE tbl_product SET pcontent = ?, deliveryfee = to_number(?) "
-						   + " WHERE pnum = to_number(?) ";
+				String sql = " UPDATE tbl_product SET pimage1 =?, pimage2 = ?, pcontent = ?, deliveryfee = ?,warranty_systemfilename = ?, Warranty_originfilename = ? "
+						   + " WHERE pnum = ? ";
 				
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1,paraMap.get("pcontent"));
-				pstmt.setString(2,paraMap.get("deliveryfee"));
-				pstmt.setString(3,paraMap.get("pnum"));
+	
+		        pstmt.setString(1, pdto.getPimage1());    
+		        pstmt.setString(2, pdto.getPimage2()); 
+		        pstmt.setString(3, pdto.getPcontent());
+		        pstmt.setInt(4, pdto.getDeliveryfee());
+		        pstmt.setString(5, pdto.getWarranty_systemfilename());
+		        pstmt.setString(6, pdto.getWarranty_originfilename());
+		        pstmt.setInt(7, pdto.getPnum());
 				
 				n = pstmt.executeUpdate();
 				
@@ -504,6 +510,54 @@ public class ProductDAO_imple implements ProductDAO {
 				close();
 			}
 			return bl;
+		}
+
+		// 추가이미지 해당제품에 이미지가 있으면 삭제해주기
+		@Override
+		public boolean selectAddImage(String pnum) throws Exception {
+			boolean bl = false;
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				String sql = " Select * from tbl_product_image "
+						   + " where fk_pnum = to_number(?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				rs = pstmt.executeQuery();
+				
+				bl = rs.next();
+				
+			} finally {
+				close();
+			}
+			
+			return bl;
+		}
+
+		// 추가이미지 삭제해주기
+		@Override
+		public void deleteImage(String pnum) throws Exception {
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				String sql = " delete from tbl_product_image "
+						   + " where fk_pnum = to_number(?)	";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				pstmt.executeUpdate();
+				
+			} finally {
+				close();
+			}
+			
 		}
 
 }
