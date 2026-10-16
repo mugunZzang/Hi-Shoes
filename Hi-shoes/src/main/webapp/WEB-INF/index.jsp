@@ -45,101 +45,99 @@
 		</section>
 		
 		<section class="bestsellers">
-			<h2 class="text-center">브랜드 별 베스트셀러</h2>
-			<!-- Nav tabs -->
-			<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist" >
-			  <li class="nav-item" role="presentation">
-			    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#brand1" type="button" role="tab" aria-controls="home" aria-selected="true">나이키</button>
-			  </li>
-			  <li class="nav-item" role="presentation">
-			    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#brand2" type="button" role="tab" aria-controls="profile" aria-selected="false">아디다스</button>
-			  </li>
-			  <li class="nav-item" role="presentation">
-			    <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#brand3" type="button" role="tab" aria-controls="messages" aria-selected="false">아식스</button>
-			  </li>
-			</ul>
-			
-			<!-- Tab panes -->
-			<div class="tab-content">
-			  <div class="tab-pane active" id="brand1" role="tabpanel" aria-labelledby="home-tab">
-			  	<div>
-			  		<ul class="">
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9050_detail_070.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9049_detail_013.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9048_detail_036.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9040_detail_070.jpg">
-			  				</a>
-			  			</li>
-			  		</ul>
-			  	</div>
-			  </div>
-			  <div class="tab-pane" id="brand2" role="tabpanel" aria-labelledby="profile-tab">
-			  	<div>
-			  		<ul class="">
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9090_detail_076.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9082_detail_091.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9081_detail_03.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/9080_detail_039.jpg">
-			  				</a>
-			  			</li>
-			  		</ul>
-			  	</div>
-			  </div>
-			  <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab">
-			  	<div>
-			  		<ul class="">
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/68639_1695633642289.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/17488_1707870306485.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/00631_1751870842066.jpg">
-			  				</a>
-			  			</li>
-			  			<li class="">
-			  				<a href="#">
-			  					<img alt="상품" src="<%=ctxPath%>/images/67001_1706255553897.jpg">
-			  				</a>
-			  			</li>
-			  		</ul>
-			  	</div>
-			  </div>
-			</div>
+			<h2 class="text-center">베스트셀러</h2>
+	         <!-- Nav tabs -->
+	         <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist" >
+	           <li class="nav-item" role="presentation">
+	             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#brand1" type="button" role="tab" aria-controls="home" aria-selected="true">운동화</button>
+	           </li>
+	           <li class="nav-item" role="presentation">
+	             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#brand2" type="button" role="tab" aria-controls="profile" aria-selected="false">스니커즈</button>
+	           </li>
+	           <li class="nav-item" role="presentation">
+	             <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#brand3" type="button" role="tab" aria-controls="messages" aria-selected="false">구두</button>
+	           </li>
+	           <li class="nav-item" role="presentation">
+	             <button class="nav-link" id="messages-tab2" data-bs-toggle="tab" data-bs-target="#brand3" type="button" role="tab" aria-controls="messages" aria-selected="false">부츠</button>
+	           </li>
+	           <li class="nav-item" role="presentation">
+	             <button class="nav-link" id="messages-tab3" data-bs-toggle="tab" data-bs-target="#brand3" type="button" role="tab" aria-controls="messages" aria-selected="false">샌들</button>
+	           </li>
+	         </ul>
+	         
+	         <!-- Tab panes -->
+	         <div class="tab-content">
+	           <!-- 스니커즈 -->
+	           <div class="tab-pane active" id="brand1" role="tabpanel" aria-labelledby="home-tab">
+	              <div>
+	                 <ul class="">
+	                    <c:forEach var="product" items="${requestScope.sneakers}">
+	                       <li class="">
+	                          <a href="<%=ctxPath%>/shop/productDetail.go?pnum=${product.pnum}">
+	                             <img alt="상품" src="<%=ctxPath%>/images/${product.pimage1}">
+	                          </a>
+	                       </li>
+	                    </c:forEach>
+	                 </ul>
+	              </div>
+	           </div>
+	           <!-- 운동화 -->
+	           <div class="tab-pane" id="brand2" role="tabpanel" aria-labelledby="profile-tab">
+	              <div>
+	                 <ul class="">
+	                    <c:forEach var="product" items="${requestScope.athleticShoes}">
+	                       <li class="">
+	                          <a href="<%=ctxPath%>/shop/productDetail.go?pnum=${product.pnum}">
+	                             <img alt="상품" src="<%=ctxPath%>/images/${product.pimage1}">
+	                          </a>
+	                       </li>
+	                    </c:forEach>
+	                 </ul>
+	              </div>
+	           </div>
+	           <!-- 구두 -->
+	           <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab">
+	              <div>
+	                 <ul class="">
+	                    <c:forEach var="product" items="${requestScope.dressShoes}">
+	                       <li class="">
+	                          <a href="<%=ctxPath%>/shop/productDetail.go?pnum=${product.pnum}">
+	                             <img alt="상품" src="<%=ctxPath%>/images/${product.pimage1}">
+	                          </a>
+	                       </li>
+	                    </c:forEach>
+	                 </ul>
+	              </div>
+	           </div>
+	           <!-- 부츠 -->
+	           <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab2">
+	              <div>
+	                 <ul class="">
+	                    <c:forEach var="product" items="${requestScope.boots}">
+	                       <li class="">
+	                          <a href="<%=ctxPath%>/shop/productDetail.go?pnum=${product.pnum}">
+	                             <img alt="상품" src="<%=ctxPath%>/images/${product.pimage1}">
+	                          </a>
+	                       </li>
+	                    </c:forEach>
+	                 </ul>
+	              </div>
+	           </div>
+	           <!-- 샌들 -->
+	           <div class="tab-pane" id="brand3" role="tabpanel" aria-labelledby="messages-tab3">
+	              <div>
+	                 <ul class="">
+	                    <c:forEach var="product" items="${requestScope.sandles}">
+	                       <li class="">
+	                          <a href="<%=ctxPath%>/shop/productDetail.go?pnum=${product.pnum}">
+	                             <img alt="상품" src="<%=ctxPath%>/images/${product.pimage1}">
+	                          </a>
+	                       </li>
+	                    </c:forEach>
+	                 </ul>
+	              </div>
+	           </div>
+	         </div>
 		</section>
 	</div>	
 </main>

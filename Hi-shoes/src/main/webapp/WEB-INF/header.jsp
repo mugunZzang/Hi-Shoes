@@ -76,7 +76,7 @@ function goCartList() {
 						<span>CART</span>
 					</a>
 					
-					<a href="#">
+					<a href="<%=ctxPath%>/user/usercallcenter.go">
 						<img alt="join" src="<%= ctxPath %>/images/cscenter.svg">
 						<span>CS</span>
 					</a>
