@@ -24,57 +24,22 @@ public class FaqDAO_imple implements FaqDAO {
 
 
     private DataSource ds;
-
     private Connection conn;
-
     private PreparedStatement pstmt;
-
     private ResultSet rs;
-
-
-    private AES256 aes;
-
-
-    // =====================================================
-    // 생성자
-    // =====================================================
 
     public FaqDAO_imple() {
 
         try {
 
-            Context initContext =
-                    new InitialContext();
-
-
-            Context envContext =
-                    (Context)initContext.lookup(
-                            "java:/comp/env"
-                    );
-
-
-            ds =
-                    (DataSource)envContext.lookup(
-                            "jdbc/myoracle"
-                    );
-
-
-            aes =
-                    new AES256(
-                            SecretMyKey.KEY
-                    );
-
+            Context initContext =new InitialContext();
+            Context envContext =(Context)initContext.lookup("java:/comp/env");
+            ds = (DataSource)envContext.lookup("jdbc/myoracle");
 
         }
         catch(NamingException e) {
 
             e.printStackTrace();
-
-        }
-        catch(UnsupportedEncodingException e) {
-
-            e.printStackTrace();
-
         }
 
     }
@@ -437,7 +402,7 @@ public class FaqDAO_imple implements FaqDAO {
 			System.out.println(num);
 			
 			String sql = " delete from tbl_faq"
-					   + " where fnum = ? ";
+					   + " where fnum = to_number(?) ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, num);

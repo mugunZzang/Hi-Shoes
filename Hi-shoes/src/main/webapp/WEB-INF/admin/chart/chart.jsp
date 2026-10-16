@@ -61,8 +61,11 @@
     background: #f1f7ff;
 }
 
-
-
+.chart2-wrapper {
+    margin-top: 80px !important;
+    padding-top: 20px;
+    clear: both;
+}
 </style>
 		
 <script type="text/javascript">
@@ -131,10 +134,21 @@ $(function(){
 	                valueSuffix: '원',
 	                valueDecimals: 0
 	            },
+	            
+	            colors: [
+	                '#4F81BD',  // 파란색
+	                '#70AD47',  // 초록색
+	                '#ED7D31',  // 주황색
+	                '#FFC000',  // 노란색
+	                '#9966CC',  // 보라색
+	                '#00A6A6',  // 청록색
+	                '#E66C9A'   // 분홍색
+	            ],
 	
 	            plotOptions: {
 	                column: {
-	                    borderWidth: 0
+	                    borderWidth: 0,
+	                    colorByPoint: true
 	                }
 	            },
 	
@@ -193,10 +207,21 @@ $(function(){
                     valueSuffix: '개',
                     valueDecimals: 0
                 },
+                
+                colors: [
+	                '#4F81BD',  // 파란색
+	                '#70AD47',  // 초록색
+	                '#ED7D31',  // 주황색
+	                '#FFC000',  // 노란색
+	                '#9966CC',  // 보라색
+	                '#00A6A6',  // 청록색
+	                '#E66C9A'   // 분홍색
+	            ],
 
                 plotOptions: {
                     column: {
-                        borderWidth: 0
+                        borderWidth: 0,
+                        colorByPoint: true
                     }
                 },
 
@@ -259,7 +284,10 @@ $(function(){
                 padding: 25px;">
                 
                 <div id="chart_container"></div>
-                <div id="chart_container2" ></div>
+
+				<div class="chart2-wrapper">
+				    <div id="chart_container2"></div>
+				</div>
                 
                 
     </div>

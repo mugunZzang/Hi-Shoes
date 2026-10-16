@@ -3,6 +3,7 @@ package product.km.model;
 import java.util.List;
 import java.util.Map;
 
+import member.km.domain.MemberDTO;
 import product.km.domain.ProductDTO;
 
 public interface ProductDAO {
@@ -41,10 +42,16 @@ public interface ProductDAO {
 	List<String> selectProductImages(String pnum) throws Exception;
 
 	// 제품 테이블 업데이트
-	int productUpdate(Map<String, String> paraMap) throws Exception;
+	int productUpdate(ProductDTO pdto) throws Exception;
 
 	// 같은 제품명이 있으면 거르는 코드
 	boolean sameNameProd(String pname) throws Exception;
+
+	// 추가이미지 해당제품에 이미지가 있으면 삭제해주기
+	boolean selectAddImage(String pnum) throws Exception;
+
+	// 추가이미지 삭제해주기
+	void deleteImage(String pnum) throws Exception;
 
 	
 	

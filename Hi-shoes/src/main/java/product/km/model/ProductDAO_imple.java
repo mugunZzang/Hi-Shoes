@@ -15,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import member.km.domain.MemberDTO;
 import product.km.domain.ProductDTO;
 import util.security.AES256;
 import util.security.SecretMyKey;
@@ -26,8 +27,6 @@ public class ProductDAO_imple implements ProductDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
-	private AES256 aes;
-	
 	// 생성자
 	public ProductDAO_imple() {
 		
@@ -37,14 +36,10 @@ public class ProductDAO_imple implements ProductDAO {
 		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
 		    // lookup()속에 /MyMVC/src/main/webapp/META-INF/context.xml에 지정한 이름을 적어준다. 
 		    
-		    aes = new AES256(SecretMyKey.KEY);
-		    // SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
 		    
 		} catch (NamingException e) {
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		} 
 		
 	}
 	
@@ -134,15 +129,14 @@ public class ProductDAO_imple implements ProductDAO {
 
 	        conn = ds.getConnection();
 
-	        String sql =
-	              " select count(*) as CNT "
-	            + " from tbl_product ";
+	        String sql = " select count(*) as CNT "
+	        		   + " from tbl_product ";
 
 	        String searchWord = paraMap.get("searchWord");
 
 	        if(searchWord != null && !searchWord.trim().isEmpty()) {
 
-	            sql += " and fk_pname like '%' || ? || '%' ";
+	            sql += " where fk_pname like '%' || ? || '%' ";
 	        }
 
 	        pstmt = conn.prepareStatement(sql);
@@ -316,15 +310,12 @@ public class ProductDAO_imple implements ProductDAO {
 		        conn = ds.getConnection();
 
 		        String sql =
-		              " select to_char(trunc(p.purtime), 'yyyy-mm-dd') as purdate "
-		            + "      , p.fk_supname as supname "
+		              " select p.fk_supname as supname "
 		            + "      , sum(pd.purqty * pd.purdprice) as totalamount "
 		            + " from tbl_purchase p "
 		            + " join tbl_purdetail pd "
 		            + "   on p.purnum = pd.fk_purnum "
 		            + " where p.instock = '입고' "
-		            + "   and p.purtime >= trunc(sysdate) - 6 "
-		            + "   and p.purtime < trunc(sysdate) + 1 "
 		            + " group by trunc(p.purtime), p.fk_supname "
 		            + " order by trunc(p.purtime), p.fk_supname ";
 
@@ -336,7 +327,6 @@ public class ProductDAO_imple implements ProductDAO {
 
 		            Map<String, String> map = new HashMap<>();
 
-		            map.put("purdate", rs.getString("purdate"));
 		            map.put("supname", rs.getString("supname"));
 		            map.put("totalamount", rs.getString("totalamount"));
 
@@ -465,7 +455,7 @@ public class ProductDAO_imple implements ProductDAO {
 
 		// 제품 테이블 업데이트
 		@Override
-		public int productUpdate(Map<String, String> paraMap) throws Exception {
+		public int productUpdate(ProductDTO pdto) throws Exception {
 			
 			int n = 0;
 			
@@ -473,13 +463,18 @@ public class ProductDAO_imple implements ProductDAO {
 				
 				conn = ds.getConnection();
 				
-				String sql = " UPDATE tbl_product SET pcontent = ?, deliveryfee = to_number(?) "
-						   + " WHERE pnum = to_number(?) ";
+				String sql = " UPDATE tbl_product SET pimage1 =?, pimage2 = ?, pcontent = ?, deliveryfee = ?,warranty_systemfilename = ?, Warranty_originfilename = ? "
+						   + " WHERE pnum = ? ";
 				
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1,paraMap.get("pcontent"));
-				pstmt.setString(2,paraMap.get("deliveryfee"));
-				pstmt.setString(3,paraMap.get("pnum"));
+	
+		        pstmt.setString(1, pdto.getPimage1());    
+		        pstmt.setString(2, pdto.getPimage2()); 
+		        pstmt.setString(3, pdto.getPcontent());
+		        pstmt.setInt(4, pdto.getDeliveryfee());
+		        pstmt.setString(5, pdto.getWarranty_systemfilename());
+		        pstmt.setString(6, pdto.getWarranty_originfilename());
+		        pstmt.setInt(7, pdto.getPnum());
 				
 				n = pstmt.executeUpdate();
 				
@@ -515,6 +510,54 @@ public class ProductDAO_imple implements ProductDAO {
 				close();
 			}
 			return bl;
+		}
+
+		// 추가이미지 해당제품에 이미지가 있으면 삭제해주기
+		@Override
+		public boolean selectAddImage(String pnum) throws Exception {
+			boolean bl = false;
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				String sql = " Select * from tbl_product_image "
+						   + " where fk_pnum = to_number(?) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				rs = pstmt.executeQuery();
+				
+				bl = rs.next();
+				
+			} finally {
+				close();
+			}
+			
+			return bl;
+		}
+
+		// 추가이미지 삭제해주기
+		@Override
+		public void deleteImage(String pnum) throws Exception {
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				String sql = " delete from tbl_product_image "
+						   + " where fk_pnum = to_number(?)	";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				pstmt.executeUpdate();
+				
+			} finally {
+				close();
+			}
+			
 		}
 
 }
