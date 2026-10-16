@@ -47,9 +47,8 @@ function goSearch(frm, type) {
 
 <div class="container-fluid"
      id="container"
-     style="position: relative;
-            top: 90px;
-            padding: 0% 7%;">
+     style="top: 90px;
+            padding: 7% 7%;">
 
 
 <ul class="nav nav-tabs nav-fill">
