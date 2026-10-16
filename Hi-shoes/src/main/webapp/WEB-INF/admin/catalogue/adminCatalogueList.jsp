@@ -657,7 +657,7 @@
 	    }
 	
 	    // 3. 헤더
-	    let head = "<tr><th>색상＼사이즈</th>";
+	    let head = "<tr class='table-light'><th style='font-size: 10pt;'>색상＼사이즈</th>";
 	    sizes.forEach(sz => head += "<th>" + sz + "</th>");
 	    head += "<th>합계</th></tr>";
 	
@@ -668,7 +668,7 @@
 	
 	    colors.forEach(color => {
 	        let rowSum = 0;
-	        body += "<tr><th>" + color + "</th>";
+	        body += "<tr><th class='table-light'>" + color + "</th>";
 	        sizes.forEach(sz => {
 	            const qty = map[color + "|" + sz] ?? 0;   // 없으면 0
 	            body += cell(qty);
@@ -682,7 +682,7 @@
 	    });
 	
 	    // 합계 행
-	    body += "<tr class='table-light'><th>합계</th>";
+	    body += "<tr class='table-light'><th class='table-light'>합계</th>";
 	    sizes.forEach(sz => body += "<td class='fw-bold'>" + (colSum[sz] || 0) + "</td>");
 	    body += "<td class='fw-bold'>" + grand + "</td></tr>";
 	
