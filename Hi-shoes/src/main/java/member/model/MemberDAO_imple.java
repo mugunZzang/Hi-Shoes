@@ -593,4 +593,58 @@ public class MemberDAO_imple implements MemberDAO {
 		
 	}	// end of public List<Map<String, String>> getReviewList(Map<String, String> paraMap) throws SQLException-------------
 
+
+	// 리뷰 삭제 함수
+	@Override
+	public int reviewDel(String reviewNo) throws SQLException {
+		int n = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " delete from tbl_review "
+						+ " where fk_odnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, reviewNo);
+			
+			n = pstmt.executeUpdate();			
+			
+		} finally {
+			
+			close();
+		}
+		
+		return n;
+	}	// end of public int reviewDel(String reviewNo) throws SQLException-------
+
+
+	
+	// 리뷰 수정 함수	
+	@Override
+	public int editFinish(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			String sql = " UPDATE tbl_review SET "
+					+ " rating = TO_NUMBER(?), rcontents = ?, rimage = ?, rwritedate = sysdate "
+					+ " WHERE fk_odnum = TO_NUMBER(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("rating"));
+			pstmt.setString(2, paraMap.get("content"));
+			pstmt.setString(3, paraMap.get("imagename"));
+			pstmt.setString(4, paraMap.get("odnum"));
+			
+			n = pstmt.executeUpdate();
+					
+		} finally {
+			close();
+		}
+		
+		return n;
+	}	// end of public int editFinish(Map<String, String> paraMap) throws SQLException-------
+
 }

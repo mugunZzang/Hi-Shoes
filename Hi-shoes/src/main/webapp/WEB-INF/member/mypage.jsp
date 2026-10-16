@@ -8,7 +8,8 @@
 <jsp:include page="../header.jsp" />
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/member/mypage.css" />
 
-<script type="text/javascript">
+<script type="text/javascript">		
+	
 	//리뷰보기 호출
 	function showReview() {
 	    fetch("<%= ctxPath%>/member/reviewList.go")
@@ -69,6 +70,178 @@
 	});
 		
 	
+	//리뷰 삭제 함수
+	function delMyReview() {
+		
+		// 리뷰보기 - 체크한 리뷰 
+		const reviewNo = $('input[name="reviewEditChk"]:checked').val();
+		
+		if(confirm("정말로 제품후기를 삭제하시겠습니까?")){
+			$.ajax({
+				url:"<%=ctxPath%>/member/reviewDel.go",
+				method:"post",
+				data:{"reviewNo":reviewNo},
+				dataType:"json",
+				success:function(json){
+					// console.log(JSON.stringify(json));
+					// {"n":1} 또는 {"n":0}
+					
+					if(json.n == 1) {
+						alert("제품후기 삭제가 성공되었습니다.");
+						showReview();
+					}
+					else {
+						alert("제품후기 삭제가 실패했습니다.");
+						showReview();
+					}
+				},
+				error: function(request, status, error){
+			         alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		       }
+			});	
+	   } 
+		
+	}	// end of function delMyReview(review_seq)--------------
+	
+	
+	// 리뷰 수정 함수
+	function editReview() {
+
+		if($('input[name="reviewEditChk"]:checked').length == 0) {
+			alert("리뷰를 선택하세요.");
+			return;
+		}		
+				
+		const checkedReview = $('input[name="reviewEditChk"]:checked');
+		const $tr = checkedReview.closest('tr');
+		
+		const review_no = checkedReview.val();
+        const content = $tr.find('.contents a').text().trim();
+        const rating = $tr.find('.star').text().trim();
+        const date = $tr.find('td').eq(3).text().trim();
+        const writer = $tr.find('td').eq(4).text().trim();
+        const thumbImg = $tr.find('.thumbnail img').attr('src');
+		
+		
+		const modalElement = $('#editReview');
+		modalElement.find('#rvwThumbnail').attr('src', thumbImg);
+		modalElement.find('#rating').val(rating);
+		modalElement.find('#content').val(content);
+		
+		/* const modalElement = document.getElementById('#editReview'); */
+		
+		
+		
+		const editReviewModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+		
+		editReviewModal.show();	
+		
+		console.log( // 체크박스 value / data 속성에서
+		        "review_no:" + checkedReview.val() +
+
+		        // 화면에 표시된 값에서
+		        "content:" +  $tr.find('.contents a').text().trim() +
+		        "rating:"   + $tr.find('.star').text().trim()+
+		        "date:"    +  $tr.find('td').eq(3).text().trim()+
+		        "writer:"  +  $tr.find('td').eq(4).text().trim()+
+		        "image:"   +  $tr.find('.thumbnail img').attr('alt')
+		        );
+	}
+	
+	// 리뷰 수정 썸네일 이미지 교체 시 유효성 검사	
+	function thumbChk() {		
+		
+		const $thumb = $('img#rvwThumbnail');
+	    const file = $('#rvwThumbnailChg')[0].files[0];
+	    const allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+	    const reset = () => {
+	    	this.value = '';
+	        $thumb.hide().removeAttr('src');
+	    };
+	
+	    if (!file) {
+	        reset();
+	        return;
+	    }
+		    
+	    if (!allowed.includes(file.type)) {
+	        alert('jpg, png, gif, webp 파일만 첨부할 수 있습니다.');
+	        reset();
+	        return;
+	    }
+	
+	    if (file.size > 10 * 1024 * 1024) {
+	        alert('사진은 10MB 이하만 첨부할 수 있습니다.');
+	        reset();
+	        return;
+	    }
+	
+	    const reader = new FileReader();
+	    reader.onload = e => $thumb.attr('src', e.target.result).show();
+	    reader.readAsDataURL(file);
+	    
+	}
+	
+	// 리뷰 수정 썸네일 이미지 삭제
+	function thumbDel() {
+		$('img#rvwThumbnail').hide().removeAttr('src');
+		$('#rvwThumbnailChg').val('');		
+		
+	}
+	
+	// 리뷰 수정 완료 시 호출
+	function editFinish() {
+
+		const rating = $('#rating').val();
+		const content = $('textarea#content').val().trim();
+		const odnum = $('input[name="reviewEditChk"]:checked').val();
+		const image =  $('#rvwThumbnailChg')[0].files[0];
+		console.log(rating);
+		console.log(content);
+		console.log(odnum);
+		console.log(image);
+
+		const formData = new FormData();
+		
+		formData.append('rating', rating);
+		formData.append('content', content);
+		formData.append('odnum', odnum);
+		
+		if(image) {
+			formData.append('image', image);
+		}
+		
+		
+		
+		$.ajax({
+			url:"<%=ctxPath%>/member/editFinish.go",
+			method:"post",
+			data: formData,
+			processData:false,
+			contentType:false,
+			dataType:"json",
+			success:function(json){
+				// console.log(JSON.stringify(json));
+				// {"n":1} 또는 {"n":0}
+				const modalElement = $('#editReview');
+				const editReviewModal = bootstrap.Modal.getOrCreateInstance(modalElement);			
+				
+				if(json.n == 1) {
+					alert("수정되었습니다.");
+					editReviewModal.hide();
+					showReview();	//특정 제품의 제품후기 글들을 보여주는 함수 호출
+				}
+				else {
+					alert("후기 수정에 실패했습니다.");
+					editReviewModal.hide();
+					showReview();	//특정 제품의 제품후기 글들을 보여주는 함수 호출
+				}
+			},
+			error: function(request, status, error){
+		         alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	       }
+		});	
+	}
 </script>
 
 <section class="bodycont container-fluid d-flex center justify-content-center align-items-start">

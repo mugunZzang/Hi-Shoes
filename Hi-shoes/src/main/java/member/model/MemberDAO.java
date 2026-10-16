@@ -46,6 +46,12 @@ public interface MemberDAO {
 	int getTotalCountReview(String userid) throws SQLException;
 
 	// *** 관리자가 아닌 일반사용자로 로그인 했을 경우에는 자신이 리뷰 쓴 내역만 페이징 처리하여 조회를 해온다, 
-	List<Map<String, String>> getReviewList(Map<String, String> paraMap) throws SQLException;	
+	List<Map<String, String>> getReviewList(Map<String, String> paraMap) throws SQLException;
+	
+	// 리뷰 삭제 함수
+	int reviewDel(String reviewNo) throws SQLException;
+
+	// 리뷰 수정 함수
+	int editFinish(Map<String, String> paraMap) throws SQLException;	
 	
 }
