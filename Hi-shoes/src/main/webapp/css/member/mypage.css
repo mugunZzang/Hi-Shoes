@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+/* 공통 */
 .cont-wrap {
 	max-width:1200px;	
 	width: 100%;
@@ -24,7 +25,115 @@
 	border-color: #114232;
 }
 
-/* 정보수정 */
+/* 회원정보수정 */
 .title-wrap h4 {
 	font-size: 20px;
+}
+
+#memberEditSection .tit-wrap .section-tit {
+	margin-bottom:10px;
+}
+
+#memberEditSection .tit-wrap p {
+	font-weight: 500;
+	font-size: 15px;
+	color:#87A922;
+	margin-bottom:14px;
+}
+
+
+form[name="editFrm"] label, form[name="editFrm"] p {
+	font-weight: 500;
+	font-size: 14px;
+	color: #1D1D1D;
+}
+
+form[name="editFrm"] p {
+	margin:0;
+	color: #87A922;
+	font-size: 12px;
+}
+
+form[name="editFrm"] p.error {
+	font-weight: 400;
+	font-size: 12px;
+	color:#ff0000;	
+}
+
+form[name="editFrm"] span.star {
+	font-weight: 500;
+	font-size: 15px;
+	color: #87A922;
+}
+
+form[name="editFrm"] .agree-tit {
+	margin-bottom:10px;
+}
+
+form[name="editFrm"] .agree-cont iframe {
+	border: 1px solid var(--bs-border-color); 
+	border-radius:var(--bs-border-radius);
+	width:100%;
+	height:200px;
+}
+
+form[name="editFrm"] input {
+	margin-bottom: 5px;
+}
+
+form[name="editFrm"] input[type="radio"] {
+	margin:0;
+}
+
+form[name="editFrm"] .phonenumber span {
+	margin: 0 8px;
+}
+
+/* 리뷰보기 */
+.myReview .section-tit {
+	margin-bottom:14px;
+}
+
+.myReview .reviewTbl table thead {
+	border-bottom: 2px solid #114232;	
+}
+
+
+.myReview .reviewTbl table th,
+.myReview .reviewTbl table td{
+	color: #1D1D1D;
+	text-align:center;	
+}
+
+.myReview .reviewTbl table tbody tr {
+	vertical-align:middle;
+}
+
+.myReview .reviewTbl table tbody tr > th:first-child {
+	text-align:center;
+}
+
+.myReview .reviewTbl table tbody td.thumbnail img{
+	width: 100px;
+	height: 100px;
+	overflow:hidden;
+    object-fit: contain;	
+}
+
+.myReview .reviewTbl table tbody td p.contents{
+	margin:0;
+	padding:0;
+	white-space: nowrap;      /* 텍스트가 줄바꿈되지 않도록 설정 */
+  	overflow: hidden;         /* 넘치는 텍스트 숨기기 */
+  	text-overflow: ellipsis;  /* 넘친 부분에 ... 표시 */
+  	width: 200px;
+  	text-align:left;
+}
+
+.myReview .reviewTbl table tbody td p.contents a {
+	color: #1d1d1d;
+}
+
+.myReview .reviewTbl table tbody td.star {
+	text-align:left;
 }

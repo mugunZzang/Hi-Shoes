@@ -7,7 +7,6 @@
     String ctx_Path = request.getContextPath();
 %>
 
-<link rel="stylesheet" type="text/css" href="<%= ctx_Path%>/css/member/editMyinfo.css" />
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="<%= ctx_Path%>/js/member/authentication.js"></script>
 <script type="text/javascript" src="<%= ctx_Path%>/js/member/editMyinfo.js"></script>
@@ -43,11 +42,11 @@
 <section id="memberEditSection" style="display:none;">
 	<section class="bodycont container-fluid d-flex center justify-content-center align-items-start flex-column">
 		<div class="tit-wrap container-fluid">
-			<h2 class="section-tit">회원수정</h2>
+			<h3 class="section-tit">회원수정</h3>
 			<p>* 표시는 필수 입력사항</p>
 		</div>
 		
-		<form name="editFrm" class="p-4">
+		<form name="editFrm" class="p-3">
 			
 			<div class="mb-4 row">
 				<div class="col-12 col-lg-2 pt-2">
