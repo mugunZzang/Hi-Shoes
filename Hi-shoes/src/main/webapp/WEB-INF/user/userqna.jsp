@@ -114,6 +114,7 @@ $(function(){
 
 		    let currentShowPageNo = $(this).text().trim();
 		 
+		    console.log("currentShowPageNo: ", currentShowPageNo); // 1
 		 $.ajax({
 			 
 			 url:"<%= ctxPath%>/user/questionListJSON.go", 
@@ -147,13 +148,16 @@ $(function(){
 	        	                        <td>답글X</td>
 	        	                        <td class="text-center">
 	        	                        <button type="button"
-    	                                    class="btn btn-success"
-    	                                    onclick="event.stopPropagation(); goEdit(\${question.qnanum});">
-    	                                  수정
-    	                            	</button>
+									        class="btn btn-success qnaEditBtn"
+									        data-qnanum="\${question.qnanum}"
+									        data-title="<c:out value='\${question.qtitle}'/>"
+									        data-contents="<c:out value='\${question.qcontents}'/>"
+									        data-islock="\${question.islock}">
+										    수정
+										</button>
 	        	                            <button type="button"
 	        	                                    class="btn btn-outline-danger"
-	        	                                    onclick="goDelete(${question.qnanum})">
+	        	                                    onclick="goDelete(\${question.qnanum})">
 	        	                                삭제
 	        	                            </button>
 	        	                        </td>
@@ -188,7 +192,7 @@ $(function(){
 	        	                                    <i class="fa-solid fa-chevron-down"></i>
 	        	                                    관리자 답변
 	        	                                </div>
-	        	                                <div class="answer-text">\${question.qanswer}</div>
+	        	                                <div class="answer-text">${question.qanswer}</div>
 	        	                            </div>
 	        	                        </td>
 	        	                    </tr>
@@ -247,12 +251,29 @@ $(function(){
 	
 	 // 버튼 클릭시 수정
 	 
-	 $('button#qnaEditBtn').on('click',function(){
-		 
-		 $('#qnaUpdateModal').modal('show');
+	 $(document).on("click", ".qnaEditBtn", function(e) {
+		    e.preventDefault();
+		    e.stopPropagation();
 
-	 });
-	
+		    const qnanum = $(this).attr("data-qnanum");
+		    const qtitle = $(this).attr("data-title");
+		    const qcontents = $(this).attr("data-contents");
+		    const islock = $(this).attr("data-islock");
+
+		    $("#qnaTitle").val(qtitle);
+		    $("#qnaContents").val(qcontents);
+		    $(".qnd-update-modal-qnanum").val(qnanum);
+		    $("#checkPublic").prop("checked", String(islock) === "비공개");
+
+		    const modalElement = document.getElementById("qnaUpdateModal");
+
+		    if (!modalElement) {
+		        console.error("qnaUpdateModal 요소를 찾을 수 없습니다.");
+		        return;
+		    }
+
+		    bootstrap.Modal.getOrCreateInstance(modalElement).show();
+		});
 	
 	
 	
@@ -299,18 +320,23 @@ function goDelete(num) {
         // 취소를 눌렀을 때
         return;
     }
+}
     
     function goUpdateQna() {
-		const modalElement = $('div#qnaUpdateModal');
-		const qnanum = modalElement.find('.qnd-update-modal-qnanum').val();
-		const qtitle = modalElement.find('#qnaTitle').val();
-		const qcontents = modalElement.find('#qnaContents').val();
-		let checked = '공개';
 		
-		if (modalElement.find('input#checkPublic').prop("checked")) {
-			checked = '비공개';
-		}
+    	const modalElement = $('div#qnaUpdateModal');
 		
+    	const qtitle = modalElement.find("#qnaTitle").val().trim();
+    	const qcontents = modalElement.find("#qnaContents").val().trim();
+    	const qnanum = modalElement.find(".qnd-update-modal-qnanum").val();
+
+    	console.log(qtitle,qcontents,qnanum);
+    	// 체크박스 체크 여부
+    	const checked = modalElement.find("#checkPublic").prop("checked");
+
+    	// 체크되어 있으면 비공개, 아니면 공개
+    	const islock = checked ? "비공개" : "공개";
+
 		// 유효성 검사 살짝
 		if (!qtitle || qtitle.trim() == "") {
 			//console.log(title);
@@ -327,10 +353,10 @@ function goDelete(num) {
 			url: "<%= ctxPath%>/shop/goUpdateQnaJSON.go",
 			type: "POST",
 			data: {
-				qnanum: qnanum,
-				qtitle: qtitle,
-				qcontents: qcontents,
-				islock: checked
+				"qnanum": qnanum,
+				"qtitle": qtitle,
+				"qcontents": qcontents,
+				"islock": islock
 			},
 			dataType: "json",
 
@@ -339,7 +365,8 @@ function goDelete(num) {
 					alert("수정되었습니다.");
 					const qnaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
 			        qnaModal.hide();
-					getQnaList('${requestScope.pnum}', 1);
+					
+					location.reload();
 				}
 				else {
 					alert("수정에 실패하였습니다.");
@@ -350,7 +377,7 @@ function goDelete(num) {
 		    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		    }
 		});
-}
+    }
 
 </script>
 
@@ -383,9 +410,13 @@ function goDelete(num) {
 				                <td class="text-center">
 				                
 				                <button type="button"
-    	                                    class="btn btn-success" id="qnaEditBtn">
-    	                                  수정
-    	                            	</button>
+								        class="btn btn-success qnaEditBtn"
+								        data-qnanum="${question.qnanum}"
+								        data-title="<c:out value='${question.qtitle}'/>"
+								        data-contents="<c:out value='${question.qcontents}'/>"
+								        data-islock="${question.islock}">
+								    수정
+								</button>
 				                <button type="button"
 		            						class="btn btn-outline-danger"
 		           						onclick="event.stopPropagation(); goDelete(${question.qnanum});">

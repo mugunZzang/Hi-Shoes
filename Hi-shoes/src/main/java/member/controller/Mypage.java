@@ -67,13 +67,13 @@ public class Mypage extends AbstractController {
 			 */
 			
 			
+			
+			
 
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/member/mypage.jsp");	  		
 		
 		}      
 	}
-	
-	
 
 }
