@@ -28,6 +28,16 @@
 <%-- Optional JavaScript --%>
 <script type="text/javascript" src="<%= ctxPath%>/js/jquery-4.0.0.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js" ></script>
+<script type="text/javascript">
+function goCartList() {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '<%= ctxPath %>/shop/cartList.go';
+
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
 
 </head>
 <body>
@@ -61,7 +71,7 @@
 						<span>MY</span>
 					</a>
 					
-					<a href="#">
+					<a href="#" onclick="goCartList()">
 						<img alt="join" src="<%= ctxPath %>/images/cart.svg">
 						<span>CART</span>
 					</a>
@@ -82,26 +92,26 @@
 			<nav>
 				<ul class="main-nav nav nav-pills">
 					<li class="nav-item">
-						<a href="#">운동화</a>
+						<a href="<%= ctxPath %>/shop/showMallByCate.go?category=운동화">운동화</a>
 					</li>
 					<li class="nav-item">
-						<a href="#">스니커즈</a>
+						<a href="<%= ctxPath %>/shop/showMallByCate.go?category=스니커즈">스니커즈</a>
 					</li>
 					<li class="nav-item">
-						<a href="#">구두</a>
+						<a href="<%= ctxPath %>/shop/showMallByCate.go?category=구두">구두</a>
 					</li>
 					<li class="nav-item">
-						<a href="#">부츠</a>
+						<a href="<%= ctxPath %>/shop/showMallByCate.go?category=부츠">부츠</a>
 					</li>
 					<li class="nav-item">
-						<a href="#">샌들</a>
+						<a href="<%= ctxPath %>/shop/showMallByCate.go?category=샌들">샌들</a>
 					</li>
 				</ul>
 			</nav>
 		
-			<form class="col-12 searchbar d-flex rounded-pill" role="search">
+			<form class="col-12 searchbar d-flex rounded-pill" role="search" action="<%= ctxPath %>/shop/showMall.go">
 			    <div class="input-group">
-			      <input type="search" class="form-control" placeholder="검색어를 입력해주세요." aria-label="Search">
+			      <input type="search" class="form-control"  name="searchKeyword" placeholder="검색어를 입력해주세요." aria-label="Search">
 			      <button class="search-icon" type="submit">검색</button>
 			    </div>
 		  	</form>
