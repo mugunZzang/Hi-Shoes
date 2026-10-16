@@ -162,4 +162,26 @@ public class SupplierDAO_imple implements SupplierDAO {
 	    return nameList;
 	} // end of public List<String> selectSupplierNameList() throws SQLException----------
 
+	// 공급업체 삭제(DELETE)
+	@Override
+	public int supplyDelete(String supname) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " DELETE FROM tbl_supplier "
+					   + " WHERE supname = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, supname);
+			
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return n;
+	} // end of public int supplyDelete(String supname) throws SQLException-------------
+
 }

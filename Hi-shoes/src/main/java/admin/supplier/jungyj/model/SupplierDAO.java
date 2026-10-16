@@ -16,4 +16,7 @@ public interface SupplierDAO {
 	
 	// 공급업체 이름 조회(SELECT)
 	List<String> selectSupplierNameList() throws SQLException;
+
+	// 공급업체 삭제(DELETE)
+	int supplyDelete(String supname) throws SQLException;
 }

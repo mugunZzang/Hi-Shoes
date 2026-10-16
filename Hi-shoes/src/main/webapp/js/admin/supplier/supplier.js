@@ -89,6 +89,65 @@ $(function () {
 			}
         });
     });
+	
+	
+	
+	// =================== 공급업체 삭제 =================================
+	$(document).on("click", ".btn-delete", function(){
+
+	    const row = $(this).closest("tr");
+
+	    const supname = row.find("td").eq(0).text().trim();
+
+	    // 실수로 지우는 일을 막기 위한 확인창 (카테고리 삭제와 동일한 방식)
+	    if(!confirm("'" + supname + "' 를 삭제하시겠습니까?")){
+	        return;
+	    }
+
+	    $.ajax({
+			url: ctx_Path + "/admin/supplier/supplierDelete.go",
+			type: "post",
+			data: {
+				"supname": supname
+			},
+			dataType: "json",
+			success: function(json){
+				
+				if(json.result == 1){
+					
+					alert(supname + "이 삭제되었습니다.");
+					// 삭제된 행을 화면에서 제거
+					row.remove();
+
+					// 남은 행이 없으면 빈 목록 안내 표시
+					if($("#supplyTbl tbody tr").length === 0){
+						$("#supplyTbl tbody").html(`
+						    <tr>
+						        <td colspan="5" class="text-center align-middle">
+						            <div class="mx-empty">
+						                <i class="bi bi-inbox"></i>
+						                <p>등록된 공급업체가 없습니다.</p>
+						            </div>
+						        </td>
+						    </tr>
+						`);
+					}
+					
+				}
+				
+			},
+			error: function(request, status, error){
+				alert("code: " + request.status +"\nmessage: " + request.responseText +"\nerror: " + error);
+			}
+	    
+	    });
+
+	});
+	
+	// =================== 공급업체 삭제 끝 =================================
+	
+	
+	
 
 });  // end of $(function(){})---------------------------------------------------
 
