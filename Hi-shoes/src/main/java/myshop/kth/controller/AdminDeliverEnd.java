@@ -11,6 +11,7 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 import member.kth.domain.AdminMemberDTO;
 import myshop.kth.model.AdminProductDAO;
 import myshop.kth.model.AdminProductDAO_imple;
@@ -57,10 +58,10 @@ public class AdminDeliverEnd extends AbstractController {
 			      
 			      HttpSession session = request.getSession();
 		          
-		          AdminMemberDTO loginuser = (AdminMemberDTO)session.getAttribute("loginuser");
+		          MemberDTO loginuser = (MemberDTO)session.getAttribute("loginuser");
 		          
 		       // === 로그인 유무 검사하기 === //
-			      if(loginuser == null || !"admin".equals(loginuser.getUserid())) {
+			      if(loginuser == null && !"admin".equals(loginuser.getUserid())) {
 			            request.setAttribute("message", "로그인 후 이용해 주세요.");
 			            request.setAttribute("loc", "javascript:history.back();");
 
@@ -103,8 +104,13 @@ public class AdminDeliverEnd extends AbstractController {
 		      	                
 		      	             이것은 오라클에서 WHERE fk_odrcode || '/' || fk_pnum IN('주문코드(전표)/제품번호', '주문코드(전표)/제품번호', '주문코드(전표)/제품번호') 로 하겠다는 말이다.    
 		      	          */
+		      	        System.out.println("onumArr 배열 시작");
+		      	        System.out.println("확인용 snumArr : " + snumArr.length);
 		      	        for(int i=0; i<onumArr.length; i++) {
-		      	        	sb.append("\'" + onumArr[i]+"/"+snumArr[i]+"\',");
+		      	        	System.out.println(onumArr[i]);
+		      	        	System.out.println("확인용 snum: " + snumArr[i]);
+		      	        	sb.append("\'" +onumArr[i]+"/"+snumArr[i]+"\',");
+		      	        	
 		      	        }//end of for---
 		      	        
 		      	        String onumSnum = sb.toString();
@@ -126,7 +132,7 @@ public class AdminDeliverEnd extends AbstractController {
 		      	        
 		      	        
 		      	        
-		      	        if(n == onumArr.length) {
+		      	        if(n > 0) {
 		                   
 			        	   
 		      	        //2.=== *** 배송을 했다라는 확인 문자(SMS)를 주문을 한 사람(여러명)에게 보내기 시작 ***===
@@ -189,13 +195,13 @@ public class AdminDeliverEnd extends AbstractController {
 		   	     	    
 		   	        	//  === *** 배송을 했다라는 확인 문자(SMS)를 주문을 한 사람(여러명)에게 보내기 끝 ***===
 		   	        	   String message = "선택하신 제품들은 출고완료로 변경되었습니다.";
-		   	               String loc = request.getContextPath()+"/shop/adminOrderList.up";
+		   	               String loc = request.getContextPath()+"/admin/adminOrderList.go";
 		   	               
 		   	               request.setAttribute("message", message);
 		   	               request.setAttribute("loc", loc);
 		   	               
 		   	               super.setRedirect(false);
-		   	               super.setViewPage("/WEB-INF/msg.jsp");
+		   	               super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
 		   	               
 		   	        } else{   
 		   	    	 String message = "선택하신 제품들은 출고완료로 변경되었습니다.";

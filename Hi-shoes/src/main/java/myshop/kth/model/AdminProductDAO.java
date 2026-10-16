@@ -30,6 +30,19 @@ public interface AdminProductDAO {
     // 페이징 처리를 위한 특정 카테고리에 대한 총페이지수(totalPage) 알아오기
 	int getTotalPage(String cnum) throws SQLException;
 
+    // 회원 주문 내역 개수세서 페이징하기
+	int getTotalCountOrder2(String userid) throws SQLException;
+
+    //회원 주문 조회하기
+	List<Map<String, String>> getOrderList2(Map<String, String> paraMap) throws SQLException;
+
+    //리뷰 조회하기
+	Map<String, String> getReviewInfo(String odnum) throws SQLException;
+
+
+	 //리뷰 작성하기 
+	int insertReview(Map<String, String> paraMap) throws SQLException;
+ 
 	
 
 }

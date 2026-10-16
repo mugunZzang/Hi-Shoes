@@ -1,18 +1,15 @@
 package admin.kth.controller;
 
-import common.controller.AbstractController;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import member.kth.domain.AdminMemberDTO;
-import member.kth.model.AdminMemberDAO;
-import member.kth.model.AdminMemberDAO_imple;
-
 import java.util.List;
 import java.util.Map;
 
 import admin.kth.model.AdminMainDAO;
 import admin.kth.model.AdminMainDAO_imple;
+import common.controller.AbstractController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 
 public class AdminMain extends AbstractController {
 	private AdminMainDAO mdao = new AdminMainDAO_imple();
@@ -20,14 +17,19 @@ public class AdminMain extends AbstractController {
 	 @Override
 	 public void execute(HttpServletRequest request,HttpServletResponse response) throws Exception{ 
 	       
+		 String method = request.getMethod();
+	      
+	     
 		 
-	 	  // HttpSession session = request.getSession();
+		 
+	 	   HttpSession session = request.getSession();
 	    // 로그인 정보 가져오기
-	     //  AdminMemberDTO loginuser= (AdminMemberDTO)session.getAttribute("loginuser");
+	       MemberDTO loginuser= (MemberDTO)session.getAttribute("loginuser");
 	    
 	    // 로그인하지 않았거나 관리자가 아니면 접근 차단
-	  /* if (loginuser==null && !"admin".equals(loginuser.getUserid())){
-		  super.setRedirect(true);super.setViewPage(request.getContextPath()+"/index.go");
+	   if (loginuser==null || !"admin".equals(loginuser.getUserid())){
+		  super.setRedirect(true);
+		  super.setViewPage(request.getContextPath()+"/index.go");
 	      return;
        }// 관리자라면 관리자 메인페이지로 이동 */
 		 
