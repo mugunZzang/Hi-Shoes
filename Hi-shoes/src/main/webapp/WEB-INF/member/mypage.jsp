@@ -49,7 +49,7 @@
 			      	
 			      </div>
 			      <div class="tab-pane fade" id="list-qna" role="tabpanel" aria-labelledby="list-qna-list">
-			      	 <jsp:include page="/WEB-INF/user/userqna.jsp" />
+			      	 
 			      </div>
 			     
 			    </div>
