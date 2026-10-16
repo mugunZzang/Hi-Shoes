@@ -83,7 +83,7 @@ public class GetQnAList extends AbstractController {
                 if (pageNo == currentPageNo) {
                     pageBar.append(
                         "<li class='page-item active'>" +
-                        "<a class='page-link' href='javascript:void(0);'>" +
+                        "<a class='page-link' href='javascript:void(0);'" +
                         "onclick='getQnaList(" + pnum + "," + pageNo + ")'>" +
                         pageNo + "</a></li>"
                     );

@@ -103,15 +103,24 @@
 
 	        // 상품 가격
 	        const regprice = Number(product.attr("data-regprice")) || 0;
+	    	console.log("정가" + regprice);
 	        const saleprice = Number(product.attr("data-saleprice")) || 0;
+	    	console.log("세일가" + saleprice);
 
 	        // 해당 상품의 현재 수량
 	        const cqty = Number(product.find(".cart-quantity").val()) || 0;
 
-	        // 정상가 기준 주문금액
-	        totalOrderPrice += saleprice * cqty;
+	        // 정가가 기준 주문금액
+	        if(saleprice >= regprice) {
+	        	totalOrderPrice += saleprice * cqty;
+	        }
+	        else {
+	        	totalOrderPrice += regprice * cqty;
+	        }
+	        
+	        console.log("판매가기준주문금액" + totalOrderPrice);
 
-	        // 정상가보다 판매가가 낮은 상품만 할인 계산
+	        // 정가보다 판매가가 낮은 상품만 할인 계산
 	        if (regprice > saleprice) {
 	            totalDiscountPrice += (regprice - saleprice) * cqty;
 	        }
@@ -440,7 +449,7 @@
 		
 		                    <%-- 가격 --%>
 		                    <div class="product-price">
-		                        <c:if test="${cart.regprice > cart.saleprice}">
+		                        <c:if test="${Integer.parseInt(cart.regprice) > Integer.parseInt(cart.saleprice)}">
 		                            <del><fmt:formatNumber value="${cart.regprice}" type="number"/>원</del>
 		                        </c:if>
 		

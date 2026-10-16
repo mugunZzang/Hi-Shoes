@@ -7,7 +7,6 @@
 
 body {
     margin: 0;
-    /* font-family: Arial, sans-serif; */
     color: #222;
 }
 
@@ -78,11 +77,11 @@ body {
   	font-size: 25px;
   	color: #7C7C7C;
   	transform: scaleY(1.8);
-cursor: pointer;
+	cursor: pointer;
   	
-  }
+}
 
-  /* =========================
+/* =========================
    오른쪽 상품 정보
 ========================= */
 
@@ -166,7 +165,7 @@ cursor: pointer;
 }
 
 
-      /* 할인 정보 */
+/* 할인 정보 */
 .discount-info {
     margin-top: 15px;
     padding: 13px;
@@ -231,7 +230,7 @@ cursor: pointer;
     min-width: 0;
 }
 
-/* 라디오 버튼은 숨김 */
+/* 라디오 버튼 숨김 */
 input.radio-ssize {
     display: none;
 }
@@ -278,7 +277,7 @@ label.label-radio-ssize:hover {
     font-size: 13px;
 }
 
-/* 색상 선택 시 포커스 */
+/* 색상 선택 시 */
 .color-option select:focus {
     outline: none;
     border-color: #555;

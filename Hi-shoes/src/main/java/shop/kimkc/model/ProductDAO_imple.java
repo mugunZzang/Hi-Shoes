@@ -1530,6 +1530,140 @@ public class ProductDAO_imple implements ProductDAO {
 	}
 
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// index 화면에 넣어줄 상품들
+	
+	@Override
+	public List<ProductDTO> getSneakersForIndex() throws SQLException {
+		List<ProductDTO> sneakers = new ArrayList<>();
+		try {
+			conn = ds.getConnection();
+			String sql = " select A.pnum, A.pimage1 from "
+					+ " tbl_product A JOIN tbl_catalogue B "
+					+ " ON A.fk_pname = B.pname "
+					+ " WHERE B.fk_catenum = 2 "
+					+ " ORDER BY DBMS_RANDOM.VALUE "
+					+ " FETCH NEXT 4 ROW ONLY ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPimage1(rs.getString("pimage1"));
+				sneakers.add(dto);
+			}
+		} finally {
+			close();
+		}
+		
+		return sneakers;
+	}
+
+
+	@Override
+	public List<ProductDTO> getAthleticShoesForIndex() throws SQLException {
+		List<ProductDTO> athleticShoes = new ArrayList<>();
+		try {
+			conn = ds.getConnection();
+			String sql = " select A.pnum, A.pimage1 from "
+					+ " tbl_product A JOIN tbl_catalogue B "
+					+ " ON A.fk_pname = B.pname "
+					+ " WHERE B.fk_catenum = '1' "
+					+ " ORDER BY DBMS_RANDOM.VALUE "
+					+ " FETCH NEXT 4 ROW ONLY ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPimage1(rs.getString("pimage1"));
+				athleticShoes.add(dto);
+			}
+		} finally {
+			close();
+		}
+		return athleticShoes;
+	}
+
+
+	@Override
+	public List<ProductDTO> getDressShoesForIndex() throws SQLException {
+		List<ProductDTO> dressShoes = new ArrayList<>();
+		try {
+			conn = ds.getConnection();
+			String sql = " select A.pnum, A.pimage1 from "
+					+ " tbl_product A JOIN tbl_catalogue B "
+					+ " ON A.fk_pname = B.pname "
+					+ " WHERE B.fk_catenum = 3 "
+					+ " ORDER BY DBMS_RANDOM.VALUE "
+					+ " FETCH NEXT 4 ROW ONLY ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPimage1(rs.getString("pimage1"));
+				dressShoes.add(dto);
+			}
+		} finally {
+			close();
+		}
+		return dressShoes;
+	}
+
+
+	@Override
+	public List<ProductDTO> getBootsForIndex() throws SQLException {
+		List<ProductDTO> boots = new ArrayList<>();
+		try {
+			conn = ds.getConnection();
+			String sql = " select A.pnum, A.pimage1 from "
+					+ " tbl_product A JOIN tbl_catalogue B "
+					+ " ON A.fk_pname = B.pname "
+					+ " WHERE B.fk_catenum = 4 "
+					+ " ORDER BY DBMS_RANDOM.VALUE "
+					+ " FETCH NEXT 4 ROW ONLY ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPimage1(rs.getString("pimage1"));
+				boots.add(dto);
+			}
+		} finally {
+			close();
+		}
+		return boots;
+	}
+
+
+	@Override
+	public List<ProductDTO> getSandlesForIndex() throws SQLException {
+		List<ProductDTO> sandles = new ArrayList<>();
+		try {
+			conn = ds.getConnection();
+			String sql = " select A.pnum, A.pimage1 from "
+					+ " tbl_product A JOIN tbl_catalogue B "
+					+ " ON A.fk_pname = B.pname "
+					+ " WHERE B.fk_catenum = 5 "
+					+ " ORDER BY DBMS_RANDOM.VALUE "
+					+ " FETCH NEXT 4 ROW ONLY ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPimage1(rs.getString("pimage1"));
+				sandles.add(dto);
+			}
+		} finally {
+			close();
+		}
+		return sandles;
+	}
+
+
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

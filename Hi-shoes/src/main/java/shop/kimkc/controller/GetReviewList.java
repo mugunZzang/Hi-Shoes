@@ -84,7 +84,7 @@ public class GetReviewList extends AbstractController {
                 if (pageNo == currentPageNo) {
                     pageBar.append(
                         "<li class='page-item active'>" +
-                        "<a class='page-link' href='javascript:void(0);'>" +
+                        "<a class='page-link' href='javascript:void(0);'" +
                         "onclick='getReviewList("+pnum+","+pageNo+")'>" +
                         pageNo + "</a></li>"
                     );
