@@ -135,7 +135,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 		        conn = ds.getConnection();
 
 		        String sql = " select q.qnanum, p.fk_pname, q.qtitle, "
-		                   + "        q.qcontents, to_char(q.qwritedate, 'yyyy-mm-dd') as qwritedate, q.qanswer "
+		                   + "        q.qcontents, to_char(q.qwritedate, 'yyyy-mm-dd') as qwritedate, q.qanswer, q.islock"
 		                   + " from tbl_qna q "
 		                   + " join tbl_product p "
 		                   + " on q.fk_pnum = p.pnum "
@@ -186,6 +186,7 @@ public class QuestionDAO_imple implements QuestionDAO {
 		            qnaMap.put("qcontents", rs.getString("qcontents"));
 		            qnaMap.put("qwritedate", rs.getString("qwritedate"));
 		            qnaMap.put("qanswer", rs.getString("qanswer"));
+		            qnaMap.put("islock", rs.getString("islock"));
 
 		            questionList.add(qnaMap);
 		        }

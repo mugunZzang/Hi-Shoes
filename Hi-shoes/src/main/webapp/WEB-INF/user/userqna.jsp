@@ -106,34 +106,152 @@
 
 $(function(){
 
-	 $(".question-row").on("click", function() {
+	 
+	 
+	 $(document).on("click", "#pageBar a", function(e) {
+		 
+		    e.preventDefault(); // 페이지 이동 방지
 
-	        let $row = $(this);
-	        let $answer = $row.next(".answer-row");
-	        let $content = $answer.find(".answer-content");
+		    let currentShowPageNo = $(this).text().trim();
+		 
+		 $.ajax({
+			 
+			 url:"<%= ctxPath%>/user/questionListJSON.go", 
+	    	 method:"post",
+	    	 data: {
+	    		 "currentShowPageNo" : currentShowPageNo
+	            },
+	         dataType:"json",
+	         success:function(json){
+	        	 
+	        	 // console.log(JSON.stringify(json));
+	        	 html = ``;
+	        	 
+	        	 if(json.questionList.length > 0) {
+	        		 $.each(json.questionList, function(index, question) {
 
-	        if ($answer.is(":visible")) {
+	        	            // 번호 계산
+	        	            let num = json.totalCountOrder
+	        	                    - (json.currentShowPageNo - 1) * json.sizePerPage
+	        	                    - index;
 
-	            $row.removeClass("active");
+	        	            if (!question.qanswer) {
+	        	                // 답변이 없는 문의
+	        	                html += `
+	        	                    <tr>
+	        	                        <td class="text-center">\${num}</td>
+	        	                        <td>\${question.fk_pname}</td>
+	        	                        <td>\${question.qtitle}</td>
+	        	                        <td>\${question.qcontents}</td>
+	        	                        <td>\${question.qwritedate}</td>
+	        	                        <td>답글X</td>
+	        	                        <td class="text-center">
+	        	                        <button type="button"
+    	                                    class="btn btn-success"
+    	                                    onclick="event.stopPropagation(); goEdit(\${question.qnanum});">
+    	                                  수정
+    	                            	</button>
+	        	                            <button type="button"
+	        	                                    class="btn btn-outline-danger"
+	        	                                    onclick="goDelete(${question.qnanum})">
+	        	                                삭제
+	        	                            </button>
+	        	                        </td>
+	        	                    </tr>`;
+	        	            }
+	        	            else {
+	        	                // 답변이 있는 문의
+	        	                html += `
+	        	                    <tr class="question-row">
+	        	                        <td class="text-center">\${num}</td>
+	        	                        <td>\${question.fk_pname}</td>
+	        	                        <td>\${question.qtitle}</td>
+	        	                        <td>\${question.qcontents}</td>
+	        	                        <td>\${question.qwritedate}</td>
+	        	                        <td>
+	        	                            <span class="answer-toggle">
+	        	                                답글 <i class="fas fa-chevron-down"></i>
+	        	                            </span>
+	        	                        </td>
+	        	                        <td class="text-center"> 
+	        	                            <button type="button"
+	        	                                    class="btn btn-outline-danger"
+	        	                                    onclick="event.stopPropagation(); goDelete(\${question.qnanum});">
+	        	                                삭제
+	        	                            </button>
+	        	                        </td>
+	        	                    </tr>
+	        	                    <tr class="answer-row">
+	        	                        <td colspan="7">
+	        	                            <div class="answer-content">
+	        	                                <div class="answer-header">
+	        	                                    <i class="fa-solid fa-chevron-down"></i>
+	        	                                    관리자 답변
+	        	                                </div>
+	        	                                <div class="answer-text">\${question.qanswer}</div>
+	        	                            </div>
+	        	                        </td>
+	        	                    </tr>
+	        	                `;
+	        	            }
+	        	        });
+	        	 }
+	        	 else{
+			        html += `<tr>
+			            <td class="text-center" colspan="7">문의사항이 없습니다.</td>
+			        </tr>`;
+	         		}
+	        	 
+	        	// 새 문의 목록으로 교체
+	        	 $("#questionTbody").html(html);
 
-	            $content.stop(true, true).slideUp(200, function() {
-	                $answer.hide();
-	            });
+	        	 // 새 페이징바로 교체
+	        	 $("#pageBar .pagination").html(json.questionPageBar);
+	        	 
+	        	 
+	         },
+	         error: function(request, status, error){
+				    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		         }
+	     });
+			 
+     });
+	 
+	 $(document).on("click", "#questionTbody tr.question-row", function(e) {
 
-	        } else {
+		    // 삭제 버튼 클릭 시 답글 열기 방지
+		    if ($(e.target).closest("button").length > 0) {
+		        return;
+		    }
 
-	            $row.addClass("active");
+		    let $row = $(this);
+		    let $answer = $row.next(".answer-row");
 
-	            // 답변 행을 테이블 행으로 표시
-	            $answer.css("display", "table-row");
+		    if ($answer.length === 0) {
+		        console.log("답변 행을 찾을 수 없습니다.");
+		        return;
+		    }
 
-	            // 답변 카드만 애니메이션 적용
-	            $content.stop(true, true).slideDown(200);
-	        }
+		    if ($answer.is(":visible")) {
+		        $row.removeClass("active");
+		        $answer.hide();
+		    }
+		    else {
+		        $row.addClass("active");
+		        $answer.css("display", "table-row");
+		    }
 
-	    });
+		});
+	
 
 	
+	 // 버튼 클릭시 수정
+	 
+	 $('button#qnaEditBtn').on('click',function(){
+		 
+		 $('#qnaUpdateModal').modal('show');
+
+	 });
 	
 	
 	
@@ -181,6 +299,57 @@ function goDelete(num) {
         // 취소를 눌렀을 때
         return;
     }
+    
+    function goUpdateQna() {
+		const modalElement = $('div#qnaUpdateModal');
+		const qnanum = modalElement.find('.qnd-update-modal-qnanum').val();
+		const qtitle = modalElement.find('#qnaTitle').val();
+		const qcontents = modalElement.find('#qnaContents').val();
+		let checked = '공개';
+		
+		if (modalElement.find('input#checkPublic').prop("checked")) {
+			checked = '비공개';
+		}
+		
+		// 유효성 검사 살짝
+		if (!qtitle || qtitle.trim() == "") {
+			//console.log(title);
+			alert("제목을 입력하세요.");
+			return;
+		}
+		if (!qcontents || qcontents.trim() == "") {
+			//console.log(content);
+			alert("질문 내용을 입력하세요.");
+			return;
+		}
+			
+		$.ajax({
+			url: "<%= ctxPath%>/shop/goUpdateQnaJSON.go",
+			type: "POST",
+			data: {
+				qnanum: qnanum,
+				qtitle: qtitle,
+				qcontents: qcontents,
+				islock: checked
+			},
+			dataType: "json",
+
+			success: function(json) {
+				if (json.n == 1) {
+					alert("수정되었습니다.");
+					const qnaModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+			        qnaModal.hide();
+					getQnaList('${requestScope.pnum}', 1);
+				}
+				else {
+					alert("수정에 실패하였습니다.");
+				}
+			},
+
+			error: function(request, status, error){
+		    	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		    }
+		});
 }
 
 </script>
@@ -198,7 +367,7 @@ function goDelete(num) {
                 <th style="width: 10%; text-align:center;"></th>
             </tr>
           </thead>
-            <tbody>
+            <tbody id="questionTbody">
             	<c:if test="${not empty requestScope.questionList}">
 			        <c:forEach var="question" items="${requestScope.questionList}" varStatus="status">
 			        	<c:if test="${empty question.qanswer}">
@@ -211,7 +380,13 @@ function goDelete(num) {
 				                <td>${question.qcontents}</td>
 				                <td>${question.qwritedate}</td>
 				                <td>답글X</td>
-				                <td class="text-center"><button type="button"
+				                <td class="text-center">
+				                
+				                <button type="button"
+    	                                    class="btn btn-success" id="qnaEditBtn">
+    	                                  수정
+    	                            	</button>
+				                <button type="button"
 		            						class="btn btn-outline-danger"
 		           						onclick="event.stopPropagation(); goDelete(${question.qnanum});">
 		        					삭제
@@ -268,4 +443,79 @@ function goDelete(num) {
 	   	     <ul class="pagination" style='margin:auto;'>${requestScope.questionPageBar}</ul>
 	   	   </div>
 		</nav>
+		
+	<div class="modal fade" id="qnaUpdateModal"
+     tabindex="-1"
+     aria-labelledby="qnaUpdateModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <%-- 모달 제목 --%>
+            <div class="modal-header">
+                <h5 class="modal-title" id="qnaWriteModalLabel">
+                    상품 Q&A 수정
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="닫기"></button>
+            </div>
+
+            <%-- 모달 본문 --%>
+            
+            
+            
+            <div class="modal-body">
+            
+	            <div class="mb-3">
+		            <label for="checkPublic">
+		            	비공개
+		            	<input type="checkbox" id="checkPublic" checked/>
+		            </label>
+	            </div>
+            
+                <div class="mb-3">
+                    <label for="qnaTitle" class="form-label">
+                        제목
+                    </label>
+                    <input type="text"
+                           id="qnaTitle"
+                           class="form-control"
+                           placeholder="제목">
+                </div>
+
+                <div class="mb-3">
+                    <label for="qnaContents" class="form-label">
+                        내용
+                    </label>
+                    <textarea id="qnaContents"
+                              class="form-control"
+                              rows="6"
+                              placeholder="질문 내용"></textarea>
+                </div>
+            </div>
+
+			<input class="qnd-update-modal-qnanum" type="hidden"/>
+
+            <%-- 하단 버튼들 --%>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    취소
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        id="btnQnARegister"
+                        onclick="goUpdateQna()">
+                    수정
+                </button>
+            </div>
+
+        </div>
+    </div>
     </div>
