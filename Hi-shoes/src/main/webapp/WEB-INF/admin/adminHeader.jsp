@@ -684,7 +684,7 @@ body.sidebar-ready #container {
 			
 			<li class="nav-item header-dropdown">
 			    <a class="nav-link menufont_size text-black"
-			       href="#">
+			       >
 			            주문관리
 			    </a>
 			
@@ -692,6 +692,8 @@ body.sidebar-ready #container {
 			        <a href="<%= ctxPath %>/admin/adminOrderList.go">
 			            주문목록
 			        </a>
+			        
+			        
 			
 			        
 			    </div>
@@ -700,38 +702,36 @@ body.sidebar-ready #container {
 
 	            <li class="nav-item header-dropdown">
 	                <a class="nav-link menufont_size text-black"
-	                   href="<%= ctxPath %>/shop/mallHomeMore.up">
+	                   >
 
 	                    상품관리
 
 	                </a>
 	                <div class="header-dropdown-menu">
-			        <a href="<%= ctxPath %>/admin/adminOrderList.go">
+			        <a href="<%= ctxPath %>/admin/product/productList.go">
 			            상품목록
 			        </a>
 			
-			        <a href="<%= ctxPath %>/admin/adminOrderDelivery.go">
+			        <a href="<%= ctxPath %>/admin/product/productRegister.go">
 			            상품등록
 			        </a>
 			       </div>
 	            </li>
 
 
-	            <li class="nav-item header-dropdown">
+	             <li class="nav-item header-dropdown">
 	                 <a class="nav-link menufont_size text-black"
-	                   href="<%= ctxPath %>/shop/mallHomeMore.up">
+	                   >
 
 	                    공급관리
 
 	                 </a>
 	                 <div class="header-dropdown-menu">
-			        <a href="<%= ctxPath %>/admin/adminOrderList.go">
-			            공급목록
+			        <a href="<%= ctxPath %>/admin/supplier/supplierList.go">
+			            공급업체 목록
 			        </a>
 			
-			        <a href="<%= ctxPath %>/admin/adminOrderDelivery.go">
-			            공급등록
-			        </a>
+			    
 			       </div>
 	            </li>
 
@@ -739,17 +739,24 @@ body.sidebar-ready #container {
 	            <!-- 발주관리 -->
 	            <li class="nav-item header-dropdown">
 	                <a class="nav-link menufont_size text-black"
-	                   href="<%= ctxPath %>/admin/catalogueRegister.go">
+	                   >
 
 	                    발주관리
 
 	                </a>
 	                <div class="header-dropdown-menu">
-			        <a href="<%= ctxPath %>/admin/adminOrderList.go">
+                        <a href="<%= ctxPath %>/admin/catalogue/catalogueList.go">
+			            카탈로그 목록
+			        </a>
+			
+			        <a href="<%= ctxPath %>/admin/catalogue/catalogueRegister.go">
+			            카탈로그 등록
+			        </a>
+			        <a href="<%= ctxPath %>/admin/purchase/purchaseList.go">
 			            발주목록
 			        </a>
 			
-			        <a href="<%= ctxPath %>/admin/adminOrderDelivery.go">
+			        <a href="<%= ctxPath %>/admin/purchase/purchaseRegister.go">
 			            발주등록
 			        </a>
 			       </div>
@@ -758,7 +765,7 @@ body.sidebar-ready #container {
 
 	            <li class="nav-item">
 	                <a class="nav-link menufont_size text-black"
-	                   href="<%= ctxPath %>/shop/mallHomeMore.up">
+	                   href="<%= ctxPath %>/admin/callcenter/callcenter.go">
 
 	                    고객센터
 
@@ -768,7 +775,7 @@ body.sidebar-ready #container {
 
 	            <li class="nav-item">
 	                <a class="nav-link menufont_size text-black"
-	                   href="<%= ctxPath %>/shop/mallHomeMore.up">
+	                   href="<%= ctxPath %>/admin/chart/chart.go">
 
 	                    차트관리
 
@@ -783,24 +790,20 @@ body.sidebar-ready #container {
 	             style="padding:0% 5%;">
 
 	            <span style="font-size:12pt;">
-	                관리자 로그인중..
+	                관리자 로그인중
 	            </span>
 
 	            &nbsp;&nbsp;
-
-	            <i class="fa-solid fa-circle-user fa-2x"
-	               style="color:#315B48;">
-	            </i>
+              <img src="<%= ctxPath %>/images/mypage.svg" />  
+	            
 
 	            &nbsp;&nbsp;&nbsp;&nbsp;
 
 	            <a class="text-decoration-none text-secondary"
-	               href="<%= ctxPath%>/login/logout.up"
+	               href="<%= ctxPath%>/login/logout.go"
 	               title="로그아웃">
 
-	                <i class="fa-solid fa-right-from-bracket fa-2x"
-	                   style="color:#315B48;">
-	                </i>
+	              <img src="<%= ctxPath %>/images/logout.svg" />  
 
 	            </a>
 

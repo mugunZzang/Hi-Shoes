@@ -6,7 +6,7 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import member.kth.domain.AdminMemberDTO;
+import member.domain.MemberDTO;
 import myshop.kth.model.AdminProductDAO;
 import myshop.kth.model.AdminProductDAO_imple;
 
@@ -39,10 +39,10 @@ public class AdminPreparingProduct extends AbstractController {
         } */
 
         HttpSession session = request.getSession();
-        AdminMemberDTO loginuser = (AdminMemberDTO) session.getAttribute("loginuser");
+        MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
         
         // === 로그인 유무 검사하기 === //
-        if(loginuser == null || !"admin".equals(loginuser.getUserid())) {
+        if(loginuser == null && !"admin".equals(loginuser.getUserid())) {
             request.setAttribute("message", "로그인 후 이용해 주세요.");
             request.setAttribute("loc", "javascript:history.back();");
 
@@ -85,17 +85,14 @@ public class AdminPreparingProduct extends AbstractController {
             e.printStackTrace();
         }
 
-        if(n == onumArr.length) {
-
+        if(n > 0) {
             request.setAttribute("message", "선택하신 제품들은 상품준비중으로 변경되었습니다.");
-            request.setAttribute("loc", request.getContextPath() + "/admin/adminOrderList.up");
+            request.setAttribute("loc", request.getContextPath() + "/admin/adminOrderList.go");
 
             super.setRedirect(false);
             super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
-
         }
         else {
-
             request.setAttribute("message", "상품준비중 변경에 실패했습니다.");
             request.setAttribute("loc", "javascript:history.back();");
 

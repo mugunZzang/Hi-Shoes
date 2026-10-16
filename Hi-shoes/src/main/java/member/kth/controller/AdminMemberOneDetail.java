@@ -4,6 +4,7 @@ import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 import member.kth.domain.AdminMemberDTO;
 import member.kth.model.AdminMemberDAO;
 import member.kth.model.AdminMemberDAO_imple;
@@ -19,18 +20,18 @@ public class AdminMemberOneDetail extends AbstractController {
 		// === 관리자(admin)로 로그인 했을 때만 회원목록 조회가 가능하도록 해야 한다. === //
 		HttpSession session = request.getSession(); 
 		
-		AdminMemberDTO loginuser = (AdminMemberDTO) session.getAttribute("loginuser");
+		MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
 		
-		//(로그인안한 상태로 페이지 보려고 만듬)
-		if(loginuser == null) {
-		    loginuser = new AdminMemberDTO();
-		    loginuser.setUserid("admin");
-		}
+		/* //(로그인안한 상태로 페이지 보려고 만듬)
+			if(loginuser == null) {
+			    loginuser = new MemberDTO();
+			    loginuser.setUserid("admin");
+			} */
 	
 	 
 	
 		
-		/*if( loginuser != null && "admin".equals(loginuser.getUserid()) ) {
+		if( loginuser != null && "admin".equals(loginuser.getUserid()) ) {
 			// 관리자(admin)로 로그인 했을 경우 */
 			
 			String method = request.getMethod(); 
@@ -66,7 +67,7 @@ public class AdminMemberOneDetail extends AbstractController {
 			}
 			
 		} 
-		/*else {
+		else {
 			// 로그인을 안한 경우 또는 일반사용자로 로그인 한 경우 
 			String message = "관리자만 접근이 가능합니다.";
 			String loc = "javascript:history.back()";
@@ -77,8 +78,9 @@ public class AdminMemberOneDetail extends AbstractController {
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/admin/adminMsg.jsp");
 		} 
-		*/
 		
+		
+}
 }
 
 

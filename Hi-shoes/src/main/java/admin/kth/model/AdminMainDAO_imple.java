@@ -174,7 +174,7 @@ public class AdminMainDAO_imple implements AdminMainDAO{
 				
 				
 				pstmt = conn.prepareStatement(sql);
-			    pstmt.setString(1, "출고 완료");
+			    pstmt.setString(1, "접수");
 
 			    rs = pstmt.executeQuery();
 
@@ -209,7 +209,7 @@ public class AdminMainDAO_imple implements AdminMainDAO{
 
 				
 				pstmt = conn.prepareStatement(sql);
-			    pstmt.setString(1, "출고 완료");
+			    pstmt.setString(1, "접수");
 
 			    rs = pstmt.executeQuery();
 
@@ -244,7 +244,7 @@ public class AdminMainDAO_imple implements AdminMainDAO{
 
 				
 				pstmt = conn.prepareStatement(sql);
-			    pstmt.setString(1, "출고 완료");
+			    pstmt.setString(1, "접수");
 
 			    rs = pstmt.executeQuery();
 
