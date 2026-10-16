@@ -113,8 +113,9 @@
                 <col style="width: 20%;">
                 <col style="width: 20%;">
                 <col style="width: 15%;">
+                <col style="width: 15%;">
                 <col style="width: 20%;">
-                <col style="width: 25%;">
+                <col style="width: 10%;">
             </colgroup>
 
             <thead>
@@ -124,6 +125,7 @@
                     <th class="text-center align-middle">대표명</th>
                     <th class="text-center align-middle">연락처</th>
                     <th class="text-center align-middle">회사이메일</th>
+                    <th class="text-center align-middle">작업</th>
                 </tr>
             </thead>
 		
@@ -168,6 +170,14 @@
 							    </c:choose>
 							</td>
 			                <td class="text-center align-middle"><c:out value="${sdto.semail}"/></td>
+			                <td class="text-center align-middle">
+			                
+			                	<button type="button"
+		                                class="btn btn-outline-danger btn-delete">
+		                            <i class="bi bi-trash"></i> 삭제
+		                        </button>
+		                        
+		                    </td>
 			            </tr>
 			        </c:forEach>
 			    </c:if>
