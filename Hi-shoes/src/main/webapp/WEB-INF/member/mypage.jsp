@@ -197,6 +197,11 @@
 	//리뷰 삭제 함수
 	function delMyReview() {
 		
+		if($('input[name="reviewEditChk"]:checked').length == 0) {
+			alert("리뷰를 선택하세요.");
+			return;
+		}		
+		
 		// 리뷰보기 - 체크한 리뷰 
 		const reviewNo = $('input[name="reviewEditChk"]:checked').val();
 		
