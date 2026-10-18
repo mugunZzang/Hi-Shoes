@@ -99,6 +99,141 @@
 	    white-space: pre-wrap;
 	    word-break: break-word;
 	}
+	
+	/* 문의내역 테이블 */
+.question-container {
+    width: 100%;
+    margin: 0 auto;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 테이블 기본 */
+.question-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #e1e8df;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #444;
+}
+
+/* 테이블 헤더 */
+.question-container thead.table-primary th {
+    background-color: #315f32;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    padding: 15px 10px;
+    border: none;
+    border-bottom: 2px solid #274d28;
+}
+
+/* 테이블 내용 */
+.question-container tbody td {
+    padding: 13px 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid #edf1eb;
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+/* 마지막 행의 아래쪽 테두리 */
+.question-container tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 문의 행 마우스 호버 */
+.question-container tbody tr:not(.answer-row):hover td {
+    background-color: #f5f8f4;
+}
+
+/* 답변이 펼쳐진 문의 */
+.question-container .question-row.active td {
+    background-color: #edf5eb;
+}
+
+/* 답변 행 */
+.question-container .answer-row > td {
+    padding: 12px 15px !important;
+    background-color: #f8faf7 !important;
+}
+
+/* 상품명, 제목, 내용 말줄임 */
+.question-container tbody td {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 답글 표시 */
+.question-container .answer-toggle {
+    color: #315f32;
+    font-weight: 600;
+}
+
+/* 수정 버튼 */
+.question-container .qnaEditBtn {
+    background-color: #315f32;
+    border-color: #315f32;
+    color: #ffffff;
+    padding: 5px 12px;
+    font-size: 13px;
+    border-radius: 5px;
+}
+
+.question-container .qnaEditBtn:hover {
+    background-color: #274d28;
+    border-color: #274d28;
+}
+
+/* 삭제 버튼 */
+.question-container .btn-outline-danger {
+    padding: 5px 12px;
+    font-size: 13px;
+    border-radius: 5px;
+}
+
+/* 페이지바 */
+#pageBar .pagination {
+    gap: 5px;
+}
+
+#pageBar .page-link {
+    color: #315f32;
+    border: 1px solid #dce6d9;
+    border-radius: 5px;
+    background-color: #ffffff;
+    min-width: 36px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+#pageBar .page-link:hover {
+    background-color: #edf5eb;
+    border-color: #315f32;
+}
+
+#pageBar .page-item.active .page-link {
+    background-color: #315f32;
+    border-color: #315f32;
+    color: #ffffff;
+}
+
+/* 작은 화면 대응 */
+@media (max-width: 768px) {
+    .question-container {
+        overflow-x: auto;
+    }
+
+    .question-container table {
+        min-width: 750px;
+    }
+}
 </style>
 
 <script type="text/javascript">
@@ -112,9 +247,23 @@ $(function(){
 		 
 		    e.preventDefault(); // 페이지 이동 방지
 
-		    let currentShowPageNo = $(this).text().trim();
-		 
-		    console.log("currentShowPageNo: ", currentShowPageNo); // 1
+		    let href = $(this).attr("href");
+		    let match = href ? href.match(/[?&]currentShowPageNo=(\d+)/) : null;
+
+		    // href에 페이지 번호가 있으면 사용
+		    if (match) {
+		        currentShowPageNo = match[1];
+		    }
+		    else {
+		        // 현재 페이지 버튼처럼 href="#"인 경우
+		        currentShowPageNo = $(this).text().trim();
+		    }
+
+		    // 숫자가 아닌 경우 요청하지 않음
+		    if (!/^\d+$/.test(currentShowPageNo)) {
+		        return;
+		    }
+
 		 $.ajax({
 			 
 			 url:"<%= ctxPath%>/user/questionListJSON.go", 
@@ -145,7 +294,7 @@ $(function(){
 	        	                        <td>\${question.qtitle}</td>
 	        	                        <td>\${question.qcontents}</td>
 	        	                        <td>\${question.qwritedate}</td>
-	        	                        <td>답글X</td>
+	        	                        <td class="text-center">답글X</td>
 	        	                        <td class="text-center">
 	        	                        <button type="button"
 									        class="btn btn-success qnaEditBtn"
@@ -172,7 +321,7 @@ $(function(){
 	        	                        <td>\${question.qtitle}</td>
 	        	                        <td>\${question.qcontents}</td>
 	        	                        <td>\${question.qwritedate}</td>
-	        	                        <td>
+	        	                        <td class="text-center">
 	        	                            <span class="answer-toggle">
 	        	                                답글 <i class="fas fa-chevron-down"></i>
 	        	                            </span>
@@ -406,7 +555,7 @@ function goDelete(num) {
 				                <td>${question.qtitle}</td>
 				                <td>${question.qcontents}</td>
 				                <td>${question.qwritedate}</td>
-				                <td>답글X</td>
+				                <td class="text-center">답글X</td>
 				                <td class="text-center">
 				                
 				                <button type="button"
@@ -434,7 +583,7 @@ function goDelete(num) {
 				                <td>${question.qtitle}</td>
 				                <td>${question.qcontents}</td>
 				                <td>${question.qwritedate}</td>
-				                <td>
+				                <td class="text-center">
 						            <span class="answer-toggle">
 						                답글 <i class="fas fa-chevron-down"></i>
 						            </span>
