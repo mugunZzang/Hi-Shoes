@@ -43,13 +43,256 @@ function goSearch(frm, type) {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    /* ===============================
+   전체 고객센터 영역
+================================ */
+#container {
+    font-family: "Noto Sans KR", sans-serif;
+    color: #444;
+}
+
+#container .tab-content {
+    background-color: #fff;
+    border: 1px solid #e1e8df !important;
+    border-top: none !important;
+    border-radius: 0 0 10px 10px;
+    padding: 30px !important;
+    box-shadow: 0 4px 15px rgba(49, 95, 50, 0.04);
+}
+
+/* ===============================
+   공지사항 / FAQ 탭
+================================ */
+#container .nav-tabs {
+    border-bottom: 2px solid #315f32;
+}
+
+#container .nav-tabs .nav-link {
+    color: #666;
+    font-weight: 500;
+    padding: 14px 20px;
+    border: 1px solid transparent;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+}
+
+#container .nav-tabs .nav-link:hover {
+    color: #315f32;
+    background-color: #f5f8f4;
+}
+
+#container .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #315f32;
+    border-color: #315f32;
+    font-weight: 600;
+}
+
+/* ===============================
+   검색 폼
+================================ */
+#container .tab-pane form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+#container .tab-pane form select,
+#container .tab-pane form input[type="text"] {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #dce5d9;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #444;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#container .tab-pane form select {
+    min-width: 125px;
+}
+
+#container .tab-pane form input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+}
+
+#container .tab-pane form select:focus,
+#container .tab-pane form input[type="text"]:focus {
+    border-color: #638b63;
+    box-shadow: 0 0 0 3px rgba(49, 95, 50, 0.1);
+}
+
+/* 검색 버튼 */
+#container .tab-pane form .btn {
+    height: 40px;
+    padding: 0 22px;
+    border: 1px solid #315f32;
+    border-radius: 6px;
+    background-color: #315f32;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+#container .tab-pane form .btn:hover {
+    background-color: #274d28;
+    border-color: #274d28;
+}
+
+/* ===============================
+   공지사항 / FAQ 테이블
+================================ */
+#container .tab-pane table {
+    width: 100%;
+    margin-bottom: 0;
+    border: 1px solid #e1e8df;
+    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    table-layout: fixed;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+/* 테이블 헤더 */
+#container .tab-pane table thead.table-primary th {
+    background-color: #315f32;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    padding: 15px 12px;
+    border: none;
+    border-bottom: 2px solid #274d28;
+}
+
+/* 테이블 본문 */
+#container .tab-pane table tbody td {
+    max-width: none;
+    padding: 14px 12px;
+    vertical-align: middle;
+    text-align: center;
+    color: #444;
+    background-color: #fff;
+    border-bottom: 1px solid #edf1eb;
+    border-right: none;
+    line-height: 1.6;
+}
+
+/* 제목 및 내용 말줄임 */
+#container .tab-pane table tbody td:nth-child(2),
+#container .tab-pane table tbody td:nth-child(3) {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 글번호 */
+#container .tab-pane table tbody td:first-child {
+    color: #777;
+    font-size: 13px;
+}
+
+/* 마지막 행 테두리 */
+#container .tab-pane table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 행 호버 효과 */
+#container .tab-pane table tbody tr.noticeInfo,
+#container .tab-pane table tbody tr.faqInfo {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#container .tab-pane table tbody tr.noticeInfo:hover td,
+#container .tab-pane table tbody tr.faqInfo:hover td {
+    background-color: #f2f7f0;
+    color: #315f32;
+}
+
+/* 빈 목록 메시지 */
+#container .tab-pane table tbody td[colspan] {
+    text-align: center;
+    padding: 35px 12px;
+    color: #888;
+    background-color: #fcfdfb;
+}
+
+/* ===============================
+   페이지바
+================================ */
+#container .tab-pane #pageBar {
+    margin-top: 28px !important;
+    margin-bottom: 15px !important;
+}
+
+#container .tab-pane #pageBar .pagination {
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+#container .tab-pane #pageBar .page-link {
+    min-width: 36px;
+    padding: 8px 12px;
+    color: #315f32;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #dce6d9;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+#container .tab-pane #pageBar .page-link:hover {
+    color: #274d28;
+    background-color: #edf5eb;
+    border-color: #8cab87;
+}
+
+#container .tab-pane #pageBar .page-item.active .page-link {
+    color: #fff;
+    background-color: #315f32;
+    border-color: #315f32;
+    font-weight: 600;
+}
+
+/* ===============================
+   반응형
+================================ */
+@media (max-width: 768px) {
+    #container {
+        padding: 100px 15px 40px !important;
+    }
+
+    #container .tab-content {
+        padding: 15px !important;
+    }
+
+    #container .tab-pane table {
+        min-width: 600px;
+    }
+
+    #container .tab-pane {
+        overflow-x: auto;
+    }
+
+    #container .tab-pane form input[type="text"] {
+        min-width: 120px;
+    }
+}
 </style>
 
 <div class="container-fluid"
      id="container"
-     style="position: relative;
-            top: 90px;
-            padding: 0% 7%;">
+     style="top: 90px;
+            padding: 7% 7%;">
 
 
 <ul class="nav nav-tabs nav-fill">
