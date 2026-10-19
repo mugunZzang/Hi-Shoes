@@ -1663,6 +1663,33 @@ public class ProductDAO_imple implements ProductDAO {
 		return sandles;
 	}
 
+	
+	
+	
+	// pnum 검증
+	@Override
+	public int isExsitPnum(String pnum) throws SQLException {
+		int p = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT count(*) as cnt from tbl_product where pnum = to_number(?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			rs = pstmt.executeQuery();
+			rs.next();
+			
+			p = rs.getInt("cnt");
+			
+		} finally {
+			close();
+		}
+		
+		return p;
+	}
+
 
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
