@@ -1049,6 +1049,27 @@ gap: 5px;
     cursor: default;
 }
 
+
+
+
+/* ====================== */
+.pagination a {
+	border: none;
+	color: #222;
+	border-radius: 0px; 
+}
+
+.pagination .active a {
+	background-color: #222 !important;
+	color: white !important;
+}
+
+
+
+
+
+
+
 /* =========================================================
    반응형
    ========================================================= */
