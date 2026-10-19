@@ -62,5 +62,8 @@ public interface MemberDAO {
 
     // 페이징 처리
     List<Map<String, String>> wishListPaging(Map<String, String> paraMap) throws SQLException;
+
+    // 회원정보 수정 시 이메일 중복검사
+	int IsValidOrOwnEmail(Map<String, String> paraMap) throws SQLException;
 	
 }

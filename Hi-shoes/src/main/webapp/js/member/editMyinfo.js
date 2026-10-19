@@ -44,7 +44,10 @@ $(() => {
 		}
 		else {
 			// 비밀번호가 정규표현식에 맞는 경우
-			$('form[name="editFrm"] :input').prop("disabled", false);	
+			$('form[name="editFrm"] :input').prop("disabled", false);
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);		
 			
 			//$(e.target).next().next().next().hide();
 			// 또는	
@@ -74,7 +77,9 @@ $(() => {
 		else {
 			// 비밀번호와 비밀번호 확인 값이 같은 경우
 			$('form[name="editFrm"] :input').prop("disabled", false);	
-			
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);	
 			//$(e.target).next().next().next().hide();
 			// 또는	
 			$(e.target).parent().parent().find('p.error').hide();	
@@ -106,7 +111,9 @@ $(() => {
 		else {
 			// 이메일이 정규표현식에 위배되지 않은 경우
 			$('form[name="editFrm"] :input').prop("disabled", false);	
-			
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);	
 			//$(e.target).next().next().next().hide();
 			// 또는	
 			$(e.target).parent().parent().find('p.error').hide();	
@@ -274,14 +281,16 @@ $(() => {
 			// 또는 
 			$('input#email').parent().parent().find('p.error').show();	
 			
-		}else {			
+		}				
+		else {			
 			b_emailcheck_click = true;
 			// "이메일 중복확인" 를 클릭했는지 클릭을 안햇는지 여부를 알아오기 위한 용도
 			
 			// === jQuery 를 사용한 Ajax 두번째 방법 === //		
 			$.ajax({
-				url: "emailDuplicateCheck.go", 
-				data: {"email" : $('input#email').val()},	
+				url: "isValidOrOwnEmail.go", 
+				data: {"email" : $('input#email').val(),
+						"userid" : $('.duplChk input[name="userid"]').val()	},
 				// data 속성은 http://localhost:9090/MyMVC/member/emailDuplicateCheck.up 로 전송 해야 할 데이터를 말한다.
 				type: "post", 	  //  type : "post",    // jQuery 4.x 이하 모든 버전에서 사용가능함. type 을 생략하면 type : "get" 이다.
 	         	method : "post",  // jQuery 4.x 버전에서만 사용가능함. jQuery 3.x 이하 버전에서는 사용불가함. method 를 생략하면 method : "get" 이다.
@@ -291,24 +300,15 @@ $(() => {
 						
 			    dataType: "json", // emailDuplicateCheck.up 에서 응답해주는 결과물의 타입은 json이다.
 								  		  
-				success: function(json) {
-					//console.log("json => ", json);
-					//json => {isExists: true}
-					//json => {isExists: false}
-					//json 는 idDuplicateCheck.up 을 통해 웹브라우저에서 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 object 타입의 결과물이다. 
+				success: function(json) {					
 					
-					//console.log("json의 데이터 타입 => ", typeof json);
-					//json의 데이터 타입 =>  object		
-					
-					console.log("json => ", json);
-					//json => {isExists: true}
-					//json => {isExists: false}
-					
-					console.log("json의 데이터 타입 => ", typeof json);
-					//json의 데이터 타입 =>  object
-					
-					if(json.isExists){
-						// 입력한 userid가 이미 사용 중이라면
+					if(json.isMyEmail == 1){
+						// 입력한 email가 본인 email과 같다면
+						$('#emailCheckResult').html($('input#email').val() + " 은 현재 사용중인 이메일입니다.").css({"color":"#87A922"});					
+						
+					}
+					else if (json.isMyEmail == 2) {
+						// 입력한 email가 이미 사용 중이라면
 						$('#emailCheckResult').html($('input#email').val() + " 은 이미 사용중이므로 다른 이메일을 입력하세요.").css({"color":"red"});
 						$('input[name="email"]').val("");
 					}
@@ -321,7 +321,8 @@ $(() => {
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	            }
 			});
-		}
+		}		
+		
 	});
 	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기 끝 //
 	
@@ -436,7 +437,7 @@ function goEdit() {
             alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
         }
 	});		
-	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기 끝 //
+	// 변경한 비밀번호가 현재 사용 중인 비밀번호와 같은 것인지 다른 것인지 판단 끝.
 	
 	
 	
