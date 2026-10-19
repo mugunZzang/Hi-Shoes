@@ -25,6 +25,33 @@ border-radius: 4px 4px 0 0;
     color: #336600;
 }
 
+
+/* 재고현황 테이블 크기 튀어나감 방지 css */
+
+.stock-table {
+
+table-layout: fixed;
+
+font-size: 12px;
+
+}
+
+.stock-table th,
+
+.stock-table td {
+
+padding: 4px 2px;
+
+line-height: 1.1;
+
+vertical-align: middle;
+
+overflow-wrap: anywhere;
+
+}
+
+
+
  </style>
 
 
@@ -285,7 +312,10 @@ border-radius: 4px 4px 0 0;
         <div class="card border-0 shadow-lg"
              style="height: 290px;">
              
-			<table class="table table-bordered text-center mx-auto my-auto" style="width:95%;">
+			<table class="table table-bordered text-center mx-auto my-auto stock-table"
+
+            style="width:95%;">
+            
 			<thead>
 			    <tr>
 			        <th class="table-success">제품명</th>

@@ -80,46 +80,46 @@
         text-align: center;
     }
 
-    .product-info {
+    .product-info2 {
         display: flex;
         align-items: center;
         gap: 15px;
         padding: 10px 0;
     }
 
-    .product-image {
+    .product-image2 {
         width: 32%;
         min-width: 90px;
         flex-shrink: 0;
     }
 
-    .product-image img {
+    .product-image2 img {
         display: block;
         width: 100%;
         max-height: 140px;
         object-fit: contain;
     }
 
-    .product-detail {
+    .product-detail2 {
         flex: 1;
         min-width: 0;
         overflow-wrap: anywhere;
     }
 
-    .product-name {
+    .product-name2 {
         display: block;
         margin-bottom: 10px;
         font-size: 11pt;
         font-weight: bold;
     }
 
-    .product-subinfo {
+    .product-subinfo2 {
         margin-bottom: 5px;
         color: #666666;
         font-size: 10pt;
     }
 
-    .product-order-info {
+    .product-order-info2 {
         font-size: 10pt;
         line-height: 1.7;
     }
@@ -171,13 +171,13 @@
     font-size: 13px;
      }
 
-    div#pageBar {
+    div#pageBar2 {
         width: 100%;
         margin-top: 3%;
         display: flex;
     }
 
-    div#pageBar > nav {
+    div#pageBar2 > nav {
         margin: auto;
     }
 
@@ -392,21 +392,32 @@ function openReview_Modal(odnum) {
                                 </td>
 
 
-                                <!-- 주문일자 -->
-                                <td class="date-text">
-                                    <small>
-                                        <c:out value="${odrmap.ORDERDATE}" />
-                                    </small>
-                                </td>
+					      <!-- 주문일자 -->
+					
+							<td class="date-text" style="text-align:center;">
+							
+							<div>
+							
+							<c:out value="${odrmap.ORDERDATE.substring(0, 5)}" />
+							
+							</div>
+							
+							<div>
+							
+							<c:out value="${odrmap.ORDERDATE.substring(5, 10)}" />
+							
+							</div>
+							
+							</td>
 
 
                                 <!-- 상품정보 -->
                                 <td>
 
-                                    <div class="product-info">
+                                    <div class="product-info2">
 
                                         <!-- 상품 이미지 -->
-                                        <div class="product-image">
+                                        <div class="product-image2">
 
                                           <img
                                              src="<%= ctxPath %>/images/<c:out value='${odrmap.PIMAGE1}'/>"
@@ -417,34 +428,34 @@ function openReview_Modal(odnum) {
 
 
                                         <!-- 상품명 및 주문정보 -->
-                                        <div class="product-detail" >
+                                        <div class="product-detail2" >
 
-                                            <strong class="product-name">
+                                            <strong class="product-name2">
                                                 <c:out value="${odrmap.PNAME}" />
                                             </strong>
 
-                                            <div class="product-order-info">
+                                            <div class="product-order-info2">
                                                 제품번호:
                                                 <c:out value="${odrmap.SNUM}" />
                                             </div>
                                             
-                                             <div class="product-order-info" style="text-decoration: line-through;">
+                                             <div class="product-order-info2" style="text-decoration: line-through;">
 												    정가:
 												    <fmt:formatNumber value="${odrmap.REGPRICE}" pattern="#,##0" />원
 												</div>
                                             
-                                             <div class="product-order-info" >
+                                             <div class="product-order-info2" >
 												    판매가:
 												    <fmt:formatNumber value="${odrmap.SALEPRICE}" pattern="#,##0" />원
 												</div>
 												
-												<div class="product-order-info">
+												<div class="product-order-info2">
                                                  사이즈:
                                                 <c:out value="${odrmap.SSIZE}" /> 
                                                  
                                             </div>
                                             
-                                          <div class="product-order-info">
+                                          <div class="product-order-info2">
                                                 색상:
                                                 <c:out value="${odrmap.COLOR}" />
                                             </div>
@@ -526,7 +537,7 @@ function openReview_Modal(odnum) {
                                         <c:when test="${odrmap.ORDERSTATUS == '접수'}">
                                             <span class="status-text"
                                                   style="color: blue;">
-                                                접수
+                                                결제 완료
                                             </span>
                                         </c:when>
 
@@ -708,11 +719,11 @@ function openReview_Modal(odnum) {
 
 			
 			        <!-- 페이지바 -->
-			        <div id="pageBar">
+			        <div id="pageBar2">
 			
 			            <nav>
 			                <ul class="pagination">
-			                    ${requestScope.pageBar}
+			                    ${requestScope.pageBar2}
 			                </ul>
 			            </nav>
 			

@@ -148,8 +148,11 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 32px !important;
+  min-width: 32px !important;
+  width: auto !important;
   height: 32px !important;
+  padding: 0 6px !important;
+  white-space: nowrap !important;
   color: #888888 !important;
   text-decoration: none !important;
   font-size: 14px !important;
