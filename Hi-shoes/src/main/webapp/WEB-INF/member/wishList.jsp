@@ -145,7 +145,7 @@
 	   상품 정보
 	========================= */
 	
-	.product-info {
+ 	.wish-product-info { 
 	    width: 100%;
 	}
 	
@@ -422,7 +422,7 @@
                     +     '<div class="product-image">'
                     +       '<img src="<%= ctx_Path%>/images/' + img + '" alt="' + img + '" />'
                     +     '</div>'
-                    +     '<div class="product-info">'
+                    +     '<div class="wish-product-info">'
                     +       '<div class="product-brand">' + brand + '</div>'
                     +       '<div class="product-name"><span class="product-title">' + pname + '</span></div>'
                     +       '<div class="product-price"><strong>' + priceHtml + '</strong></div>'

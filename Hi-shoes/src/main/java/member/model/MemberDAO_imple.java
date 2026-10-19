@@ -739,6 +739,57 @@ public class MemberDAO_imple implements MemberDAO {
 	       return wishList;
 	   
 	   } // public List<Map<String, String>> wishListPaging(Map<String, String> paraMap) throws SQLException------
+
+
+	   // 회원정보 수정 시 이메일 중복검사
+	   @Override
+	   public int IsValidOrOwnEmail(Map<String, String> paraMap) throws SQLException {
+		   int isMyEmail = 0;
+			
+			try {
+								
+				conn = ds.getConnection();
+				
+				String sql = " select email "
+						   + " from tbl_member"
+						   + " where email = ? and userid = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, aes.encrypt(paraMap.get("email")));
+				pstmt.setString(2, paraMap.get("userid"));
+				
+				rs = pstmt.executeQuery(); 
+				
+				if(rs.next()) {
+					isMyEmail = 1;
+				}
+				else {
+					conn = ds.getConnection();
+					
+					sql = " select email "
+					   + " from tbl_member"
+					   + " where email = ? ";
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, aes.encrypt(paraMap.get("email")));
+					
+					rs = pstmt.executeQuery(); 
+					
+					if(rs.next()) {
+						isMyEmail = 2;
+					}
+				}
+				
+			} catch(UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			} finally {
+				close();
+			}
+			
+			return isMyEmail;		
+			
+			
+	   }	// end of  public boolean IsValidOrOwnEmail(Map<String, String> paraMap) throws SQLException ------
 	   
 
 

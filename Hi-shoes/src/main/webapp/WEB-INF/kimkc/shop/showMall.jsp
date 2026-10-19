@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/kimkc/showMall.css" >
 
 
-=
+
 
 <div class="search-container">
 
