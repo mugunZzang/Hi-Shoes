@@ -44,7 +44,10 @@ $(() => {
 		}
 		else {
 			// 비밀번호가 정규표현식에 맞는 경우
-			$('form[name="editFrm"] :input').prop("disabled", false);	
+			$('form[name="editFrm"] :input').prop("disabled", false);
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);		
 			
 			//$(e.target).next().next().next().hide();
 			// 또는	
@@ -74,7 +77,9 @@ $(() => {
 		else {
 			// 비밀번호와 비밀번호 확인 값이 같은 경우
 			$('form[name="editFrm"] :input').prop("disabled", false);	
-			
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);	
 			//$(e.target).next().next().next().hide();
 			// 또는	
 			$(e.target).parent().parent().find('p.error').hide();	
@@ -106,7 +111,9 @@ $(() => {
 		else {
 			// 이메일이 정규표현식에 위배되지 않은 경우
 			$('form[name="editFrm"] :input').prop("disabled", false);	
-			
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);	
 			//$(e.target).next().next().next().hide();
 			// 또는	
 			$(e.target).parent().parent().find('p.error').hide();	
