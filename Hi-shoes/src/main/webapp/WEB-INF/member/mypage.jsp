@@ -105,12 +105,37 @@
 			dataType: "json",
 			success: function(json) {
 				console.log("리뷰 등록 응답:", json);
+				**if** (Number(json.result) === 1) {
 
-				if (Number(json.result) === 1) {
 					alert("리뷰가 등록되었습니다.");
-					$("#reviewWriteModal").modal("hide");
+
+					**const** modalElement = document.getElementById("reviewWriteModal");
+
+					**const** modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+					modal.hide();
+
+					// 모달이 완전히 닫힌 뒤 목록 갱신
+
+					$(modalElement).one("hidden.bs.modal", **function**() {
+
+					$(".modal-backdrop").remove();
+
+					$("body").removeClass("modal-open");
+
+					$("body").css({
+
+					"overflow": "",
+
+					"padding-right": ""
+
+					});
+
 					loadOrderList(1);
-				}
+
+					});
+
+					}
 				else if (Number(json.result) === -1) {
 					alert("이미 작성한 리뷰가 있습니다.");
 				}
