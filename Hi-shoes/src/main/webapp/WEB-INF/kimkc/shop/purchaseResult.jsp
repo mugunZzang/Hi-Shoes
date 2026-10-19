@@ -48,7 +48,7 @@
 	            <div class="result-info-row total-price-row">
 	                <span class="info-label">결제금액</span>
 	                <strong class="info-value total-price">
-	                    <fmt:formatNumber value="${requestScope.orderMap.totalprice}" type="number" />
+	                    <fmt:formatNumber value="${requestScope.orderMap.totalprice + 3000}" type="number" />
 	                </strong>
 	            </div>
 	        </div>

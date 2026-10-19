@@ -65,7 +65,7 @@
         totalDeliveryFee = Number("${requestScope.deliveryfee}");
 	    
 	 	// 최종 결제금액
-	    const finalPrice = totalOrderPrice - totalDiscountPrice;
+	    const finalPrice = totalOrderPrice - totalDiscountPrice + totalDeliveryFee;
 	        /* totalOrderPrice - totalDiscountPrice + totalDeliveryFee; */
 
 	    // 천 단위 콤마 및 원 표시
