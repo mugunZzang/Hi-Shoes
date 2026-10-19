@@ -143,7 +143,9 @@ $(() => {
 		else {
 			// 휴대폰 국번이 정규표현식에 위배되지 않은 경우
 			$('form[name="editFrm"] :input').prop("disabled", false);	
-			
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);	
 			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 hp2 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -173,7 +175,9 @@ $(() => {
 		else {
 			// 이메일이 정규표현식에 위배되지 않은 경우
 			$('form[name="editFrm"] :input').prop("disabled", false);	
-			
+			$('form[name="editFrm"] :input[name="company"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="busiNum"]').prop("disabled", true);	
+			$('form[name="editFrm"] :input[name="userid"]').prop("disabled", true);	
 			$(e.target).parent().parent().find('p.error').hide();	
 		}
 	});	// 아이디가 hp3 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
