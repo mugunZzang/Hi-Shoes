@@ -47,6 +47,30 @@ public class ProductDetail extends AbstractController {
 		String userid = loginuser.getUserid();
 		String pnum = request.getParameter("pnum");
 		
+		int p = 0;
+		try {
+			p = pdao.isExsitPnum(pnum);
+			
+		} catch (Exception e) {
+			request.setAttribute("message", "상품이 존재하지 않습니다.");
+		    request.setAttribute("loc", request.getContextPath() + "/index.go");
+		         
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/msg.jsp");
+		         
+		    return;
+		}
+		 
+		if (p != 1 ) {
+			request.setAttribute("message", "상품이 존재하지 않습니다.");
+		    request.setAttribute("loc", request.getContextPath() + "/index.go");
+		         
+		    super.setRedirect(false);
+		    super.setViewPage("/WEB-INF/msg.jsp");
+		         
+		    return;
+		}
+		
 		request.setAttribute("pnum", pnum);
 		
 		// 클릭한 상품의 정보를 갖고온다.

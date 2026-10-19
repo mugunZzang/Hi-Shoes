@@ -141,6 +141,10 @@ public interface ProductDAO {
 	List<ProductDTO> getDressShoesForIndex() throws SQLException;
 	List<ProductDTO> getBootsForIndex() throws SQLException;
 	List<ProductDTO> getSandlesForIndex() throws SQLException;
+
+
+	// pnum 검증
+	int isExsitPnum(String pnum) throws SQLException;
 	
 
 }
