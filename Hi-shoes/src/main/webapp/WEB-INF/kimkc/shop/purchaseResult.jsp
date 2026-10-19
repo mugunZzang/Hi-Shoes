@@ -10,6 +10,15 @@
 
 <jsp:include page="../../header.jsp" />
 
+<script type="text/javascript">
+
+function goMypage() {
+	const frm = $('form#goMypagefrm');
+	frm.submit();
+}
+
+
+</script>
 
 
 	<div class="purchase-result-container">
@@ -97,13 +106,13 @@
 	            홈으로
 	        </a>
 	
-	        <a href="#" class="result-btn btn-order-list">
+	        <a href='javascript:void(0);' class="result-btn btn-order-list" onclick="goMypage()">
 	            주문내역
 	        </a>
 	    </div>
 	
 	</div>
-
+	<form id="goMypagefrm" method="post" action="<%= ctxPath %>/member/mypage.go"></form>
 
 
 <jsp:include page="../../footer.jsp" />
