@@ -105,19 +105,19 @@
 			dataType: "json",
 			success: function(json) {
 				console.log("리뷰 등록 응답:", json);
-				**if** (Number(json.result) === 1) {
+				if (Number(json.result) === 1) {
 
 					alert("리뷰가 등록되었습니다.");
 
-					**const** modalElement = document.getElementById("reviewWriteModal");
+					const modalElement = document.getElementById("reviewWriteModal");
 
-					**const** modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+					const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
 					modal.hide();
 
 					// 모달이 완전히 닫힌 뒤 목록 갱신
 
-					$(modalElement).one("hidden.bs.modal", **function**() {
+					$(modalElement).one("hidden.bs.modal", function () {
 
 					$(".modal-backdrop").remove();
 
