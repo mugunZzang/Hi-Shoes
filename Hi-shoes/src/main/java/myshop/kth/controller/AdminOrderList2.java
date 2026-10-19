@@ -188,7 +188,7 @@ public class AdminOrderList2 extends AbstractController {
 		30                  21 = ( (30 - 1)/10 ) * 10 + 1			           
 		
 		*/
-		String pageBar = "";
+		String pageBar2 = "";
 		
 		int blockSize = 10;
 		// blockSize 는 블럭(토막)당 보여지는 페이지 번호의 개수이다.
@@ -204,19 +204,19 @@ public class AdminOrderList2 extends AbstractController {
 		// **** [맨처음][이전] 만들기 **** //
 		// 
 
-pageBar += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList(1); return false;'><<</a></li>";
+pageBar2 += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList(1); return false;'><<</a></li>";
 
 if (pageNo != 1) {
-    pageBar += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+(pageNo-1)+"); return false;'>[이전]</a></li>";
+    pageBar2 += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+(pageNo-1)+"); return false;'>[이전]</a></li>";
 }
 
 while (!(loop > blockSize || pageNo > totalPage)) {
 
     if (pageNo == Integer.parseInt(currentShowPageNo)) {
-        pageBar += "<li class='page-item active'><a class='page-link' href='#' onclick='return false;'>"+pageNo+"</a></li>";
+        pageBar2 += "<li class='page-item active'><a class='page-link' href='#' onclick='return false;'>"+pageNo+"</a></li>";
     }
     else {
-        pageBar += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+pageNo+"); return false;'>"+pageNo+"</a></li>";
+        pageBar2 += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+pageNo+"); return false;'>"+pageNo+"</a></li>";
     }
 
     loop++;
@@ -224,14 +224,14 @@ while (!(loop > blockSize || pageNo > totalPage)) {
 }
 
 if (pageNo <= totalPage) {
-    pageBar += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+pageNo+"); return false;'>[다음]</a></li>";
+    pageBar2 += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+pageNo+"); return false;'>[다음]</a></li>";
 }
 
-pageBar += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+totalPage+"); return false;'>>></a></li>";
+pageBar2 += "<li class='page-item'><a class='page-link' href='#' onclick='loadOrderList("+totalPage+"); return false;'>>></a></li>";
 
 		// *** ====== 페이지바 만들기 끝 ====== *** //
 		
-		request.setAttribute("pageBar", pageBar);
+		request.setAttribute("pageBar2", pageBar2);
 		
 		/* >>> 뷰단(orderList.jsp)에서 "페이징 처리시 보여주는 순번 공식" 에서 사용하기 위해 
 		주문내역 총개수 알아오기 시작 <<< */
